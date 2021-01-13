@@ -24,14 +24,14 @@ const Activate = ({ verify, match }) => {
                 className='d-flex flex-column justify-content-center align-items-center'
                 style={{ marginTop: '200px' }}
             >
-                <h1>Verify your Account:</h1>
+                <h1>אמת את חשבונך: </h1>
                 <button
                     onClick={verify_account}
                     style={{ marginTop: '50px' }}
                     type='button'
                     className='btn btn-primary'
                 >
-                    Verify
+                    לאמת
                 </button>
             </div>
         </div>

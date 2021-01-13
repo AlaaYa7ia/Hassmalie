@@ -35,7 +35,7 @@ const ResetPasswordConfirm = ({ match, reset_password_confirm }) => {
                     <input
                         className='form-control'
                         type='password'
-                        placeholder='New Password'
+                        placeholder='סיסמה חדשה'
                         name='new_password'
                         value={new_password}
                         onChange={e => onChange(e)}
@@ -47,7 +47,7 @@ const ResetPasswordConfirm = ({ match, reset_password_confirm }) => {
                     <input
                         className='form-control'
                         type='password'
-                        placeholder='Confirm New Password'
+                        placeholder='חזור על סיסמה חדשה'
                         name='re_new_password'
                         value={re_new_password}
                         onChange={e => onChange(e)}
@@ -55,7 +55,7 @@ const ResetPasswordConfirm = ({ match, reset_password_confirm }) => {
                         required
                     />
                 </div>
-                <button className='btn btn-primary' type='submit'>Reset Password</button>
+                <button className='btn btn-primary' type='submit'>לאפס את הסיסמה</button>
             </form>
         </div>
     );

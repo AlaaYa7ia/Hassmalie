@@ -6,14 +6,16 @@ import { signup } from '../actions/auth';
 const Signup = ({ signup, isAuthenticated }) => {
     const [accountCreated, setAccountCreated] = useState(false);
     const [formData, setFormData] = useState({
-        first_name: 'firstname',
-        last_name: 'lastname',
-        email: 'email',
-        password: 'password',
-        re_password: 'repassword'
+        first_name: '',
+        last_name: '',
+        email: '',
+        phone_number: '',
+        address: '',
+        password: '',
+        re_password: ''
     });
 
-    const { first_name, last_name, email, password, re_password } = formData;
+    const { first_name, last_name, email, phone_number, address, password, re_password } = formData;
 
     const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
 
@@ -21,7 +23,7 @@ const Signup = ({ signup, isAuthenticated }) => {
         e.preventDefault();
 
         if (password === re_password) {
-            signup(first_name, last_name, email, password, re_password);
+            signup(first_name, last_name, email, phone_number, address, password, re_password);
             setAccountCreated(true);
         }
     };
@@ -35,14 +37,14 @@ const Signup = ({ signup, isAuthenticated }) => {
 
     return (
         <div className='container mt-5'>
-            <h1>Sign Up</h1>
-            <p>Create your Account</p>
+            <h1>הרשמה</h1>
+            <p>תיצור את המשתמש שלך</p>
             <form onSubmit={e => onSubmit(e)}>
                 <div className='form-group'>
                     <input
                         className='form-control'
                         type='text'
-                        placeholder='First Name*'
+                        placeholder='שם פרטי*'
                         name='first_name'
                         value={first_name}
                         onChange={e => onChange(e)}
@@ -53,7 +55,7 @@ const Signup = ({ signup, isAuthenticated }) => {
                     <input
                         className='form-control'
                         type='text'
-                        placeholder='Last Name*'
+                        placeholder='שם משפחה*'
                         name='last_name'
                         value={last_name}
                         onChange={e => onChange(e)}
@@ -64,7 +66,7 @@ const Signup = ({ signup, isAuthenticated }) => {
                     <input
                         className='form-control'
                         type='email'
-                        placeholder='Email*'
+                        placeholder='איימיל*'
                         name='email'
                         value={email}
                         onChange={e => onChange(e)}
@@ -74,8 +76,31 @@ const Signup = ({ signup, isAuthenticated }) => {
                 <div className='form-group'>
                     <input
                         className='form-control'
+                        type='number'
+                        placeholder='מספר טילפון*'
+                        name='phone_number'
+                        value={phone_number}
+                        onChange={e => onChange(e)}
+                        minLength='8'
+                        required
+                    />
+                </div>
+                <div className='form-group'>
+                    <input
+                        className='form-control'
+                        type='text'
+                        placeholder='כתובת*'
+                        name='address'
+                        value={address}
+                        onChange={e => onChange(e)}
+                        required
+                    />
+                </div>
+                <div className='form-group'>
+                    <input
+                        className='form-control'
                         type='password'
-                        placeholder='Password*'
+                        placeholder='סיסמה*'
                         name='password'
                         value={password}
                         onChange={e => onChange(e)}
@@ -87,7 +112,7 @@ const Signup = ({ signup, isAuthenticated }) => {
                     <input
                         className='form-control'
                         type='password'
-                        placeholder='Confirm Password*'
+                        placeholder='אשר סיסמה*'
                         name='re_password'
                         value={re_password}
                         onChange={e => onChange(e)}
@@ -95,10 +120,10 @@ const Signup = ({ signup, isAuthenticated }) => {
                         required
                     />
                 </div>
-                <button className='btn btn-primary' type='submit'>Register</button>
+                <button className='btn btn-primary' type='submit'>הירשם</button>
             </form>
             <p className='mt-3'>
-                Already have an account? <Link to='/login'>Sign In</Link>
+                כבר יש לך חשבון? <Link to='/login'>תתחבר</Link>
             </p>
         </div>
     );

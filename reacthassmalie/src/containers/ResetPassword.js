@@ -26,20 +26,20 @@ const ResetPassword = ({ reset_password }) => {
 
     return (
         <div className='container mt-5'>
-            <h1>Request Password Reset:</h1>
+            <h1>בקש איפוס סיסמה:</h1>
             <form onSubmit={e => onSubmit(e)}>
                 <div className='form-group'>
                     <input
                         className='form-control'
                         type='email'
-                        placeholder='Email'
+                        placeholder='אימייל'
                         name='email'
                         value={email}
                         onChange={e => onChange(e)}
                         required
                     />
                 </div>
-                <button className='btn btn-primary' type='submit'>Reset Password</button>
+                <button className='btn btn-primary' type='submit'>לאפס את הסיסמה</button>
             </form>
         </div>
     );

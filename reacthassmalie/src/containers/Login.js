@@ -19,25 +19,6 @@ const Login = ({ login, isAuthenticated }) => {
         login(email, password);
     };
 
-//    const continueWithGoogle = async () => {
-//        try {
-//            const res = await axios.get(`${process.env.REACT_APP_API_URL}/auth/o/google-oauth2/?redirect_uri=${process.env.REACT_APP_API_URL}/google`)
-//
-//            window.location.replace(res.data.authorization_url);
-//        } catch (err) {
-//
-//        }
-//    };
-//
-//    const continueWithFacebook = async () => {
-//        try {
-//            const res = await axios.get(`${process.env.REACT_APP_API_URL}/auth/o/facebook/?redirect_uri=${process.env.REACT_APP_API_URL}/facebook`)
-//
-//            window.location.replace(res.data.authorization_url);
-//        } catch (err) {
-//
-//        }
-//    };
 
     if (isAuthenticated) {
         return <Redirect to='/' />
@@ -45,14 +26,14 @@ const Login = ({ login, isAuthenticated }) => {
 
     return (
         <div className='container mt-5'>
-            <h1>Sign In</h1>
-            <p>Sign into your Account</p>
+            <h1>כניסה</h1>
+            <p>כניסה לחשבון שלך</p>
             <form onSubmit={e => onSubmit(e)}>
                 <div className='form-group'>
                     <input
                         className='form-control'
                         type='email'
-                        placeholder='Email'
+                        placeholder='איימיל'
                         name='email'
                         value={email}
                         onChange={e => onChange(e)}
@@ -63,7 +44,7 @@ const Login = ({ login, isAuthenticated }) => {
                     <input
                         className='form-control'
                         type='password'
-                        placeholder='Password'
+                        placeholder='סיסמה'
                         name='password'
                         value={password}
                         onChange={e => onChange(e)}
@@ -71,13 +52,13 @@ const Login = ({ login, isAuthenticated }) => {
                         required
                     />
                 </div>
-                <button className='btn btn-primary' type='submit'>Login</button>
+                <button className='btn btn-primary' type='submit'>כניסה</button>
             </form>
             <p className='mt-3'>
-                Don't have an account? <Link to='/signup'>Sign Up</Link>
+                עדין לא עשית חשבון? <Link to='/signup'>תירשם</Link>
             </p>
             <p className='mt-3'>
-                Forgot your Password? <Link to='/reset-password'>Reset Password</Link>
+                שכחת את הסיסמה? <Link to='/reset-password'>לאפס את הסיסמה</Link>
             </p>
         </div>
     );
