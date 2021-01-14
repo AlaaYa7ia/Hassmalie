@@ -22,9 +22,14 @@ const Navbar = ({ logout, isAuthenticated }) => {
     );
 
     const authLinks = () => (
+    <Fragment>
         <li className='nav-item'>
             <a className='nav-link' href='#!' onClick={logout}>ליציאה</a>
         </li>
+        <li className='nav-item'>
+                <Link className='nav-link' to='/homepage'>העסק שלי</Link>
+        </li>
+    </Fragment>
     );
 
     return (

@@ -9,6 +9,12 @@ import ResetPassword from './containers/ResetPassword';
 import ResetPasswordConfirm from './containers/ResetPasswordConfirm';
 import Homepage from './containers/Homepage';
 import PrivateRoute from './hocs/PrivateRoute';
+import MyBusinessDetails from './containers/MyBusinessDetails';
+import WorkersManagement from './containers/WorkersManagement';
+import WorkSchedule from './containers/WorkSchedule';
+import ProjectsManagement from './containers/ProjectsManagement';
+import Financial from './containers/Financial';
+
 
 import { Provider } from 'react-redux';
 import store from './store';
@@ -27,6 +33,11 @@ const App = () => (
                     <Route exact path='/password/reset/confirm/:uid/:token' component={ResetPasswordConfirm} />
                     <Route exact path='/activate/:uid/:token' component={Activate} />
                     <PrivateRoute exact path='/homepage' component={Homepage} />
+                    <Route exact path='/my-business-details' component={MyBusinessDetails} />
+                    <Route exact path='/workers-management' component={WorkersManagement} />
+                    <Route exact path='/work-schedule' component={WorkSchedule} />
+                    <Route exact path='/financial' component={Financial} />
+                    <Route exact path='/projects-management' component={ProjectsManagement} />
                 </Switch>
             </Layout>
         </Router>
