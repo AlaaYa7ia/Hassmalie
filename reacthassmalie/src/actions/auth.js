@@ -124,6 +124,7 @@ export const signup = (first_name, last_name, email, phone_number, address, pass
             payload: res.data
         });
     } catch (err) {
+        console.log("here",err)
         dispatch({
             type: SIGNUP_FAIL
         })

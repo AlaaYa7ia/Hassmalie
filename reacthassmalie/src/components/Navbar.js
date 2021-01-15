@@ -9,7 +9,7 @@ const Navbar = ({ logout, isAuthenticated }) => {
 //        logout();
 //        setRedirect(true);
 //    };
-
+    console.log("params",logout, isAuthenticated)
     const guestLinks = () => (
         <Fragment>
             <li className='nav-item'>
