@@ -2,14 +2,14 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const Homepage = () => (
-    <html lang="he" >
+    <html lang="he" dir="rtl">
         <head>
         <meta charset="utf-8"></meta>
         </head>
-        <body dir="rtl">
-        <div class = "container-fluid">
-        <div class = "row ">
-        <div className='container' class="col-6" >
+        <body lang="he" dir="rtl">
+        <div class = "container-fluid" lang="he" dir="rtl">
+        <div class = "row " lang="he" dir="rtl">
+        <div className='container' lang="he" dir="rtl"class="col-6" >
            <div class='jumbotron mt-5'>
                 <h1 class='display-4'>העסק שלי</h1>
                 <hr class='my-4' />

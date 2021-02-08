@@ -17,6 +17,14 @@ class UserAccountManager(BaseUserManager):
         user.save()
         return user
 
+    def create_superuser(self, email, password=None, **extra_fields):
+        user = self.create_user(email, password, **extra_fields)
+        user.is_superuser = True
+        user.is_staff = True
+        user.save()
+        return user
+
+
 
 class UserAccount(AbstractBaseUser, PermissionsMixin):
     USER_TYPE = (
@@ -54,6 +62,9 @@ class MyBusiness(models.Model):
     name = models.CharField(max_length=255)
     logo = models.ImageField()
 
+    def __str__(self):
+        return self.name
+
 
 class Car(models.Model):
     # many to one relation
@@ -63,4 +74,7 @@ class Car(models.Model):
     insurance_validity = models.DateField(default=None)
     insurance_up_to_age = models.IntegerField(default=None)
     image = models.ImageField()
+
+    def __str__(self):
+        return self.license_number
 

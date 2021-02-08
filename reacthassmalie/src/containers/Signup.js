@@ -15,6 +15,7 @@ const Signup = ({ signup, isAuthenticated }) => {
         re_password: ''
     });
 
+
     const { first_name, last_name, email, phone_number, address, password, re_password } = formData;
 
     const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -25,6 +26,10 @@ const Signup = ({ signup, isAuthenticated }) => {
         if (password === re_password) {
             signup(first_name, last_name, email, phone_number, address, password, re_password);
             setAccountCreated(true);
+            console.log("form Data", formData)
+            localStorage.setItem('user' , JSON.stringify(formData))
+            console.log(localStorage.getItem('user'))
+
         }
     };
 
@@ -36,10 +41,10 @@ const Signup = ({ signup, isAuthenticated }) => {
     }
 
     return (
-        <div className='container mt-5'>
-            <h1>הרשמה</h1>
+    <div dir='rtl' class='col-6 container-fluid jumbotron mt-5' lang="he"  style={{  justifyContent:'right'}}>
+                <h1 dir='rtl'>הרשמה</h1>
             <p>תיצור את המשתמש שלך</p>
-            <form onSubmit={e => onSubmit(e)}>
+            <form dir='rtl' onSubmit={e => onSubmit(e)}>
                 <div className='form-group'>
                     <input
                         className='form-control'

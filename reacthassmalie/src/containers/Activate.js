@@ -19,19 +19,21 @@ const Activate = ({ verify, match }) => {
     }
 
     return (
-        <div className='container'>
+        <div className='container' >
             <div
-                className='d-flex flex-column justify-content-center align-items-center'
+                className='d-flex flex-column justify-content-right align-items-center'
                 style={{ marginTop: '200px' }}
             >
-                <h1>אמת את חשבונך: </h1>
+                <h1 dir= "rtl">אמת את חשבונך: </h1>
                 <button
                     onClick={verify_account}
                     style={{ marginTop: '50px' }}
                     type='button'
                     className='btn btn-primary'
                 >
+                <div dir= "rtl">
                     לאמת
+                    </div>
                 </button>
             </div>
         </div>

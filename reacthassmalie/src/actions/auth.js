@@ -17,6 +17,8 @@ import {
     LOGOUT
 } from './types';
 
+
+
 export const load_user = () => async dispatch => {
     if (localStorage.getItem('access')) {
         const config = {
@@ -29,7 +31,6 @@ export const load_user = () => async dispatch => {
 
         try {
             const res = await axios.get(`${process.env.REACT_APP_API_URL}/auth/users/me/`, config);
-
             dispatch({
                 type: USER_LOADED_SUCCESS,
                 payload: res.data
@@ -105,6 +106,7 @@ export const login = (email, password) => async dispatch => {
             type: LOGIN_FAIL
         })
     }
+
 };
 
 export const signup = (first_name, last_name, email, phone_number, address, password, re_password) => async dispatch => {
@@ -124,7 +126,7 @@ export const signup = (first_name, last_name, email, phone_number, address, pass
             payload: res.data
         });
     } catch (err) {
-        console.log("here",err)
+        
         dispatch({
             type: SIGNUP_FAIL
         })

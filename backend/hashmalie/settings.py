@@ -153,6 +153,8 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated'
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
@@ -187,3 +189,9 @@ DJOSER = {
 }
 
 AUTH_USER_MODEL = "hassmalieapp.UserAccount"
+
+
+CORS_ORIGIN_WHITELIST = (
+     'localhost:3000/',
+    'localhost:8000/',
+ )

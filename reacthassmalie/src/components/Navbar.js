@@ -3,13 +3,14 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logout } from '../actions/auth';
 
+
 const Navbar = ({ logout, isAuthenticated }) => {
 //
 //    const logout_user = () => {
 //        logout();
 //        setRedirect(true);
 //    };
-    console.log("params",logout, isAuthenticated)
+
     const guestLinks = () => (
         <Fragment>
             <li className='nav-item'>
@@ -29,11 +30,15 @@ const Navbar = ({ logout, isAuthenticated }) => {
         <li className='nav-item'>
                 <Link className='nav-link' to='/homepage'>העסק שלי</Link>
         </li>
+        <li className='nav-item'>
+            <Link className='nav-link'>ברוך הבא משתמש חדש</Link>
+        </li>
+
     </Fragment>
     );
 
     return (
-            <nav className='navbar navbar-expand-lg navbar-light bg-light'>
+            <nav className='navbar navbar-expand-lg navbar-light bg-light' lang="he" dir="rtl">
                 <Link className='navbar-brand' to='/'>החשמלאי</Link>
                 <button
                     className='navbar-toggler'

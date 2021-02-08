@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,  Fragment } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { login } from '../actions/auth';
@@ -25,11 +25,13 @@ const Login = ({ login, isAuthenticated }) => {
     }
 
     return (
-        <div className='container mt-5'>
-            <h1>כניסה</h1>
-            <p>כניסה לחשבון שלך</p>
+    <html  lang="he" dir="rtl" >
+    <div  class='col-4 container-fluid jumbotron mt-5' lang="he"  style={{display: 'flex',  justifyContent:'center', alignItems:'center', height: '70vh'}}>
+        <div className='container mt-5' dir= "rtl" >
+            <h1 dir= "rtl">כניסה</h1>
+            <p dir= "rtl">כניסה לחשבון שלך</p>
             <form onSubmit={e => onSubmit(e)}>
-                <div className='form-group'>
+                <div className='form-group' dir= "rtl">
                     <input
                         className='form-control'
                         type='email'
@@ -52,15 +54,17 @@ const Login = ({ login, isAuthenticated }) => {
                         required
                     />
                 </div>
-                <button className='btn btn-primary' type='submit'>כניסה</button>
+                <button className='btn btn-primary' dir= "rtl" type='submit'>כניסה</button>
             </form>
-            <p className='mt-3'>
+            <p className='mt-3' dir= "rtl">
                 עדין לא עשית חשבון? <Link to='/signup'>תירשם</Link>
             </p>
             <p className='mt-3'>
                 שכחת את הסיסמה? <Link to='/reset-password'>לאפס את הסיסמה</Link>
             </p>
         </div>
+        </div>
+        </html>
     );
 };
 
