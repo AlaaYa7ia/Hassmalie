@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { signup } from '../actions/auth';
+//import Select from 'react-select'
 
 const Signup = ({ signup, isAuthenticated }) => {
     const [accountCreated, setAccountCreated] = useState(false);
@@ -9,14 +10,20 @@ const Signup = ({ signup, isAuthenticated }) => {
         first_name: '',
         last_name: '',
         email: '',
+        title: '',
         phone_number: '',
         address: '',
         password: '',
         re_password: ''
     });
+    const options = [
+  { value: 'M', label: 'מנהל' },
+  { value: 'D', label: 'סגן מנהל' },
+  { value: 'R', label: 'עובד חשמל' }
+]
 
 
-    const { first_name, last_name, email, phone_number, address, password, re_password } = formData;
+    const { first_name, last_name, email,title, phone_number, address, password, re_password } = formData;
 
     const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
 
@@ -24,7 +31,7 @@ const Signup = ({ signup, isAuthenticated }) => {
         e.preventDefault();
 
         if (password === re_password) {
-            signup(first_name, last_name, email, phone_number, address, password, re_password);
+            signup(first_name, last_name, email,title, phone_number, address, password, re_password);
             setAccountCreated(true);
             console.log("form Data", formData)
             localStorage.setItem('user' , JSON.stringify(formData))
@@ -78,6 +85,19 @@ const Signup = ({ signup, isAuthenticated }) => {
                         required
                     />
                 </div>
+
+                <div className='form-group'>
+                    <input
+                        className='form-control'
+                        type='text'
+                        placeholder='סוג עובד*'
+                        name='title'
+                        value={title}
+                        onChange={e => onChange(e)}
+                        required
+                    />
+                </div>
+
                 <div className='form-group'>
                     <input
                         className='form-control'

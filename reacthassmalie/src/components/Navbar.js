@@ -1,15 +1,18 @@
-import React, { Fragment } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { logout } from '../actions/auth';
+import { logout, get_user_data } from '../actions/auth';
 
 
-const Navbar = ({ logout, isAuthenticated }) => {
-//
-//    const logout_user = () => {
-//        logout();
-//        setRedirect(true);
-//    };
+const Navbar = ({ get_user_data,logout, isAuthenticated}) => {
+    const [data, setData] = useState("");
+
+    useEffect(() => {
+        get_user_data().then((dataRes) => {
+            setData(dataRes);
+        });
+    }, []);
+
 
     const guestLinks = () => (
         <Fragment>
@@ -23,6 +26,7 @@ const Navbar = ({ logout, isAuthenticated }) => {
     );
 
     const authLinks = () => (
+
     <Fragment>
         <li className='nav-item'>
             <a className='nav-link' href='#!' onClick={logout}>ליציאה</a>
@@ -30,14 +34,16 @@ const Navbar = ({ logout, isAuthenticated }) => {
         <li className='nav-item'>
                 <Link className='nav-link' to='/homepage'>העסק שלי</Link>
         </li>
-        <li className='nav-item'>
-            <Link className='nav-link'>ברוך הבא משתמש חדש</Link>
-        </li>
+        {<li className='nav-item'>
+            <Link className='nav-link'>ברוך הבא {data.first_name+ " " + data.last_name}</Link>
+        </li>}
+
 
     </Fragment>
     );
 
     return (
+
             <nav className='navbar navbar-expand-lg navbar-light bg-light' lang="he" dir="rtl">
                 <Link className='navbar-brand' to='/'>החשמלאי</Link>
                 <button
@@ -56,6 +62,7 @@ const Navbar = ({ logout, isAuthenticated }) => {
                         <li className='nav-item active'>
                             <Link className='nav-link' to='/'>עמוד הבית <span className='sr-only'>(current)</span></Link>
                         </li>
+
                         {isAuthenticated ? authLinks() : guestLinks()}
                     </ul>
                 </div>
@@ -65,6 +72,6 @@ const Navbar = ({ logout, isAuthenticated }) => {
 
 const mapStateToProps = state => ({
     isAuthenticated: state.auth.isAuthenticated
-});
+    });
 
-export default connect(mapStateToProps, { logout })(Navbar);
+export default connect(mapStateToProps, { logout, get_user_data })(Navbar);

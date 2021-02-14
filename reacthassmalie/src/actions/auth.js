@@ -18,7 +18,7 @@ import {
 } from './types';
 
 
-
+let name = "name";
 export const load_user = () => async dispatch => {
     if (localStorage.getItem('access')) {
         const config = {
@@ -35,6 +35,7 @@ export const load_user = () => async dispatch => {
                 type: USER_LOADED_SUCCESS,
                 payload: res.data
             });
+            name = res.data.first_name +" "+ res.data.last_name;
         } catch (err) {
             dispatch({
                 type: USER_LOADED_FAIL
@@ -109,14 +110,14 @@ export const login = (email, password) => async dispatch => {
 
 };
 
-export const signup = (first_name, last_name, email, phone_number, address, password, re_password) => async dispatch => {
+export const signup = (first_name, last_name, email, title, phone_number, address, password, re_password) => async dispatch => {
     const config = {
         headers: {
             'Content-Type': 'application/json'
         }
     };
 
-    const body = JSON.stringify({ first_name, last_name, email, phone_number, address, password, re_password });
+    const body = JSON.stringify({ first_name, last_name, email, title, phone_number, address, password, re_password });
 
     try {
         const res = await axios.post(`${process.env.REACT_APP_API_URL}/auth/users/`, body, config);
@@ -203,4 +204,32 @@ export const logout = () => dispatch => {
     dispatch({
         type: LOGOUT
     });
+};
+
+
+
+
+
+export const get_user_data = () => async dispatch => {
+    if (localStorage.getItem('access')) {
+    const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `JWT ${localStorage.getItem('access')}`,
+                'Accept': 'application/json'
+            }
+        };
+         try {
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}/auth/users/me/`, config);
+            let name = res.data;
+            return name;
+
+
+        } catch (err) {
+            console.log(err);
+            return "";
+        }
+    } else {
+        return ""
+    }
 };
