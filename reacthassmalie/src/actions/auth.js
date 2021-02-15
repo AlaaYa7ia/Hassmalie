@@ -18,7 +18,7 @@ import {
 } from './types';
 
 
-let name = "name";
+
 export const load_user = () => async dispatch => {
     if (localStorage.getItem('access')) {
         const config = {
@@ -35,7 +35,6 @@ export const load_user = () => async dispatch => {
                 type: USER_LOADED_SUCCESS,
                 payload: res.data
             });
-            name = res.data.first_name +" "+ res.data.last_name;
         } catch (err) {
             dispatch({
                 type: USER_LOADED_FAIL
@@ -221,8 +220,8 @@ export const get_user_data = () => async dispatch => {
         };
          try {
             const res = await axios.get(`${process.env.REACT_APP_API_URL}/auth/users/me/`, config);
-            let name = res.data;
-            return name;
+            let id = res.data;
+            return id;
 
 
         } catch (err) {

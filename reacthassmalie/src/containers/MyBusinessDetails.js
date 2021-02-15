@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import axios from "axios";
 import { connect } from 'react-redux';
 import {get_user_data } from '../actions/auth';
+import { Link, Redirect } from 'react-router-dom';
 
 
 //class MyBusinessDetailsIner extends React.Component {
@@ -43,37 +44,73 @@ import {get_user_data } from '../actions/auth';
 //}
 
 const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
-    const [data, setData] = useState("");
-    useEffect(() => {
-        get_user_data().then((dataRes) => {
-            setData(dataRes);
-        });
+    const [manager, setManager] = useState("");
+    const [director, setDirector] = useState("");
+    const [cars, setCars] = useState("");
+    const [business, setBusiness] = useState("");
+
+     useEffect(() => {
+        (async () => {
+        await get_user_data().then((dataRes) => {
+            axios
+          .get("/api/users/"+ dataRes.id +"/")
+          .then((dataRes) => {
+            setManager(dataRes.data);
+
+           })
+
+           axios
+          .get("/api/my-business/"+ dataRes.id +"/")
+          .then((dataRes) => {
+            setBusiness(dataRes.data);
+
+           })
+        })
+        })();
+
     }, []);
 
         return(
       <div>
-    <p>user: {JSON.stringify(data)}</p>
+
+    <p>API: {JSON.stringify(manager)}</p>
 
     <html lang="he" >
         <head>
         <meta charset="utf-8"></meta>
         </head>
         <body dir="rtl">
+
+
+
+        <div class = "container-fluid">
+        <div className='container' >
+           <div class = "row ">
+           <div class='jumbotron mt-5 col-6'>
+                <h1 class='display-4'>{business.name}</h1>
+           </div>
+           <div class='jumbotron mt-5 col-6'>
+                <img src={require('./pic.png').default} height={250} width={250} alt="stam pic"></img>
+           </div>
+            </div>
+        </div>
+        </div>
+
         <div class = "container-fluid">
         <div class = "row ">
         <div className='container' class="col-6" >
            <div class = "row ">
            <div class='jumbotron mt-5 col-5'>
                 <h1 class='display-4'>מנהל העסק</h1>
-                <p class='lead'>שם פרטי: {data.first_name}</p>
-                <p class='lead'>שם משפחה: {data.last_name}</p>
-                <p class='lead'>מספר טילפון: {data.phone_number}</p>
-                <p class='lead'>איימיל: {data.email}</p>
-                <p class='lead'>כתובת מגורים: {data.address}</p>
-                <p class='lead'>גיל: {data.age}</p>
+                <p class='lead'>שם פרטי: {manager.first_name }</p>
+                <p class='lead'>שם משפחה: {manager.last_name}</p>
+                <p class='lead'>מספר טילפון: {manager.phone_number}</p>
+                <p class='lead'>איימיל: {manager.email}</p>
+                <p class='lead'>כתובת מגורים: {manager.address}</p>
+                <p class='lead'>גיל: {manager.age}</p>
            </div>
            <div class='jumbotron mt-5 col-5'>
-                <img src="../public/logo512.png" alt="stam pic"></img>
+                <img src="./public/logo512.png" alt="stam pic"></img>
            </div>
            </div>
         </div>
