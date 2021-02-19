@@ -11,10 +11,10 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
     const [directorExtra, setDirectorExtra] = useState("");
     const [cars, setCars] = useState([]);
     const [business, setBusiness] = useState("");
+    const [newUser, setNewUser] = useState("");
 
 
      useEffect(() => {
-
         (async () => {
         await get_user_data().then((dataRes) => {
             axios
@@ -23,6 +23,7 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
             setManager(dataRes.data);
 
            })
+
             axios
           .get("/api/cars/"+dataRes.id+"/")
           .then((dataRes) => {
@@ -59,12 +60,13 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
     }, []);
 
         return(
-      <div>
+    <div>
 
     <p>API: {JSON.stringify(manager)}</p>
     <p>Director: {JSON.stringify(director)}</p>
     <p>DirectorExtra: {JSON.stringify(directorExtra)}</p>
     <p>Cars: {JSON.stringify(cars)}</p>
+    <p>NewUser: {JSON.stringify(newUser)}</p>
 
     <html lang="he" >
         <head>
@@ -146,6 +148,7 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
         </div>
         </div>
         </div>
+        <p class='lead'> <Link to='/my-business-details-update'>עדכן את פרטי העסק שלי</Link></p>
         </body>
     </html>
       </div>
@@ -156,3 +159,12 @@ const mapStateToProps = state => ({
     isAuthenticated: state.auth.isAuthenticated
     });
 export default connect(mapStateToProps, { get_user_data })(MyBusinessDetails);
+
+
+//axios
+//          .post("/api/users/",{first_name: "new", last_name: "user", phone_number: 987987
+//          , email: "hello@gmail.com", address: "fnkl", password: "Ma7ashveem", title: "R" })
+//          .then((dataRes) => {
+//            setNewUser(dataRes.data);
+//
+//            })

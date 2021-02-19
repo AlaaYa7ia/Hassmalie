@@ -14,6 +14,7 @@ import WorkersManagement from './containers/WorkersManagement';
 import WorkSchedule from './containers/WorkSchedule';
 import ProjectsManagement from './containers/ProjectsManagement';
 import Financial from './containers/Financial';
+import MyBusinessDetailsUpdate from './containers/MyBusinessDetailsUpdate';
 
 
 import { Provider } from 'react-redux';
@@ -34,6 +35,7 @@ const App = () => (
                     <Route exact path='/activate/:uid/:token' component={Activate} />
                     <PrivateRoute exact path='/homepage' component={Homepage} />
                     <Route exact path='/my-business-details' component={MyBusinessDetails} />
+                    <Route exact path='/my-business-details-update' component={MyBusinessDetailsUpdate} />
                     <Route exact path='/workers-management' component={WorkersManagement} />
                     <Route exact path='/work-schedule' component={WorkSchedule} />
                     <Route exact path='/financial' component={Financial} />

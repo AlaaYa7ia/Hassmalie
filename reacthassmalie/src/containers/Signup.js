@@ -34,7 +34,7 @@ const Signup = ({ signup, isAuthenticated }) => {
             signup(first_name, last_name, email,title, phone_number, address, password, re_password);
             setAccountCreated(true);
             console.log("form Data", formData)
-            localStorage.setItem('user' , JSON.stringify(formData))
+            localStorage.setItem('user' , JSON.stringify(formData))//check if you added this or from the original
             console.log(localStorage.getItem('user'))
 
         }
