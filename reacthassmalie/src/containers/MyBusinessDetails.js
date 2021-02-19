@@ -5,51 +5,16 @@ import { connect } from 'react-redux';
 import {get_user_data } from '../actions/auth';
 import { Link, Redirect } from 'react-router-dom';
 
-
-//class MyBusinessDetailsIner extends React.Component {
-//  constructor(props) {
-//    super(props);
-//      console.log("MyBusinessDetails"
-//      );
-//    this.state = {
-//        user: "",
-//
-////        usersList: [],
-//    };
-//    console.log("this.state.userProp", this.state.userProp)
-//
-//    console.log("useeer", this.state.user)
-//  }
-//
-//
-//  componentDidMount() {
-//  console.log("componentDidMount");
-//    this.refreshList();
-//  }
-//
-//
-//  refreshList = () => {
-//  console.log("refreshList");
-//  this.setState({ user: this.props.user});
-////    axios
-////      .get("/api/users/"+ this.state.id+"/")
-////      .then(res => {this.setState({ usersList: res.data})
-////      })
-////      .catch(err => console.log(err));
-//  };
-//  render(){
-//  //console.log(this.state.usersList); //prints the data
-//  // inside the Return : <p>{JSON.stringify(this.state.usersList)}</p>
-//
-//}
-
 const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
     const [manager, setManager] = useState("");
     const [director, setDirector] = useState("");
-    const [cars, setCars] = useState("");
+    const [directorExtra, setDirectorExtra] = useState("");
+    const [cars, setCars] = useState([]);
     const [business, setBusiness] = useState("");
 
+
      useEffect(() => {
+
         (async () => {
         await get_user_data().then((dataRes) => {
             axios
@@ -58,13 +23,36 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
             setManager(dataRes.data);
 
            })
+            axios
+          .get("/api/cars/"+dataRes.id+"/")
+          .then((dataRes) => {
+            setCars(dataRes.data);})
 
            axios
           .get("/api/my-business/"+ dataRes.id +"/")
           .then((dataRes) => {
             setBusiness(dataRes.data);
 
+
+             return dataRes.data.deputy_director
+
+           }).then((dataRes) => {
+            axios
+          .get("/api/workers/"+ dataRes +"/")
+          .then((dataRes) => {
+            setDirectorExtra(dataRes.data);
+             return dataRes.data.user
+            }).then((dataRes) => {
+            axios
+          .get("/api/users/"+ dataRes +"/")
+          .then((dataRes) => {
+            setDirector(dataRes.data);
+
+            })
+
            })
+           })
+
         })
         })();
 
@@ -74,6 +62,9 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
       <div>
 
     <p>API: {JSON.stringify(manager)}</p>
+    <p>Director: {JSON.stringify(director)}</p>
+    <p>DirectorExtra: {JSON.stringify(directorExtra)}</p>
+    <p>Cars: {JSON.stringify(cars)}</p>
 
     <html lang="he" >
         <head>
@@ -118,19 +109,42 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
            <div class = "row ">
            <div class='jumbotron mt-5 col-5'>
                 <h1 class='display-4'>סגן מנהל</h1>
-                <p class='lead'>שם פרטי: </p>
-                <p class='lead'>שם משפחה: </p>
-                <p class='lead'>מספר טילפון: </p>
-                <p class='lead'>איימיל: </p>
-                <p class='lead'>כתובת מגורים: </p>
-                <p class='lead'>גיל: </p>
+                <p class='lead'>שם פרטי: {director.first_name}</p>
+                <p class='lead'>שם משפחה: {director.last_name} </p>
+                <p class='lead'>מספר טילפון: {director.phone_number}</p>
+                <p class='lead'>איימיל: {director.email}</p>
+                <p class='lead'>כתובת מגורים: {director.address}</p>
+                <p class='lead'>גיל: {director.age}</p>
+                <p class='lead'>תוקף של רשיון שהיה בארץ: {directorExtra.license}</p>
            </div>
-           <div class='jumbotron mt-5 col-5'>
+           <div class='jumbotron mt-5'>
                 <img src="../public/logo512.png" alt="stam pic"></img>
            </div>
            </div>
         </div>
-            </div>
+
+        <div class = "container-fluid" dir="rtl">
+           <div class='jumbotron mt-5'>
+                <h1 class='display-4'>רכבים בעסק</h1>
+
+             {cars.map(car => (
+            <div class = "row ">
+           <div class='col-6'>
+                <h2 >רכב מספר {car.id}</h2>
+                <p class='lead'>מספר רישוי: {car.license_number}</p>
+                <p class='lead'>תוקף רישוי: {car.license_validity} </p>
+                <p class='lead'>תוקף ביטוח: {car.insurance_validity}</p>
+                <p class='lead'>ביטוח עד גיל: {car.insurance_up_to_age}</p>
+           </div>
+           <div class='col-6'>
+                <img src={car.image} alt="stam pic"></img>
+           </div>
+
+           </div>
+          ))}
+        </div>
+        </div>
+        </div>
         </div>
         </body>
     </html>

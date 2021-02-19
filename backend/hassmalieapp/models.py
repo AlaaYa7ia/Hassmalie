@@ -58,20 +58,20 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
 
 class Worker(models.Model):
     user = models.OneToOneField(UserAccount, on_delete=models.CASCADE, primary_key=True, default=None)
-    # user.title = models.CharField(max_length=70)
     license = models.DateField(default=None)
-    report_id = models.IntegerField(default=None)#change it to model report
-    REQUIRED_FIELDS = ['user','license', 'report_id']
+    REQUIRED_FIELDS = ['user','license']
 
     def __str__(self):
-        return self.license
+        return str(self.user)
 
 
 class MyBusiness(models.Model):
     manager = models.OneToOneField(UserAccount, related_name='M', on_delete=models.PROTECT)
-    #deputy_director = models.OneToOneField(UserAccount, related_name='D', on_delete=models.PROTECT, default="Director")
+    deputy_director = models.OneToOneField(Worker, on_delete=models.PROTECT, default=1)
     name = models.CharField(max_length=255)
     logo = models.ImageField()
+    #fanincial_id
+    REQUIRED_FIELDS = ['manager','deputy_director', 'name']
 
     def __str__(self):
         return self.name
@@ -87,5 +87,40 @@ class Car(models.Model):
     image = models.ImageField()
 
     def __str__(self):
-        return self.license_number
+        return str(self.license_number)
+
+
+class Costumer(models.Model):
+    email = models.EmailField(max_length=255, unique=True)
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
+    phone_number = models.IntegerField(default=None)
+    address = models.CharField(max_length=255)
+    def __str__(self):
+            return self.first_name
+
+
+class Project(models.Model):
+    type_of_building = models.CharField(max_length=255)
+    address = models.CharField(max_length=255)
+    contractor_id = models.OneToOneField(Worker,related_name='contractor_id', on_delete=models.PROTECT)
+    architect_id = models.OneToOneField(Worker,related_name='architect_id', on_delete=models.PROTECT)
+    owner_id = models.OneToOneField(Costumer, on_delete=models.PROTECT)
+    #file_storage_id =
+    #bid_id =
+    def __str__(self):
+            return str(self.contractor_id)
+
+
+class Report(models.Model):
+        worker_id = models.OneToOneField(Worker, on_delete=models.PROTECT)
+        project_id = models.OneToOneField(Project, on_delete=models.PROTECT)
+        reporting_date = models.DateField(default=None)
+        start_time = models.TimeField()
+        end_time =  models.TimeField()
+        #file storage id
+        description = models.TextField()
+        def __str__(self):
+            return str(self.worker_id)
+
 
