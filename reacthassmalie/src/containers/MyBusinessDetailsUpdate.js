@@ -7,14 +7,14 @@ import { Link, Redirect } from 'react-router-dom';
 
 const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
     const [formData, setFormData] = useState({
-        id:'',
         first_name: '',
         last_name: '',
         email: '',
         title: '',
         phone_number: '',
+        age: '',
         address: '',
-        age: ''
+        password: '',
     });
 
     const options = [
@@ -36,21 +36,22 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
     }, []);
 
 
-    const { first_name, last_name, email,title, phone_number, address, age } = formData;
+    const { first_name, last_name, email,title, phone_number, age, address, password} = formData;
 
     const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
 
     const onSubmit = e => {
         e.preventDefault();
-//        axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
-//        axios.defaults.xsrfCookieName = "csrftoken";
-//        axios.defaults.withCredentials = true;
+        axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+        axios.defaults.xsrfCookieName = "csrftoken";
+        axios.defaults.withCredentials = true;
            axios
-          .put("/api/users/"+formData.id+"/",{first_name: first_name, last_name: last_name
-          , email: email,title: title, phone_number: phone_number,age: age, address: address})
+          .put("/api/users/"+formData.id+"/",
+          /*{first_name: first_name, last_name: last_name,email: email,title: title, phone_number: phone_number,age: age, address: address}*/
+          {first_name: first_name, last_name: last_name, phone_number: phone_number , email: email, address: address, password: password, title: title, age: age })
           .then((dataRes) => {
                 setFormData(dataRes.data)
-            })
+            }).catch(err=>{ console.log("err")})
                //if changed title or email?
     };
 
