@@ -29,7 +29,7 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     USER_TYPE = (
         ('M', 'Manager'),
         ('D', 'Deputy Director'),
-        ('R', 'Regular'),
+        #('R', 'Regular'),
     )
     email = models.EmailField(max_length=255, unique=True)
     first_name = models.CharField(max_length=255)
@@ -57,19 +57,31 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
 
 
 class Worker(models.Model):
-    user = models.OneToOneField(UserAccount, on_delete=models.CASCADE, primary_key=True, default=None)
+    #user = models.OneToOneField(UserAccount, on_delete=models.CASCADE, primary_key=True, default=None)
+    WORKER_TYPE = (
+        ('R', 'Regular'),
+        ('C', 'contractor'),
+        ('A', 'Architect'),
+    )
+    email = models.EmailField(max_length=255, unique=True, default=None)
+    first_name = models.CharField(max_length=255, default=None)
+    last_name = models.CharField(max_length=255, default=None)
+    phone_number = models.IntegerField(default=None)
+    address = models.CharField(max_length=255, default=None)
+    age = models.IntegerField(default=0)
+    title = models.CharField(max_length=1, choices=WORKER_TYPE, default='R')
     license = models.DateField(default=None)
-    REQUIRED_FIELDS = ['user','license']
+    REQUIRED_FIELDS = ['email', 'first_name', 'last_name', 'phone_number', 'address', 'age', 'title', 'license']
 
     def __str__(self):
-        return str(self.user)
+        return str(self.email)
 
 
 class MyBusiness(models.Model):
     manager = models.OneToOneField(UserAccount, related_name='M', on_delete=models.PROTECT)
-    deputy_director = models.OneToOneField(Worker, on_delete=models.PROTECT, default=1)
+    deputy_director = models.OneToOneField(UserAccount, related_name='D', on_delete=models.PROTECT)
     name = models.CharField(max_length=255)
-    logo = models.ImageField()
+    logo = models.ImageField(upload_to='images/') # maybe if we make another name like: bussines Images we can orginize things in files
     #fanincial_id
     REQUIRED_FIELDS = ['manager','deputy_director', 'name']
 

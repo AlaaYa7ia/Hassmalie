@@ -8,7 +8,6 @@ import { Link, Redirect } from 'react-router-dom';
 const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
     const [manager, setManager] = useState("");
     const [director, setDirector] = useState("");
-    const [directorExtra, setDirectorExtra] = useState("");
     const [cars, setCars] = useState([]);
     const [business, setBusiness] = useState("");
     const [newUser, setNewUser] = useState("");
@@ -39,19 +38,10 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
 
            }).then((dataRes) => {
             axios
-          .get("/api/workers/"+ dataRes +"/")
-          .then((dataRes) => {
-            setDirectorExtra(dataRes.data);
-             return dataRes.data.user
-            }).then((dataRes) => {
-            axios
           .get("/api/users/"+ dataRes +"/")
           .then((dataRes) => {
             setDirector(dataRes.data);
-
             })
-
-           })
            })
 
         })
@@ -64,7 +54,6 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
 
     <p>API: {JSON.stringify(manager)}</p>
     <p>Director: {JSON.stringify(director)}</p>
-    <p>DirectorExtra: {JSON.stringify(directorExtra)}</p>
     <p>Cars: {JSON.stringify(cars)}</p>
     <p>NewUser: {JSON.stringify(newUser)}</p>
 
@@ -117,7 +106,6 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
                 <p class='lead'>איימיל: {director.email}</p>
                 <p class='lead'>כתובת מגורים: {director.address}</p>
                 <p class='lead'>גיל: {director.age}</p>
-                <p class='lead'>תוקף של רשיון שהיה בארץ: {directorExtra.license}</p>
            </div>
            <div class='jumbotron mt-5'>
                 <img src="../public/logo512.png" alt="stam pic"></img>

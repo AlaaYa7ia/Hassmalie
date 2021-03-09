@@ -17,14 +17,15 @@ class CarCreateSerializer(serializers.ModelSerializer):
 class WorkerCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Worker
-        fields = ('user', 'license')
+        fields = ('id', 'email', 'first_name', 'last_name', 'phone_number', 'address', 'age', 'title', 'license')
 
 
 class MyBusinessCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = MyBusiness
         manager = UserCreateSerializer(many=False)
-        deputy_director = WorkerCreateSerializer(many=False)
+        deputy_director = UserCreateSerializer(many=False)
+        logo = serializers.FileField(max_length=None, use_url=True, required=False)
         fields = ('manager','deputy_director', 'name', 'logo')
 
 

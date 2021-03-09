@@ -3,24 +3,21 @@ import ReactDOM from "react-dom";
 import axios from "axios";
 import { connect } from 'react-redux';
 import {get_user_data, logout } from '../actions/auth';
-import { Link, Redirect } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
+
+import MyBusinessDetails from '../containers/MyBusinessDetails';
+
 
 const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
-    const [formData, setFormData] = useState({
-        first_name: '',
-        last_name: '',
-        email: '',
-        title: '',
-        phone_number: '',
-        age: '',
-        address: '',
-        password: '',
-    });
+    const [manager, setManager] = useState("");
+    const [director, setDirector] = useState("");
+    const [cars, setCars] = useState([]);
+    const [business, setBusiness] = useState("");
+    const [newUser, setNewUser] = useState("");
+    const [title,setTitle] = useState('dfv')
+    const [body,setBody] = useState('vdfvdfd')
 
-    const options = [
-    { value: 'M', label: 'מנהל' },
-    { value: 'D', label: 'סגן מנהל' },
-    { value: 'R', label: 'עובד חשמל' }];
+
 
     useEffect(() => {
         (async () => {
@@ -28,77 +25,154 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
             axios
           .get("/api/users/"+ dataRes.id +"/")
           .then((dataRes) => {
-            setFormData(dataRes.data);
+            setManager(dataRes.data);
 
            })
+
+            axios
+          .get("/api/cars/"+dataRes.id+"/")
+          .then((dataRes) => {
+            setCars(dataRes.data);})
+
+           axios
+          .get("/api/my-business/"+ dataRes.id +"/")
+          .then((dataRes) => {
+            setBusiness(dataRes.data);
+             return dataRes.data.deputy_director
+
+           }).then((dataRes) => {
+            axios
+          .get("/api/users/"+ dataRes +"/")
+          .then((dataRes) => {
+            setDirector(dataRes.data);
+            })
            })
+        })
         })();
+
     }, []);
 
+    let fileSelectedHandler = event =>{
+    console.log(event.target.files[0]);
+    setBusiness({...business,logo: event.target.files[0] })
 
-    const { first_name, last_name, email,title, phone_number, age, address, password} = formData;
+    }
+    console.log(business)
+    const managerChange = e => setManager({ ...manager, [e.target.name]: e.target.value });
+    const directorChange = e => setDirector({ ...director, [e.target.name]: e.target.value });
+    const businessChange = e => setBusiness({ ...business, [e.target.name]: e.target.value });
 
-    const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
-
-    const onSubmit = e => {
+    const mangerSubmit = e => {
         e.preventDefault();
         axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
         axios.defaults.xsrfCookieName = "csrftoken";
         axios.defaults.withCredentials = true;
-           axios
-          .put("/api/users/"+formData.id+"/",
-          /*{first_name: first_name, last_name: last_name,email: email,title: title, phone_number: phone_number,age: age, address: address}*/
-          {first_name: first_name, last_name: last_name, phone_number: phone_number , email: email, address: address, password: password, title: title, age: age })
-          .then((dataRes) => {
-                setFormData(dataRes.data)
-            }).catch(err=>{ console.log("err")})
-               //if changed title or email?
+        axios
+        .put("/api/users/"+manager.id+"/",
+        {first_name: manager.first_name, last_name: manager.last_name, phone_number: manager.phone_number ,
+        email: manager.email, address: manager.address, password: manager.password, title: manager.title, age: manager.age })
+        .then((dataRes) => {
+            setManager(dataRes.data)
+        }).catch(err=>{ console.log("err")})
+        //if changed title or email?
     };
 
+    const directorSubmit = e => {
+        e.preventDefault();
+        axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+        axios.defaults.xsrfCookieName = "csrftoken";
+        axios.defaults.withCredentials = true;
+        axios
+        .put("/api/users/"+director.id+"/",
+        {first_name: director.first_name, last_name: director.last_name, phone_number: director.phone_number ,
+        email: director.email, address: director.address, password: director.password, title: director.title, age: director.age })
+        .then((dataRes) => {
+            setDirector(dataRes.data)
+        }).catch(err=>{ console.log("err")})
+        //if changed title or email?
+    };
+     const businessSubmit = e => {
+        e.preventDefault();
+        console.log("bus befir submit: ", business)
+
+        const formData = new FormData();
+        console.log("business.logo", business.logo)
+        formData.append(
+        "logo",
+        business.logo,
+        business.logo.name
+        );
+
+        formData.append('manager', business.manager);
+        formData.append('deputy_director', business.deputy_director);
+        formData.append('name', business.name);
+
+
+        axios({
+  method: 'put',
+  url: "/api/my-business/"+business.manager+"/",
+  data: formData,
+  header: {
+            'Accept': 'application/json',
+            'Content-Type': 'multipart/form-data',
+          },
+    })
+        .then((dataRes) => {
+            setBusiness(dataRes.data)
+            console.log(dataRes.data)
+        }).catch(err=>{ console.log("err", err.response)})
+     };
+
     return (
-    <div dir='rtl' class='col-6 container-fluid jumbotron mt-5' lang="he"  style={{  justifyContent:'right'}}>
-                <h1 dir='rtl'>עדכון הפרטי העסק שלי</h1>
-            <p>תעדכן את המשתמש שלך</p>
-            <form dir='rtl' onSubmit={e => onSubmit(e)}>
+
+
+    <div dir='rtl' class=' container-fluid jumbotron mt-5' lang="he"  style={{  justifyContent:'right'}}>
+            <h1 dir='rtl'>עדכון הפרטים העסק שלי</h1>
+
+            <form dir='rtl' onSubmit={e => businessSubmit(e)}>
+                <p>תעדכן את פרטי העסק</p>
                 <div className='form-group'>
                     <input
                         className='form-control'
                         type='text'
-                        placeholder={first_name}
-                        name='first_name'
-                        value={first_name}
-                        onChange={e => onChange(e)}
+                        placeholder={business.name}
+                        name='name'
+                        value={business.name}
+                        onChange={e => businessChange(e)}
                     />
                 </div>
                 <div className='form-group'>
-                    <input
-                        className='form-control'
-                        type='text'
-                        placeholder={last_name}
-                        name='last_name'
-                        value={last_name}
-                        onChange={e => onChange(e)}
-                    />
-                </div>
-                <div className='form-group'>
-                    <input
-                        className='form-control'
-                        type='email'
-                        placeholder={email}
-                        name='email'
-                        value={email}
-                        onChange={e => onChange(e)}
-                    />
+                <input className='form-group'
+                type = 'file'
+                onChange={e => fileSelectedHandler(e)}
+                />
                 </div>
 
+                <button className='btn btn-primary' type='submit'>עדכן פרטים העסק</button>
+            </form>
+
+            <div class = "container-fluid row">
+
+            <form  onSubmit={e => mangerSubmit(e)}>
+                <p>תעדכן את המשתמש שלך</p>
                 <div className='form-group'>
                     <input
                         className='form-control'
                         type='text'
-                        placeholder={title}
-                        name='title'
-                        value={title}
-                        onChange={e => onChange(e)}
+                        placeholder={manager.first_name}
+                        name='first_name'
+                        value={manager.first_name}
+                        onChange={e => managerChange(e)}
+                    />
+                </div>
+                <div className='form-group'>
+                    <input
+                        className='form-control'
+                        type='text'
+                        placeholder={manager.last_name}
+                        name='last_name'
+                        value={manager.last_name}
+                        onChange={e => managerChange(e)}
                     />
                 </div>
 
@@ -106,10 +180,10 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
                     <input
                         className='form-control'
                         type='number'
-                        placeholder={phone_number}
+                        placeholder={manager.phone_number}
                         name='phone_number'
-                        value={phone_number}
-                        onChange={e => onChange(e)}
+                        value={manager.phone_number}
+                        onChange={e => managerChange(e)}
                         minLength='8'
                     />
                 </div>
@@ -117,10 +191,10 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
                     <input
                         className='form-control'
                         type='number'
-                        placeholder={age}
+                        placeholder={manager.age}
                         name='age'
-                        value={age}
-                        onChange={e => onChange(e)}
+                        value={manager.age}
+                        onChange={e => managerChange(e)}
                         minLength='1'
                     />
                 </div>
@@ -128,15 +202,78 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
                     <input
                         className='form-control'
                         type='text'
-                        placeholder={address}
+                        placeholder={manager.address}
                         name='address'
-                        value={address}
-                        onChange={e => onChange(e)}
+                        value={manager.address}
+                        onChange={e => managerChange(e)}
                     />
                 </div>
 
-                <button className='btn btn-primary' type='submit'>עדכן</button>
+                <button className='btn btn-primary' type='submit'>עדכן פרטים שלי</button>
             </form>
+
+
+            <form  onSubmit={e => directorSubmit(e)}>
+            <p>תעדכן את פרטי סגן המנהל</p>
+                <div className='form-group'>
+                    <input
+                        className='form-control'
+                        type='text'
+                        placeholder={director.first_name}
+                        name='first_name'
+                        value={director.first_name}
+                        onChange={e => directorChange(e)}
+                    />
+                </div>
+                <div className='form-group'>
+                    <input
+                        className='form-control'
+                        type='text'
+                        placeholder={director.last_name}
+                        name='last_name'
+                        value={director.last_name}
+                        onChange={e => directorChange(e)}
+                    />
+                </div>
+
+                <div className='form-group'>
+                    <input
+                        className='form-control'
+                        type='number'
+                        placeholder={director.phone_number}
+                        name='phone_number'
+                        value={director.phone_number}
+                        onChange={e => directorChange(e)}
+                        minLength='8'
+                    />
+                </div>
+                <div className='form-group'>
+                    <input
+                        className='form-control'
+                        type='number'
+                        placeholder={director.age}
+                        name='age'
+                        value={director.age}
+                        onChange={e => directorChange(e)}
+                        minLength='1'
+                    />
+                </div>
+                <div className='form-group'>
+                    <input
+                        className='form-control'
+                        type='text'
+                        placeholder={director.address}
+                        name='address'
+                        value={director.address}
+                        onChange={e => directorChange(e)}
+                    />
+                </div>
+
+                <button className='btn btn-primary' type='submit'>עדכן פרטי הסגן מנהל</button>
+            </form>
+            </div>
+
+            <p class='lead'> <Link to='/my-business-details'>סיימתי עדכון</Link></p>
         </div>
     );
 };
@@ -146,4 +283,28 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps, { get_user_data, logout })(MyBusinessDetailsUpdate);
+
+
+
+//<div className='form-group'>
+//                    <input
+//                        className='form-control'
+//                        type='text'
+//                        placeholder={manager.title}
+//                        name='title'
+//                        value={manager.title}
+//                        onChange={e => onChange(e)}
+//                    />
+//                </div>
+
+//                <div className='form-group'>
+//                    <input
+//                        className='form-control'
+//                        type='email'
+//                        placeholder={manager.email}
+//                        name='email'
+//                        value={manager.email}
+//                        onChange={e => onChange(e)}
+//                    />
+//                </div>
 
