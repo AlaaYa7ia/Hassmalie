@@ -12,7 +12,6 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
     const [business, setBusiness] = useState("");
     const [newUser, setNewUser] = useState("");
 
-
      useEffect(() => {
         (async () => {
         await get_user_data().then((dataRes) => {
@@ -23,7 +22,7 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
 
            })
 
-            axios
+           axios
           .get("/api/cars/"+dataRes.id+"/")
           .then((dataRes) => {
             setCars(dataRes.data);})
@@ -32,8 +31,6 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
           .get("/api/my-business/"+ dataRes.id +"/")
           .then((dataRes) => {
             setBusiness(dataRes.data);
-
-
              return dataRes.data.deputy_director
 
            }).then((dataRes) => {
@@ -41,6 +38,7 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
           .get("/api/users/"+ dataRes +"/")
           .then((dataRes) => {
             setDirector(dataRes.data);
+
             })
            })
 
@@ -49,6 +47,7 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
 
     }, []);
 
+
         return(
     <div>
 
@@ -56,6 +55,7 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
     <p>Director: {JSON.stringify(director)}</p>
     <p>Cars: {JSON.stringify(cars)}</p>
     <p>NewUser: {JSON.stringify(newUser)}</p>
+    <p>business: {JSON.stringify(business)}</p>
 
     <html lang="he" >
         <head>
@@ -72,7 +72,7 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
                 <h1 class='display-4'>{business.name}</h1>
            </div>
            <div class='jumbotron mt-5 col-6'>
-                <img src={require('./pic.png').default} height={250} width={250} alt="stam pic"></img>
+                <img src={business.logo} height={250} width={250} ></img>
            </div>
             </div>
         </div>
@@ -92,7 +92,7 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
                 <p class='lead'>גיל: {manager.age}</p>
            </div>
            <div class='jumbotron mt-5 col-5'>
-                <img src="./public/logo512.png" alt="stam pic"></img>
+                <img src={manager.photo} height={150} width={150} ></img>
            </div>
            </div>
         </div>
@@ -108,7 +108,7 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
                 <p class='lead'>גיל: {director.age}</p>
            </div>
            <div class='jumbotron mt-5'>
-                <img src="../public/logo512.png" alt="stam pic"></img>
+                <img src={director.photo} height={150} width={150} ></img>
            </div>
            </div>
         </div>
@@ -121,13 +121,13 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
             <div class = "row ">
            <div class='col-6'>
                 <h2 >רכב מספר {car.id}</h2>
-                <p class='lead'>מספר רישוי: {car.license_number}</p>
+                    <p class='lead'>מספר רישוי: {car.license_number}</p>
                 <p class='lead'>תוקף רישוי: {car.license_validity} </p>
                 <p class='lead'>תוקף ביטוח: {car.insurance_validity}</p>
                 <p class='lead'>ביטוח עד גיל: {car.insurance_up_to_age}</p>
            </div>
            <div class='col-6'>
-                <img src={car.image} alt="stam pic"></img>
+                <img src={car.image} height={150} width={150}></img>
            </div>
 
            </div>

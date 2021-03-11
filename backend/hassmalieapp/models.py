@@ -40,6 +40,7 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)## ??
     is_staff = models.BooleanField(default=False) ##??
     title = models.CharField(max_length=1, choices=USER_TYPE, default='M')
+    photo = models.ImageField(upload_to='usersphotos/')
 
     objects = UserAccountManager()
 
@@ -81,9 +82,9 @@ class MyBusiness(models.Model):
     manager = models.OneToOneField(UserAccount, related_name='M', on_delete=models.PROTECT)
     deputy_director = models.OneToOneField(UserAccount, related_name='D', on_delete=models.PROTECT)
     name = models.CharField(max_length=255)
-    logo = models.ImageField(upload_to='images/') # maybe if we make another name like: bussines Images we can orginize things in files
+    logo = models.ImageField(upload_to='logos/')
     #fanincial_id
-    REQUIRED_FIELDS = ['manager','deputy_director', 'name']
+    REQUIRED_FIELDS = ['manager', 'name']
 
     def __str__(self):
         return self.name
@@ -96,7 +97,8 @@ class Car(models.Model):
     license_validity = models.DateField(default=None)
     insurance_validity = models.DateField(default=None)
     insurance_up_to_age = models.IntegerField(default=None)
-    image = models.ImageField()
+    image = models.ImageField(upload_to='carimages/')
+
 
     def __str__(self):
         return str(self.license_number)

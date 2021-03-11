@@ -14,8 +14,7 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
     const [cars, setCars] = useState([]);
     const [business, setBusiness] = useState("");
     const [newUser, setNewUser] = useState("");
-    const [title,setTitle] = useState('dfv')
-    const [body,setBody] = useState('vdfvdfd')
+    const [newCar, setNewCar] = useState("");
 
 
 
@@ -52,40 +51,78 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
 
     }, []);
 
-    let fileSelectedHandler = event =>{
-    console.log(event.target.files[0]);
-    setBusiness({...business,logo: event.target.files[0] })
+    let fileSelectedHandler = event =>{setBusiness({...business,logo: event.target.files[0] })}
+    let carImageHandler  = event =>{setNewCar({...newCar,image: event.target.files[0] })}
+    let directorImageHandler  = event =>{setDirector({...director, photo: event.target.files[0] })}
+    let managerImageHandler  = event =>{setManager({...manager, photo: event.target.files[0] })}
 
-    }
-    console.log(business)
+    //console.log(business)
     const managerChange = e => setManager({ ...manager, [e.target.name]: e.target.value });
     const directorChange = e => setDirector({ ...director, [e.target.name]: e.target.value });
     const businessChange = e => setBusiness({ ...business, [e.target.name]: e.target.value });
+    const newCarChange = e => setNewCar({ ...newCar, [e.target.name]: e.target.value });
 
     const mangerSubmit = e => {
         e.preventDefault();
         axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
         axios.defaults.xsrfCookieName = "csrftoken";
         axios.defaults.withCredentials = true;
+        const formData = new FormData();
+        try{
+        formData.append(
+        'photo',
+        manager.photo,
+        manager.photo.name
+        );
+        } catch(err){
+            console.log("didn't change image.")
+        }
+        formData.append('first_name', manager.first_name);
+        formData.append('last_name', manager.last_name);
+        formData.append('phone_number', manager.phone_number);
+        formData.append('email', manager.email);
+        formData.append('address', manager.address);
+        formData.append('password', manager.password);
+        formData.append('title', manager.title);
+        formData.append('age', manager.age);
+
         axios
         .put("/api/users/"+manager.id+"/",
-        {first_name: manager.first_name, last_name: manager.last_name, phone_number: manager.phone_number ,
-        email: manager.email, address: manager.address, password: manager.password, title: manager.title, age: manager.age })
+        formData
+        )
         .then((dataRes) => {
             setManager(dataRes.data)
-        }).catch(err=>{ console.log("err")})
+        }).catch(err=>{ console.log("err", err.response)})
         //if changed title or email?
     };
+
 
     const directorSubmit = e => {
         e.preventDefault();
         axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
         axios.defaults.xsrfCookieName = "csrftoken";
         axios.defaults.withCredentials = true;
+        const formData = new FormData();
+        try{
+        formData.append(
+        'photo',
+        director.photo,
+        director.photo.name
+        );
+        } catch(err){
+            console.log("didn't change image.")
+        }
+        formData.append('first_name', director.first_name);
+        formData.append('last_name', director.last_name);
+        formData.append('phone_number', director.phone_number);
+        formData.append('email', director.email);
+        formData.append('address', director.address);
+        formData.append('password', director.password);
+        formData.append('title', director.title);
+        formData.append('age', director.age);
         axios
         .put("/api/users/"+director.id+"/",
-        {first_name: director.first_name, last_name: director.last_name, phone_number: director.phone_number ,
-        email: director.email, address: director.address, password: director.password, title: director.title, age: director.age })
+        formData)
         .then((dataRes) => {
             setDirector(dataRes.data)
         }).catch(err=>{ console.log("err")})
@@ -93,35 +130,79 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
     };
      const businessSubmit = e => {
         e.preventDefault();
-        console.log("bus befir submit: ", business)
+        //console.log("bus befir submit: ", business)
 
         const formData = new FormData();
-        console.log("business.logo", business.logo)
+        try{
         formData.append(
         "logo",
         business.logo,
         business.logo.name
         );
-
+        } catch(err){
+            console.log("didn't change image.")
+        }
         formData.append('manager', business.manager);
         formData.append('deputy_director', business.deputy_director);
         formData.append('name', business.name);
 
 
         axios({
-  method: 'put',
-  url: "/api/my-business/"+business.manager+"/",
-  data: formData,
-  header: {
-            'Accept': 'application/json',
-            'Content-Type': 'multipart/form-data',
-          },
-    })
+            method: 'put',
+            url: "/api/my-business/"+business.manager+"/",
+            data: formData,
+            header: {
+                'Accept': 'application/json',
+                'Content-Type': 'multipart/form-data',
+            },
+        })
         .then((dataRes) => {
             setBusiness(dataRes.data)
             console.log(dataRes.data)
         }).catch(err=>{ console.log("err", err.response)})
      };
+
+     const newCarSubmit = e => {
+        e.preventDefault();
+        axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+        axios.defaults.xsrfCookieName = "csrftoken";
+        axios.defaults.withCredentials = true;
+        const formData = new FormData();
+        //console.log("business.logo", business.logo)
+        try{
+        formData.append(
+        "image",
+        newCar.image,
+        newCar.image.name
+        );
+        } catch(err){
+            console.log("didn't change image.")
+        }
+
+        formData.append('my_business', business.manager);
+        formData.append('license_number', newCar.license_number)
+        formData.append('license_validity', newCar.license_validity)
+        formData.append('insurance_validity', newCar.insurance_validity)
+        formData.append('insurance_up_to_age', newCar.insurance_up_to_age)
+
+        console.log("new car", newCar)
+        setNewCar({license_number: "",
+        license_validity: "",
+        insurance_validity: "",
+        insurance_up_to_age: "",
+        image: "",
+        })
+        axios({
+            method: 'post',
+            url: "/api/cars/"+business.manager+"/",
+            data: formData,
+        })
+        .then((dataRes) => {
+            setCars(dataRes.data)
+            console.log("cars data", dataRes.data)
+        }).catch(err=>{ console.log("err", err.response)})
+
+     }
 
     return (
 
@@ -208,6 +289,13 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
                         onChange={e => managerChange(e)}
                     />
                 </div>
+                תמונה אשית
+                <div className='form-group'>
+                <input className='form-group'
+                type = 'file'
+                onChange={e => managerImageHandler(e)}
+                />
+                </div>
 
                 <button className='btn btn-primary' type='submit'>עדכן פרטים שלי</button>
             </form>
@@ -268,12 +356,76 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
                         onChange={e => directorChange(e)}
                     />
                 </div>
+                תמונת סגן מנהל
+                <div className='form-group'>
+                <input className='form-group'
+                type = 'file'
+                onChange={e => directorImageHandler(e)}
+                />
+                </div>
 
                 <button className='btn btn-primary' type='submit'>עדכן פרטי הסגן מנהל</button>
             </form>
+
+            <form dir='rtl' onSubmit={e => newCarSubmit(e)}>
+            <p>תוסיף רכב חדש</p>
+                <div className='form-group'>
+                    <input
+                        className='form-control'
+                        type='number'
+                        placeholder="מספר רישוי"
+                        name='license_number'
+                        value={newCar.license_number}
+                        onChange={e => newCarChange(e)}
+                        minLength='7'
+                    />
+                </div>
+                <div className='form-group'>
+                    תוקף רישוי
+                    <input
+                        className='form-control'
+                        type='date'
+                        placeholder="תוקף רישוי"
+                        name='license_validity'
+                        value={newCar.license_validity}
+                        onChange={e => newCarChange(e)}
+                    />
+                </div>
+                <div className='form-group'>
+                    תוקף ביטוח
+                    <input
+                        className='form-control'
+                        type='date'
+                        placeholder="תוקף ביטוח"
+                        name='insurance_validity'
+                        value={newCar.insurance_validity}
+                        onChange={e => newCarChange(e)}
+                    />
+                </div>
+                <div className='form-group'>
+                    <input
+                        className='form-control'
+                        type='number'
+                        placeholder="ביטוח עד גיל"
+                        name='insurance_up_to_age'
+                        value={newCar.insurance_up_to_age}
+                        onChange={e => newCarChange(e)}
+                        minLength='2'
+                    />
+                </div>
+                תמונת רכב
+                <div className='form-group'>
+
+                <input className='form-group'
+                type = 'file'
+                onChange={e => carImageHandler(e)}
+                />
+                </div>
+                <button className='btn btn-primary' type='submit'>תוסיף רכב חדש</button>
+            </form>
             </div>
 
-            <p class='lead'> <Link to='/my-business-details'>סיימתי עדכון</Link></p>
+            <p> <Link className='nav-link' to='/my-business-details'>סיימתי עדכון</Link></p>
         </div>
     );
 };
