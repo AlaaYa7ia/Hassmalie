@@ -11,16 +11,25 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
 class CarCreateSerializer(serializers.ModelSerializer):
     image = serializers.ImageField(max_length=None, use_url=True, required=False)
+
     class Meta:
         model = Car
         fields = ("id","my_business","license_number","license_validity", "insurance_validity", "insurance_up_to_age", "image" )
 
 
-
 class WorkerCreateSerializer(serializers.ModelSerializer):
+    photo = serializers.ImageField(max_length=None, use_url=True, required=False)
+    id_photo = serializers.ImageField(max_length=None, use_url=True, required=False)
+    rate_per_day = serializers.FloatField(required=False)
+    license = serializers.ImageField(max_length=None, use_url=True, required=False)
+    permit = serializers.ImageField(max_length=None, use_url=True, required=False)
+    permit_type = serializers.CharField(allow_blank=True, required=False)
+    permit_validity = serializers.DateField(required=False)
+
     class Meta:
         model = Worker
-        fields = ('id', 'email', 'first_name', 'last_name', 'phone_number', 'address', 'age', 'title', 'license')
+        fields = ('id','my_business', 'email', 'first_name', 'last_name','photo', 'phone_number', 'app_password',
+                  'address', 'age', 'title','id_photo','rate_per_day', 'license', 'permit', 'permit_type', 'permit_validity')
 
 
 class MyBusinessCreateSerializer(serializers.ModelSerializer):

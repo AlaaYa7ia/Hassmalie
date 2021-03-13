@@ -8,8 +8,11 @@ cryptography==3.2.1
 defusedxml==0.7.0rc1
 dj-database-url==0.5.0
 Django==3.0.8
+django-cors-headers==3.6.0
 django-forgiving-collectstatic==1.0.0
 django-heroku==0.3.1
+django-mongoengine==0.4.4
+django-rest-framework-mongoengine==3.4.1
 django-templated-mail==1.1.1
 djangorestframework==3.11.0
 djangorestframework-simplejwt==4.4.0
@@ -20,11 +23,14 @@ itypes==1.2.0
 Jinja2==2.11.2
 jsonfield==3.1.0
 MarkupSafe==1.1.1
+mongoengine==0.22.1
 oauthlib==3.1.0
+Pillow==8.1.0
 psycopg2==2.8.5
 psycopg2-binary==2.8.5
 pycparser==2.20
 PyJWT==1.7.1
+pymongo==3.11.3
 python3-openid==3.2.0
 pytz==2020.1
 requests==2.25.0

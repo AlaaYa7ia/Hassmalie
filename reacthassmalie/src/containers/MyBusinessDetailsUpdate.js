@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import axios from "axios";
 import { connect } from 'react-redux';
 import {get_user_data, logout } from '../actions/auth';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, Redirect } from 'react-router-dom';
 
 import MyBusinessDetails from '../containers/MyBusinessDetails';
 
@@ -424,7 +424,6 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
                 <button className='btn btn-primary' type='submit'>תוסיף רכב חדש</button>
             </form>
             </div>
-
             <p> <Link className='nav-link' to='/my-business-details'>סיימתי עדכון</Link></p>
         </div>
     );

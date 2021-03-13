@@ -57,26 +57,6 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
         return self.email
 
 
-class Worker(models.Model):
-    #user = models.OneToOneField(UserAccount, on_delete=models.CASCADE, primary_key=True, default=None)
-    WORKER_TYPE = (
-        ('R', 'Regular'),
-        ('C', 'contractor'),
-        ('A', 'Architect'),
-    )
-    email = models.EmailField(max_length=255, unique=True, default=None)
-    first_name = models.CharField(max_length=255, default=None)
-    last_name = models.CharField(max_length=255, default=None)
-    phone_number = models.IntegerField(default=None)
-    address = models.CharField(max_length=255, default=None)
-    age = models.IntegerField(default=0)
-    title = models.CharField(max_length=1, choices=WORKER_TYPE, default='R')
-    license = models.DateField(default=None)
-    REQUIRED_FIELDS = ['email', 'first_name', 'last_name', 'phone_number', 'address', 'age', 'title', 'license']
-
-    def __str__(self):
-        return str(self.email)
-
 
 class MyBusiness(models.Model):
     manager = models.OneToOneField(UserAccount, related_name='M', on_delete=models.PROTECT)
@@ -88,6 +68,34 @@ class MyBusiness(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Worker(models.Model):
+    #user = models.OneToOneField(UserAccount, on_delete=models.CASCADE, primary_key=True, default=None)
+    WORKER_TYPE = (
+        ('R', 'Regular'),
+        ('C', 'contractor'),
+        ('A', 'Architect'),
+    )
+    my_business = models.ForeignKey(MyBusiness, on_delete=models.CASCADE)
+    email = models.EmailField(max_length=255, unique=True, default=None) #username
+    app_password = models.CharField(max_length=255)
+    first_name = models.CharField(max_length=255, default=None)
+    last_name = models.CharField(max_length=255, default=None)
+    photo = models.ImageField(upload_to='workers/photos/')
+    phone_number = models.IntegerField(default=None)
+    address = models.CharField(max_length=255, default=None)
+    age = models.IntegerField(default=0)
+    title = models.CharField(max_length=1, choices=WORKER_TYPE, default='R')
+    id_photo = models.ImageField(upload_to='workers/ids/')
+    rate_per_day = models.FloatField(null=True, default=None)
+    license = models.ImageField(upload_to='workers/licenses/')
+    permit = models.ImageField(upload_to='workers/permits/', default=None)
+    permit_type = models.CharField(null=True, max_length=255, default=None) #we should change it to options
+    permit_validity = models.DateField(null= True, default=None)
+
+    def __str__(self):
+        return str(self.email)
 
 
 class Car(models.Model):

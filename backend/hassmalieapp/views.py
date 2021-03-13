@@ -26,7 +26,11 @@ class MyBusinessView(viewsets.ModelViewSet):
 
 class WorkerView(viewsets.ModelViewSet):
     serializer_class = WorkerCreateSerializer
-    queryset = Worker.objects.all()
+
+    def get_queryset(self):
+        user = self.request.user
+        workers = Worker.objects.filter(my_business=self.kwargs['business'])
+        return workers
 
 
 class ReportView(viewsets.ModelViewSet):
