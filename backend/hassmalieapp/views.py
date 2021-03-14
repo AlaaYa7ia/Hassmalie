@@ -1,8 +1,10 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from rest_framework import viewsets
+from rest_framework import viewsets, generics
+from django_filters import rest_framework as filters
 from .serializers import *
 from .models import *
+from django_filters.rest_framework import DjangoFilterBackend
 
 
 class UserView(viewsets.ModelViewSet):
@@ -34,8 +36,12 @@ class WorkerView(viewsets.ModelViewSet):
 
 
 class ReportView(viewsets.ModelViewSet):
-    serializer_class = ReportCreateSerializer
     queryset = Report.objects.all()
+    serializer_class = ReportCreateSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['project_id', 'reporting_date', 'worker_id']
+
+
 
 
 class CostumerView(viewsets.ModelViewSet):

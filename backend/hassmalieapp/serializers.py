@@ -20,11 +20,11 @@ class CarCreateSerializer(serializers.ModelSerializer):
 class WorkerCreateSerializer(serializers.ModelSerializer):
     photo = serializers.ImageField(max_length=None, use_url=True, required=False)
     id_photo = serializers.ImageField(max_length=None, use_url=True, required=False)
-    rate_per_day = serializers.FloatField(required=False)
     license = serializers.ImageField(max_length=None, use_url=True, required=False)
     permit = serializers.ImageField(max_length=None, use_url=True, required=False)
     permit_type = serializers.CharField(allow_blank=True, required=False)
-    permit_validity = serializers.DateField(required=False)
+    permit_validity = serializers.DateField(read_only=True, allow_null=True, required=False)
+    rate_per_day = serializers.FloatField(read_only=True, required=False)
 
     class Meta:
         model = Worker
@@ -46,17 +46,12 @@ class CostumerCreateSerializer(serializers.ModelSerializer):
 
 
 class ProjectCreateSerializer(serializers.ModelSerializer):
-    contractor_id = WorkerCreateSerializer(many=False)
-    architect_id = WorkerCreateSerializer(many=False)
-    owner_id = CostumerCreateSerializer(many=False)
     class Meta:
         model = Project
         fields = ('id', 'type_of_building', 'address', 'contractor_id', 'architect_id', 'owner_id')
 
 
 class ReportCreateSerializer(serializers.ModelSerializer):
-    worker_id = WorkerCreateSerializer(many=False)
-    project_id = ProjectCreateSerializer(many=False)
     class Meta:
         model = Report
         fields = ('id', 'worker_id', 'project_id', 'reporting_date', 'start_time', 'end_time', 'description')

@@ -135,11 +135,11 @@ class Project(models.Model):
 
 
 class Report(models.Model):
-        worker_id = models.OneToOneField(Worker, on_delete=models.PROTECT)
-        project_id = models.OneToOneField(Project, on_delete=models.PROTECT)
+        worker_id = models.ForeignKey(Worker, on_delete=models.PROTECT)
+        project_id = models.ForeignKey(Project, on_delete=models.PROTECT)
         reporting_date = models.DateField(default=None)
         start_time = models.TimeField()
-        end_time =  models.TimeField()
+        end_time = models.TimeField()
         #file storage id
         description = models.TextField()
         def __str__(self):

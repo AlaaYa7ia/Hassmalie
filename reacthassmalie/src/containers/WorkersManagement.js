@@ -17,6 +17,21 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
     const [state, setState] = useState({showMessage: false, msg: "תציג כל הפרטים"});
     const [addWorker, setAddWorker] = useState({showForm: false, showButton: true})
     const [newWorker, setNewWorker] = useState("");
+    const [myBusiness, setMyBusiness] = useState({my_business: null});
+
+    useEffect(() => {
+    (async () => {
+        await get_user_data().then((dataRes) => {
+            setMyBusiness({my_business: dataRes.id})
+             axios
+          .get("/api/workers/" +dataRes.id +"/")
+          .then((dataRes) => {
+            setWorkers(dataRes.data);
+            })
+
+        })})();
+    }, []);
+
 
     const newWorkerChange = e => setNewWorker({ ...newWorker, [e.target.name]: e.target.value });
 
@@ -42,7 +57,7 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
         try{formData.append("permit", newWorker.permit,newWorker.permit.name);
         } catch(err){console.log("didn't change permit.")}
 
-        formData.append('my_business', 1);
+        formData.append('my_business', myBusiness.my_business);
         formData.append('email', newWorker.email);
         formData.append('app_password', newWorker.app_password);
         formData.append('first_name', newWorker.first_name);
@@ -59,7 +74,7 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
 
         axios({
             method: 'post',
-            url: "/api/workers/"+1+"/",
+            url: "/api/workers/"+myBusiness.my_business+"/",
             data: formData,
         })
         .then((dataRes) => {
@@ -83,20 +98,6 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
         setAddWorker({showForm: false, showButton: true});
         setNewWorker("");
     };
-
-
-    useEffect(() => {
-    (async () => {
-        await get_user_data().then((dataRes) => {
-            setAddWorker({ ...addWorker, my_business: dataRes.id })
-             axios
-          .get("/api/workers/" +dataRes.id +"/")
-          .then((dataRes) => {
-            setWorkers(dataRes.data);
-            })
-
-        })})();
-    }, []);
 
     function workerForm(){
     return(
@@ -211,7 +212,6 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
              value={newWorker.permit_validity}
              onChange={e => newWorkerChange(e)}
         />
-        /// continue here 
         <button className='btn btn-success' type='submit'>הוספה</button>
         <button className='btn btn-danger' onClick={dontAddWorkerClickHandler}>בטל הוספת עובד</button>
 
