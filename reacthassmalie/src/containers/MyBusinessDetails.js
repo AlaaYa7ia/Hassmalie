@@ -21,7 +21,7 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
           .then((dataRes) => {
             setManager(dataRes.data);
             axios
-          .get("/api/cars/"+userData.id+"/")
+          .get("/api/cars/?my_business="+userData.id)
           .then((dataRes) => {
             setCars(dataRes.data);})
 

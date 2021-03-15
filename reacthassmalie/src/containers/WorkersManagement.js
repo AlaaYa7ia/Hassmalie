@@ -7,7 +7,7 @@ import { Link, Redirect } from 'react-router-dom';
 
 const WORKER_TYPE =
         {'R': 'Regular Worker',
-        'C': 'contractor',
+        'C': 'Contractor',
         'A': 'Architect'};
 
 const TOGGLE_MSG ={true: "תציג כל הפרטים", false: "צמצם פרטים"}
@@ -24,7 +24,7 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
         await get_user_data().then((dataRes) => {
             setMyBusiness({my_business: dataRes.id})
              axios
-          .get("/api/workers/" +dataRes.id +"/")
+          .get("/api/workers/?my_business=" +dataRes.id )
           .then((dataRes) => {
             setWorkers(dataRes.data);
             })
@@ -74,7 +74,7 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
 
         axios({
             method: 'post',
-            url: "/api/workers/"+myBusiness.my_business+"/",
+            url: "/api/workers/",
             data: formData,
         })
         .then((dataRes) => {

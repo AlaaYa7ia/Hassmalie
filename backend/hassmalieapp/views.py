@@ -13,12 +13,10 @@ class UserView(viewsets.ModelViewSet):
 
 
 class CarView(viewsets.ModelViewSet):
+    queryset = Car.objects.all()
     serializer_class = CarCreateSerializer
-
-    def get_queryset(self):
-        user = self.request.user
-        cars = Car.objects.filter(my_business=self.kwargs['business'])
-        return cars
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['my_business']
 
 
 class MyBusinessView(viewsets.ModelViewSet):
@@ -27,19 +25,23 @@ class MyBusinessView(viewsets.ModelViewSet):
 
 
 class WorkerView(viewsets.ModelViewSet):
+    # serializer_class = WorkerCreateSerializer
+    #
+    # def get_queryset(self):
+    #     user = self.request.user
+    #     workers = Worker.objects.filter(my_business=self.kwargs['business'])
+    #     return workers
+    queryset = Worker.objects.all()
     serializer_class = WorkerCreateSerializer
-
-    def get_queryset(self):
-        user = self.request.user
-        workers = Worker.objects.filter(my_business=self.kwargs['business'])
-        return workers
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['my_business', 'first_name', 'last_name']
 
 
 class ReportView(viewsets.ModelViewSet):
     queryset = Report.objects.all()
     serializer_class = ReportCreateSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['project_id', 'reporting_date', 'worker_id']
+    filterset_fields = ['my_business', 'project_id', 'reporting_date', 'worker_id']
 
 
 

@@ -29,7 +29,7 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
            })
 
             axios
-          .get("/api/cars/"+dataRes.id+"/")
+          .get("/api/cars/?my_business="+dataRes.id)
           .then((dataRes) => {
             setCars(dataRes.data);})
 
@@ -194,7 +194,7 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
         })
         axios({
             method: 'post',
-            url: "/api/cars/"+business.manager+"/",
+            url: "/api/cars/",
             data: formData,
         })
         .then((dataRes) => {

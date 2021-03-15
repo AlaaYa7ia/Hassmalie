@@ -125,16 +125,17 @@ class Costumer(models.Model):
 class Project(models.Model):
     type_of_building = models.CharField(max_length=255)
     address = models.CharField(max_length=255)
-    contractor_id = models.OneToOneField(Worker,related_name='contractor_id', on_delete=models.PROTECT)
-    architect_id = models.OneToOneField(Worker,related_name='architect_id', on_delete=models.PROTECT)
-    owner_id = models.OneToOneField(Costumer, on_delete=models.PROTECT)
+    contractor_id = models.ForeignKey(Worker,related_name='contractor_id', on_delete=models.PROTECT)
+    architect_id = models.ForeignKey(Worker,related_name='architect_id', on_delete=models.PROTECT)
+    owner_id = models.ForeignKey(Costumer, on_delete=models.PROTECT)
     #file_storage_id =
     #bid_id =
     def __str__(self):
-            return str(self.contractor_id)
+            return str(self.type_of_building)
 
 
 class Report(models.Model):
+        my_business = models.ForeignKey(MyBusiness, on_delete=models.CASCADE)
         worker_id = models.ForeignKey(Worker, on_delete=models.PROTECT)
         project_id = models.ForeignKey(Project, on_delete=models.PROTECT)
         reporting_date = models.DateField(default=None)

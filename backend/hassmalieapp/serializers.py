@@ -54,7 +54,7 @@ class ProjectCreateSerializer(serializers.ModelSerializer):
 class ReportCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Report
-        fields = ('id', 'worker_id', 'project_id', 'reporting_date', 'start_time', 'end_time', 'description')
+        fields = ('id','my_business', 'worker_id', 'project_id', 'reporting_date', 'start_time', 'end_time', 'description')
 
 
 
