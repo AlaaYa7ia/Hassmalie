@@ -1,5 +1,7 @@
 # Hassmalie
+
 #How to run the application (windows): 
+
 1- clone the repository.
 2- cd to reacthassmalie folder
 3- run: npm run install
