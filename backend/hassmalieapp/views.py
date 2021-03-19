@@ -1,3 +1,7 @@
+"""
+Views are callable which takes a request and returns a response.
+Here's our application views.
+"""
 from django.shortcuts import render
 from django.http import HttpResponse
 from rest_framework import viewsets, generics
@@ -25,12 +29,6 @@ class MyBusinessView(viewsets.ModelViewSet):
 
 
 class WorkerView(viewsets.ModelViewSet):
-    # serializer_class = WorkerCreateSerializer
-    #
-    # def get_queryset(self):
-    #     user = self.request.user
-    #     workers = Worker.objects.filter(my_business=self.kwargs['business'])
-    #     return workers
     queryset = Worker.objects.all()
     serializer_class = WorkerCreateSerializer
     filter_backends = [DjangoFilterBackend]
@@ -42,8 +40,6 @@ class ReportView(viewsets.ModelViewSet):
     serializer_class = ReportCreateSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['my_business', 'project_id', 'reporting_date', 'worker_id']
-
-
 
 
 class CostumerView(viewsets.ModelViewSet):

@@ -1,12 +1,18 @@
+"""
+Serializers allow complex data such as querysets and model instances to be converted to native Python datatypes
+that can then be easily rendered into JSON , XML or other content types.
+"""
 from rest_framework import serializers
 from .models import *
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
     photo = serializers.ImageField(max_length=None, use_url=True, required=False)
+
     class Meta:
         model = UserAccount
-        fields = ('id', 'email', 'first_name', 'last_name', 'phone_number', 'address', 'password', 'age', 'title', 'photo')
+        fields = (
+        'id', 'email', 'first_name', 'last_name', 'phone_number', 'address', 'password', 'age', 'title', 'photo')
 
 
 class CarCreateSerializer(serializers.ModelSerializer):
@@ -14,7 +20,8 @@ class CarCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Car
-        fields = ("id","my_business","license_number","license_validity", "insurance_validity", "insurance_up_to_age", "image" )
+        fields = (
+        "id", "my_business", "license_number", "license_validity", "insurance_validity", "insurance_up_to_age", "image")
 
 
 class WorkerCreateSerializer(serializers.ModelSerializer):
@@ -28,15 +35,17 @@ class WorkerCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Worker
-        fields = ('id','my_business', 'email', 'first_name', 'last_name','photo', 'phone_number', 'app_password',
-                  'address', 'age', 'title','id_photo','rate_per_day', 'license', 'permit', 'permit_type', 'permit_validity')
+        fields = ('id', 'my_business', 'email', 'first_name', 'last_name', 'photo', 'phone_number', 'app_password',
+                  'address', 'age', 'title', 'id_photo', 'rate_per_day', 'license', 'permit', 'permit_type',
+                  'permit_validity')
 
 
 class MyBusinessCreateSerializer(serializers.ModelSerializer):
     logo = serializers.ImageField(max_length=None, use_url=True, required=False)
+
     class Meta:
         model = MyBusiness
-        fields = ('manager','deputy_director', 'name', 'logo')
+        fields = ('manager', 'deputy_director', 'name', 'logo')
 
 
 class CostumerCreateSerializer(serializers.ModelSerializer):
@@ -54,8 +63,5 @@ class ProjectCreateSerializer(serializers.ModelSerializer):
 class ReportCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Report
-        fields = ('id','my_business', 'worker_id', 'project_id', 'reporting_date', 'start_time', 'end_time', 'description')
-
-
-
-
+        fields = (
+        'id', 'my_business', 'worker_id', 'project_id', 'reporting_date', 'start_time', 'end_time', 'description')

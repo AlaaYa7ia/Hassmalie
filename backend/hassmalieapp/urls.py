@@ -5,6 +5,7 @@ from django.conf.urls import include, url
 from django.conf import settings
 from django.views.static import serve
 
+# the application API routes
 router = routers.DefaultRouter()
 router.register(r'users', views.UserView, 'user')
 router.register(r'workers', views.WorkerView, 'worker')
