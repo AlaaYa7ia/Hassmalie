@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import os
 from datetime import timedelta
+import django_heroku
+import dj_database_url
+
 
 # from pathlib import Path
 
@@ -36,7 +39,7 @@ DEBUG = True
 # A list of strings representing the host/domain names that this Django site can serve.
 # This is a security measure to prevent HTTP Host header attacks,
 # which are possible even under many seemingly-safe web server configurations.
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['hassmalie.herokuapp.com','127.0.0.1', 'localhost']
 
 # Application definition
 INSTALLED_APPS = [
@@ -60,6 +63,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -165,7 +169,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'build/static'),
 ]
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static') #staticfiles ??
 
 MEDIA_URL = '/media/'
 
