@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import os
 from datetime import timedelta
+import django_heroku
+import dj_database_url
+
 
 # from pathlib import Path
 
@@ -22,15 +25,23 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+# Secret key is used to provide cryptographic signing.
+# The secret key is used for:
+# All sessions.
+# All messages if you are using CookieStorage or FallbackStorage.
+# All PasswordResetView tokens.
+# Any usage of cryptographic signing, unless a different key is provided.
 SECRET_KEY = 'h76(9u7ahd9@lcnax!w86soey2yc()!5$0((^zos53z_&h9l!w'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+# A list of strings representing the host/domain names that this Django site can serve.
+# This is a security measure to prevent HTTP Host header attacks,
+# which are possible even under many seemingly-safe web server configurations.
+ALLOWED_HOSTS = ['hassmalie.herokuapp.com','127.0.0.1', 'localhost']
 
 # Application definition
-
 INSTALLED_APPS = [
     'corsheaders',
     'django.contrib.admin',
@@ -40,6 +51,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'django_filters',
     'djoser',
     'hassmalieapp',
     'rest_framework_simplejwt',
@@ -51,12 +63,14 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# A list of origins that are authorized to make cross-site HTTP requests.
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",
     "http://localhost:3000",
@@ -64,8 +78,12 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000"
 ]
 
+# A string representing the full Python import path to your root URLconf
 ROOT_URLCONF = 'hashmalie.urls'
 
+# A list containing the settings for all template engines to be used with Django.
+# Each item of the list is a dictionary containing the options for an individual engine.
+# We set templates to "build" directory from the frontend build so we could run the templates from the frontend.
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -84,22 +102,22 @@ TEMPLATES = [
     },
 ]
 
+# The full Python path of the WSGI application object that Django’s built-in servers will use.
 WSGI_APPLICATION = 'hashmalie.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
+    # 'default': { #sqlite3
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    # }
+    'default': {  # Mongo database
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': 'hassmalieDB',
     }
-    # 'default': {
-    #       'ENGINE': 'django.db.backends.sqlite3',
-    #       'NAME': 'hassmalieDB',
-    #   }
 }
-
 
 # Email: hassmalie.project@gmail.com
 # App Password: egjfbrwuhyjndfef
@@ -151,12 +169,13 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'build/static'),
 ]
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static') #staticfiles ??
 
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+# rest API framework sittings
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated'
@@ -166,8 +185,10 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
 }
 
+# Simple JWT provides a JSON Web Token authentication backend for the Django REST Framework.
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('JWT',),
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
@@ -177,6 +198,8 @@ SIMPLE_JWT = {
     )
 }
 
+# Djoser library provides a set of Django Rest Framework views to handle basic actions such as registration,
+# login, logout, password reset and account activation.
 DJOSER = {
     'LOGIN_FIELD': 'email',
     'USER_CREATE_PASSWORD_RETYPE': True,
@@ -197,10 +220,12 @@ DJOSER = {
     }
 }
 
+# override the default user model by providing a value for the auth user model setting that references a custom model.
 AUTH_USER_MODEL = "hassmalieapp.UserAccount"
 
-
+# allowing our resources to be accessed on other domains.
+# ToDo: add qussay domain.
 CORS_ORIGIN_WHITELIST = (
-     'localhost:3000/',
+    'localhost:3000/',
     'localhost:8000/',
- )
+)

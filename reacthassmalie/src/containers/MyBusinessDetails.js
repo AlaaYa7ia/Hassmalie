@@ -15,20 +15,18 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
      useEffect(() => {
         (async () => {
         await get_user_data().then((dataRes) => {
+            let userData = dataRes;
             axios
           .get("/api/users/"+ dataRes.id +"/")
           .then((dataRes) => {
             setManager(dataRes.data);
-
-           })
-
-           axios
-          .get("/api/cars/"+dataRes.id+"/")
+            axios
+          .get("/api/cars/?my_business="+userData.id)
           .then((dataRes) => {
             setCars(dataRes.data);})
 
-           axios
-          .get("/api/my-business/"+ dataRes.id +"/")
+            axios
+          .get("/api/my-business/"+ userData.id +"/")
           .then((dataRes) => {
             setBusiness(dataRes.data);
              return dataRes.data.deputy_director
@@ -41,12 +39,34 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
 
             })
            })
+            })
 
         })
         })();
 
     }, []);
 
+    function loadCars(){
+        try{
+        return(
+        cars.map(car => (
+            <div class = "row ">
+           <div class='col-6'>
+                <h2 >רכב מספר {car.id}</h2>
+                    <p class='lead'>מספר רישוי: {car.license_number}</p>
+                <p class='lead'>תוקף רישוי: {car.license_validity} </p>
+                <p class='lead'>תוקף ביטוח: {car.insurance_validity}</p>
+                <p class='lead'>ביטוח עד גיל: {car.insurance_up_to_age}</p>
+           </div>
+           <div class='col-6'>
+                <img src={car.image} height={150} width={150}></img>
+           </div>
+
+           </div>
+          )))
+        } catch(err){
+        }
+    }
 
         return(
     <div>
@@ -117,21 +137,7 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
            <div class='jumbotron mt-5'>
                 <h1 class='display-4'>רכבים בעסק</h1>
 
-             {cars.map(car => (
-            <div class = "row ">
-           <div class='col-6'>
-                <h2 >רכב מספר {car.id}</h2>
-                    <p class='lead'>מספר רישוי: {car.license_number}</p>
-                <p class='lead'>תוקף רישוי: {car.license_validity} </p>
-                <p class='lead'>תוקף ביטוח: {car.insurance_validity}</p>
-                <p class='lead'>ביטוח עד גיל: {car.insurance_up_to_age}</p>
-           </div>
-           <div class='col-6'>
-                <img src={car.image} height={150} width={150}></img>
-           </div>
-
-           </div>
-          ))}
+             {loadCars()}
         </div>
         </div>
         </div>

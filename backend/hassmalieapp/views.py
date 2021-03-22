@@ -1,8 +1,14 @@
+"""
+Views are callable which takes a request and returns a response.
+Here's our application views.
+"""
 from django.shortcuts import render
 from django.http import HttpResponse
-from rest_framework import viewsets
+from rest_framework import viewsets, generics
+from django_filters import rest_framework as filters
 from .serializers import *
 from .models import *
+from django_filters.rest_framework import DjangoFilterBackend
 
 
 class UserView(viewsets.ModelViewSet):
@@ -11,12 +17,10 @@ class UserView(viewsets.ModelViewSet):
 
 
 class CarView(viewsets.ModelViewSet):
+    queryset = Car.objects.all()
     serializer_class = CarCreateSerializer
-
-    def get_queryset(self):
-        user = self.request.user
-        cars = Car.objects.filter(my_business=self.kwargs['business'])
-        return cars
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['my_business']
 
 
 class MyBusinessView(viewsets.ModelViewSet):
@@ -25,13 +29,17 @@ class MyBusinessView(viewsets.ModelViewSet):
 
 
 class WorkerView(viewsets.ModelViewSet):
-    serializer_class = WorkerCreateSerializer
     queryset = Worker.objects.all()
+    serializer_class = WorkerCreateSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['my_business', 'first_name', 'last_name']
 
 
 class ReportView(viewsets.ModelViewSet):
-    serializer_class = ReportCreateSerializer
     queryset = Report.objects.all()
+    serializer_class = ReportCreateSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['my_business', 'project_id', 'reporting_date', 'worker_id']
 
 
 class CostumerView(viewsets.ModelViewSet):

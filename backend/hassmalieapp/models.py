@@ -2,10 +2,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 
 
-# Create your models here.
-
+# here we create users and super users
 class UserAccountManager(BaseUserManager):
-    # here we can also create super users and other kind of users
     def create_user(self, email, password=None, **extra_fields):
         if not email:
             raise ValueError("User must have an email address")
@@ -25,11 +23,12 @@ class UserAccountManager(BaseUserManager):
         return user
 
 
+# user account model, for managers and deputy directors
 class UserAccount(AbstractBaseUser, PermissionsMixin):
     USER_TYPE = (
         ('M', 'Manager'),
         ('D', 'Deputy Director'),
-        #('R', 'Regular'),
+        # ('R', 'Regular'),
     )
     email = models.EmailField(max_length=255, unique=True)
     first_name = models.CharField(max_length=255)
@@ -37,13 +36,11 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     phone_number = models.IntegerField(default=None)
     address = models.CharField(max_length=255)
     age = models.IntegerField(default=0)
-    is_active = models.BooleanField(default=True)## ??
-    is_staff = models.BooleanField(default=False) ##??
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
     title = models.CharField(max_length=1, choices=USER_TYPE, default='M')
     photo = models.ImageField(upload_to='usersphotos/')
-
     objects = UserAccountManager()
-
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name', 'phone_number', 'address', 'title']
 
@@ -57,39 +54,49 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
         return self.email
 
 
-class Worker(models.Model):
-    #user = models.OneToOneField(UserAccount, on_delete=models.CASCADE, primary_key=True, default=None)
-    WORKER_TYPE = (
-        ('R', 'Regular'),
-        ('C', 'contractor'),
-        ('A', 'Architect'),
-    )
-    email = models.EmailField(max_length=255, unique=True, default=None)
-    first_name = models.CharField(max_length=255, default=None)
-    last_name = models.CharField(max_length=255, default=None)
-    phone_number = models.IntegerField(default=None)
-    address = models.CharField(max_length=255, default=None)
-    age = models.IntegerField(default=0)
-    title = models.CharField(max_length=1, choices=WORKER_TYPE, default='R')
-    license = models.DateField(default=None)
-    REQUIRED_FIELDS = ['email', 'first_name', 'last_name', 'phone_number', 'address', 'age', 'title', 'license']
-
-    def __str__(self):
-        return str(self.email)
-
-
+# my business model, represent the business information.
 class MyBusiness(models.Model):
     manager = models.OneToOneField(UserAccount, related_name='M', on_delete=models.PROTECT)
     deputy_director = models.OneToOneField(UserAccount, related_name='D', on_delete=models.PROTECT)
     name = models.CharField(max_length=255)
     logo = models.ImageField(upload_to='logos/')
-    #fanincial_id
+    # fanincial_id
     REQUIRED_FIELDS = ['manager', 'name']
 
     def __str__(self):
         return self.name
 
 
+# the worker model, represent a worker with no high permissions. Regular, constrictor or architect.
+# it's a regular model, not a user model.
+class Worker(models.Model):
+    WORKER_TYPE = (
+        ('R', 'Regular'),
+        ('C', 'Contractor'),
+        ('A', 'Architect'),
+    )
+    my_business = models.ForeignKey(MyBusiness, on_delete=models.CASCADE)
+    email = models.EmailField(max_length=255, unique=True, default=None)  # username
+    app_password = models.CharField(max_length=255)
+    first_name = models.CharField(max_length=255, default=None)
+    last_name = models.CharField(max_length=255, default=None)
+    photo = models.ImageField(upload_to='workers/photos/')
+    phone_number = models.IntegerField(default=None)
+    address = models.CharField(max_length=255, default=None)
+    age = models.IntegerField(default=0)
+    title = models.CharField(max_length=1, choices=WORKER_TYPE, default='R')
+    id_photo = models.ImageField(upload_to='workers/ids/')
+    rate_per_day = models.FloatField(null=True, default=None)
+    license = models.ImageField(upload_to='workers/licenses/')
+    permit = models.ImageField(upload_to='workers/permits/', default=None)
+    permit_type = models.CharField(null=True, max_length=255, default=None)  # we should change it to options
+    permit_validity = models.DateField(null=True, default=None)
+
+    def __str__(self):
+        return str(self.email)
+
+
+# car model
 class Car(models.Model):
     # many to one relation
     my_business = models.ForeignKey(MyBusiness, on_delete=models.CASCADE)
@@ -99,42 +106,47 @@ class Car(models.Model):
     insurance_up_to_age = models.IntegerField(default=None)
     image = models.ImageField(upload_to='carimages/')
 
-
     def __str__(self):
         return str(self.license_number)
 
 
+# costumer model, it's a regular model, not a user model.
 class Costumer(models.Model):
     email = models.EmailField(max_length=255, unique=True)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     phone_number = models.IntegerField(default=None)
     address = models.CharField(max_length=255)
+
     def __str__(self):
-            return self.first_name
+        return self.first_name
 
 
+# constricting project model.
 class Project(models.Model):
     type_of_building = models.CharField(max_length=255)
     address = models.CharField(max_length=255)
-    contractor_id = models.OneToOneField(Worker,related_name='contractor_id', on_delete=models.PROTECT)
-    architect_id = models.OneToOneField(Worker,related_name='architect_id', on_delete=models.PROTECT)
-    owner_id = models.OneToOneField(Costumer, on_delete=models.PROTECT)
-    #file_storage_id =
-    #bid_id =
+    contractor_id = models.ForeignKey(Worker, related_name='contractor_id', on_delete=models.PROTECT)
+    architect_id = models.ForeignKey(Worker, related_name='architect_id', on_delete=models.PROTECT)
+    owner_id = models.ForeignKey(Costumer, on_delete=models.PROTECT)
+
+    # file_storage_id =
+    # bid_id =
+
     def __str__(self):
-            return str(self.contractor_id)
+        return str(self.type_of_building)
 
 
+# a worker report model
 class Report(models.Model):
-        worker_id = models.OneToOneField(Worker, on_delete=models.PROTECT)
-        project_id = models.OneToOneField(Project, on_delete=models.PROTECT)
-        reporting_date = models.DateField(default=None)
-        start_time = models.TimeField()
-        end_time =  models.TimeField()
-        #file storage id
-        description = models.TextField()
-        def __str__(self):
-            return str(self.worker_id)
+    my_business = models.ForeignKey(MyBusiness, on_delete=models.CASCADE)
+    worker_id = models.ForeignKey(Worker, on_delete=models.PROTECT)
+    project_id = models.ForeignKey(Project, on_delete=models.PROTECT)
+    reporting_date = models.DateField(default=None)
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    # file storage id
+    description = models.TextField()
 
-
+    def __str__(self):
+        return str(self.worker_id)
