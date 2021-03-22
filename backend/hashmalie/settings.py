@@ -14,6 +14,7 @@ from datetime import timedelta
 import django_heroku
 import dj_database_url
 
+django_heroku.settings(locals())
 
 # from pathlib import Path
 
@@ -169,7 +170,9 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'build/static'),
 ]
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static') #staticfiles ??
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') #staticfiles ??
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
 
@@ -227,5 +230,4 @@ AUTH_USER_MODEL = "hassmalieapp.UserAccount"
 # ToDo: add qussay domain.
 CORS_ORIGIN_WHITELIST = (
     'localhost:3000/',
-    'localhost:8000/',
 )
