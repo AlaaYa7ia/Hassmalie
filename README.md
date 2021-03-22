@@ -20,7 +20,7 @@
 
 9- then run: python manage.py migrate
 
-Note: you need to run steps 8 and 9 onley once in order to configure your database. [for more information about Django migrations see documentation](https://docs.djangoproject.com/en/3.1/topics/migrations/) 
+Note: you need to run steps 8 and 9 only once in order to configure your database. [for more information about Django migrations see documentation](https://docs.djangoproject.com/en/3.1/topics/migrations/) 
 
 10- then run: python manage.py runserver
 
