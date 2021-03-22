@@ -12,7 +12,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserAccount
         fields = (
-        'id', 'email', 'first_name', 'last_name', 'phone_number', 'address', 'password', 'age', 'title', 'photo')
+            'id', 'email', 'first_name', 'last_name', 'phone_number', 'address', 'password', 'age', 'title', 'photo')
 
 
 class CarCreateSerializer(serializers.ModelSerializer):
@@ -21,7 +21,8 @@ class CarCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Car
         fields = (
-        "id", "my_business", "license_number", "license_validity", "insurance_validity", "insurance_up_to_age", "image")
+            "id", "my_business", "license_number", "license_validity", "insurance_validity", "insurance_up_to_age",
+            "image")
 
 
 class WorkerCreateSerializer(serializers.ModelSerializer):
@@ -64,4 +65,4 @@ class ReportCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Report
         fields = (
-        'id', 'my_business', 'worker_id', 'project_id', 'reporting_date', 'start_time', 'end_time', 'description')
+            'id', 'my_business', 'worker_id', 'project_id', 'reporting_date', 'start_time', 'end_time', 'description')

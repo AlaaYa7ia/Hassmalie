@@ -1,7 +1,8 @@
 from django.contrib import admin
 from .models import UserAccount
 
-#TODO: PRUD VS LOCAL
+
+# TODO: PRUD VS LOCAL
 
 # Custom Django admin
 class HassmalieAdmin(admin.ModelAdmin):

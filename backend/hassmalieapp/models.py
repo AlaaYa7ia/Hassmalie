@@ -28,7 +28,7 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     USER_TYPE = (
         ('M', 'Manager'),
         ('D', 'Deputy Director'),
-        #('R', 'Regular'),
+        # ('R', 'Regular'),
     )
     email = models.EmailField(max_length=255, unique=True)
     first_name = models.CharField(max_length=255)
@@ -60,7 +60,7 @@ class MyBusiness(models.Model):
     deputy_director = models.OneToOneField(UserAccount, related_name='D', on_delete=models.PROTECT)
     name = models.CharField(max_length=255)
     logo = models.ImageField(upload_to='logos/')
-    #fanincial_id
+    # fanincial_id
     REQUIRED_FIELDS = ['manager', 'name']
 
     def __str__(self):
@@ -76,7 +76,7 @@ class Worker(models.Model):
         ('A', 'Architect'),
     )
     my_business = models.ForeignKey(MyBusiness, on_delete=models.CASCADE)
-    email = models.EmailField(max_length=255, unique=True, default=None) #username
+    email = models.EmailField(max_length=255, unique=True, default=None)  # username
     app_password = models.CharField(max_length=255)
     first_name = models.CharField(max_length=255, default=None)
     last_name = models.CharField(max_length=255, default=None)
@@ -89,8 +89,8 @@ class Worker(models.Model):
     rate_per_day = models.FloatField(null=True, default=None)
     license = models.ImageField(upload_to='workers/licenses/')
     permit = models.ImageField(upload_to='workers/permits/', default=None)
-    permit_type = models.CharField(null=True, max_length=255, default=None) #we should change it to options
-    permit_validity = models.DateField(null= True, default=None)
+    permit_type = models.CharField(null=True, max_length=255, default=None)  # we should change it to options
+    permit_validity = models.DateField(null=True, default=None)
 
     def __str__(self):
         return str(self.email)
@@ -119,33 +119,34 @@ class Costumer(models.Model):
     address = models.CharField(max_length=255)
 
     def __str__(self):
-            return self.first_name
+        return self.first_name
 
 
 # constricting project model.
 class Project(models.Model):
     type_of_building = models.CharField(max_length=255)
     address = models.CharField(max_length=255)
-    contractor_id = models.ForeignKey(Worker,related_name='contractor_id', on_delete=models.PROTECT)
-    architect_id = models.ForeignKey(Worker,related_name='architect_id', on_delete=models.PROTECT)
+    contractor_id = models.ForeignKey(Worker, related_name='contractor_id', on_delete=models.PROTECT)
+    architect_id = models.ForeignKey(Worker, related_name='architect_id', on_delete=models.PROTECT)
     owner_id = models.ForeignKey(Costumer, on_delete=models.PROTECT)
-    #file_storage_id =
-    #bid_id =
+
+    # file_storage_id =
+    # bid_id =
 
     def __str__(self):
-            return str(self.type_of_building)
+        return str(self.type_of_building)
 
 
 # a worker report model
 class Report(models.Model):
-        my_business = models.ForeignKey(MyBusiness, on_delete=models.CASCADE)
-        worker_id = models.ForeignKey(Worker, on_delete=models.PROTECT)
-        project_id = models.ForeignKey(Project, on_delete=models.PROTECT)
-        reporting_date = models.DateField(default=None)
-        start_time = models.TimeField()
-        end_time = models.TimeField()
-        #file storage id
-        description = models.TextField()
+    my_business = models.ForeignKey(MyBusiness, on_delete=models.CASCADE)
+    worker_id = models.ForeignKey(Worker, on_delete=models.PROTECT)
+    project_id = models.ForeignKey(Project, on_delete=models.PROTECT)
+    reporting_date = models.DateField(default=None)
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    # file storage id
+    description = models.TextField()
 
-        def __str__(self):
-            return str(self.worker_id)
+    def __str__(self):
+        return str(self.worker_id)

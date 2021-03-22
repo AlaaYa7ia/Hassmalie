@@ -33,7 +33,6 @@ SECRET_KEY = 'h76(9u7ahd9@lcnax!w86soey2yc()!5$0((^zos53z_&h9l!w'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-
 # A list of strings representing the host/domain names that this Django site can serve.
 # This is a security measure to prevent HTTP Host header attacks,
 # which are possible even under many seemingly-safe web server configurations.
@@ -56,7 +55,6 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
 ]
 
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -78,7 +76,6 @@ CORS_ALLOWED_ORIGINS = [
 
 # A string representing the full Python import path to your root URLconf
 ROOT_URLCONF = 'hashmalie.urls'
-
 
 # A list containing the settings for all template engines to be used with Django.
 # Each item of the list is a dictionary containing the options for an individual engine.
@@ -113,11 +110,10 @@ DATABASES = {
     #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     # }
     'default': {  # Mongo database
-          'ENGINE': 'django.db.backends.sqlite3',
-          'NAME': 'hassmalieDB',
-      }
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'hassmalieDB',
+    }
 }
-
 
 # Email: hassmalie.project@gmail.com
 # App Password: egjfbrwuhyjndfef
@@ -226,6 +222,6 @@ AUTH_USER_MODEL = "hassmalieapp.UserAccount"
 # allowing our resources to be accessed on other domains.
 # ToDo: add qussay domain.
 CORS_ORIGIN_WHITELIST = (
-     'localhost:3000/',
+    'localhost:3000/',
     'localhost:8000/',
- )
+)
