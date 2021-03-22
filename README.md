@@ -34,5 +34,5 @@ now you have your frontend running at http://localhost:3000/
 # # tests: 
 
 - cd to backend folder. 
-- to run spisific test or ؤollection of tests run the command : python manage.py test *spisific_package.spisific_test* 
+- to run spisific test or collection of tests run the command : python manage.py test *spisific_package.spisific_test* 
 - to run all tests: python manage.py test
