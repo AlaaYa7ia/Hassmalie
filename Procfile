@@ -1,1 +1,1 @@
-web: gunicorn hashmalie.wsgi
+web: gunicorn backend.hashmalie.wsgi
