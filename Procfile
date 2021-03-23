@@ -1,2 +1,2 @@
 release: python manage.py migrate
-web: gunicorn backend.hashmalie.wsgi
+web: gunicorn hashmalie.wsgi
