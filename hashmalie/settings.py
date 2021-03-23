@@ -230,4 +230,5 @@ AUTH_USER_MODEL = "hassmalieapp.UserAccount"
 # ToDo: add qussay domain.
 CORS_ORIGIN_WHITELIST = (
     'localhost:3000/',
+    'hassmalie.herokuapp.com/',
 )
