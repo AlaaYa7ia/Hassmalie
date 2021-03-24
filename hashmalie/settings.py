@@ -77,7 +77,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:8000",
     "http://127.0.0.1:3000",
-    "http://hassmalie.herokuapp.com",
+    "https://hassmalie.herokuapp.com",
 ]
 
 # A string representing the full Python import path to your root URLconf
