@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Cookies from 'js-cookie';
 import {
     LOGIN_SUCCESS,
     LOGIN_FAIL,
@@ -18,6 +19,7 @@ import {
 } from './types';
 
 
+const csrftoken = Cookies.get('csrftoken');
 
 export const load_user = () => async dispatch => {
     if (localStorage.getItem('access')) {
@@ -25,7 +27,8 @@ export const load_user = () => async dispatch => {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `JWT ${localStorage.getItem('access')}`,
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                'X-CSRFToken': csrftoken
             }
         };
 
@@ -52,7 +55,8 @@ export const checkAuthenticated = () => async dispatch => {
         const config = {
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                'X-CSRFToken': csrftoken
             }
         };
 
@@ -86,7 +90,8 @@ export const checkAuthenticated = () => async dispatch => {
 export const login = (email, password) => async dispatch => {
     const config = {
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
         }
     };
 
@@ -112,7 +117,8 @@ export const login = (email, password) => async dispatch => {
 export const signup = (first_name, last_name, email, title, phone_number, address, password, re_password) => async dispatch => {
     const config = {
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
         }
     };
 
@@ -136,7 +142,8 @@ export const signup = (first_name, last_name, email, title, phone_number, addres
 export const verify = (uid, token) => async dispatch => {
     const config = {
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
         }
     };
 
@@ -158,7 +165,8 @@ export const verify = (uid, token) => async dispatch => {
 export const reset_password = (email) => async dispatch => {
     const config = {
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
         }
     };
 
@@ -180,7 +188,8 @@ export const reset_password = (email) => async dispatch => {
 export const reset_password_confirm = (uid, token, new_password, re_new_password) => async dispatch => {
     const config = {
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
         }
     };
 
@@ -215,7 +224,8 @@ export const get_user_data = () => async dispatch => {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `JWT ${localStorage.getItem('access')}`,
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                'X-CSRFToken': csrftoken
             }
         };
          try {
