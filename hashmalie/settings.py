@@ -171,7 +171,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'build/static'),
 ]
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static') #staticfiles ??
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') #staticfiles ??
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
@@ -231,5 +231,6 @@ AUTH_USER_MODEL = "hassmalieapp.UserAccount"
 # ToDo: add qussay domain.
 CORS_ORIGIN_WHITELIST = (
     'localhost:3000/',
+    'localhost:8000/',
     'hassmalie.herokuapp.com/',
 )
