@@ -32,6 +32,13 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
         })})();
     }, []);
 
+   function getImgUrl(image, instance) {
+    if (image === null) {
+        return '/default_'+instance+'_pic.png';
+    }
+     return image;
+    }
+
 
     const newWorkerChange = e => setNewWorker({ ...newWorker, [e.target.name]: e.target.value });
 
@@ -257,7 +264,7 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
         workers.map(worker => (
             <div >
             <div class='col-12'>
-                <img src={worker.photo} height={150} width={150}></img>
+                <img src={getImgUrl(worker.photo, "worker")} height={150} width={150}></img>
            </div>
            <div class='col-12'>
                  <p class='lead'>{worker.first_name} {worker.last_name} - {WORKER_TYPE[worker.title]}</p>

@@ -434,28 +434,3 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps, { get_user_data, logout })(MyBusinessDetailsUpdate);
-
-
-
-//<div className='form-group'>
-//                    <input
-//                        className='form-control'
-//                        type='text'
-//                        placeholder={manager.title}
-//                        name='title'
-//                        value={manager.title}
-//                        onChange={e => onChange(e)}
-//                    />
-//                </div>
-
-//                <div className='form-group'>
-//                    <input
-//                        className='form-control'
-//                        type='email'
-//                        placeholder={manager.email}
-//                        name='email'
-//                        value={manager.email}
-//                        onChange={e => onChange(e)}
-//                    />
-//                </div>
-

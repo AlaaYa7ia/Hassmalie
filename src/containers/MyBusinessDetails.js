@@ -46,6 +46,13 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
 
     }, []);
 
+    function getImgUrl(image, instance) {
+    if (image === null) {
+        return '/default_'+instance+'_pic.png';
+    }
+     return image;
+    }
+
     function loadCars(){
         try{
         return(
@@ -59,7 +66,7 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
                 <p class='lead'>ביטוח עד גיל: {car.insurance_up_to_age}</p>
            </div>
            <div class='col-6'>
-                <img src={car.image} height={150} width={150}></img>
+                <img src={getImgUrl(car.image, "car")} height={150} width={150}></img>
            </div>
 
            </div>
@@ -92,7 +99,7 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
                 <h1 class='display-4'>{business.name}</h1>
            </div>
            <div class='jumbotron mt-5 col-6'>
-                <img src={business.logo} height={250} width={250} ></img>
+                <img src={getImgUrl(business.logo, "business")} height={250} width={250} ></img>
            </div>
             </div>
         </div>
@@ -112,7 +119,7 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
                 <p class='lead'>גיל: {manager.age}</p>
            </div>
            <div class='jumbotron mt-5 col-5'>
-                <img src={manager.photo} height={150} width={150} ></img>
+                <img src={getImgUrl(manager.photo, "user")} height={150} width={150} ></img>
            </div>
            </div>
         </div>
@@ -128,7 +135,7 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
                 <p class='lead'>גיל: {director.age}</p>
            </div>
            <div class='jumbotron mt-5'>
-                <img src={director.photo} height={150} width={150} ></img>
+                <img src={getImgUrl(director.photo, "user")} height={150} width={150} ></img>
            </div>
            </div>
         </div>
@@ -148,17 +155,8 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
       </div>
       );
 };
-//<MyBusinessDetailsIner user={JSON.stringify(data)} />
+
 const mapStateToProps = state => ({
     isAuthenticated: state.auth.isAuthenticated
     });
 export default connect(mapStateToProps, { get_user_data })(MyBusinessDetails);
-
-
-//axios
-//          .post("/api/users/",{first_name: "new", last_name: "user", phone_number: 987987
-//          , email: "hello@gmail.com", address: "fnkl", password: "Ma7ashveem", title: "R" })
-//          .then((dataRes) => {
-//            setNewUser(dataRes.data);
-//
-//            })
