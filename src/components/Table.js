@@ -1,5 +1,5 @@
 import React,{useState} from "react";
-import { useTable, useFilters } from "react-table";
+import { useTable, useFilters, useSortBy } from "react-table";
 export default function Table({ columns, data }) {
 // Table component logic and UI come here
 
@@ -15,17 +15,12 @@ export default function Table({ columns, data }) {
     columns,
     data
   },
-   useFilters // Adding the useFilters Hook to the table
+   useFilters, // Adding the useFilters Hook to the table
+   useSortBy // This plugin Hook will help to sort our table columns
    );
 
     // Create a state
     const [filterInput, setFilterInput] = useState("");
-
-//    const [filterInput, setFilterInput] = useState({
-//        project_id: '',
-//        reporting_date: ''
-//    });
-
     // Update the state when input changes
     const handleProjectFilterChange = e => {
       const value = e.target.value || undefined;
@@ -45,24 +40,38 @@ export default function Table({ columns, data }) {
 
 
   return (
-    <div>
+    <div dir='rtl' class=' container-fluid jumbotron mt-5' lang="he"  style={{  justifyContent:'right'}}>
+    <h1>דיווחים של העובדים</h1>
+    <p>מסננים:</p>
     <input
       value={filterInput.project_id}
       onChange={handleProjectFilterChange}
-      placeholder={"Search by project id"}
+      placeholder={"סנן לפי מספר פרויקט"}
     />
     <input
       type='date'
       value={filterInput.reporting_date}
       onChange={handleDateFilterChange}
-      placeholder={"Search by date of report"}
+      placeholder={"סננן לפי תאריך דיווח"}
     />
+    <p>תלחץ על עמודה כדי למיין אותה</p>
     <table class="table" {...getTableProps()}>
       <thead>
         {headerGroups.map(headerGroup => (
           <tr {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map(column => (
-              <th {...column.getHeaderProps()}>{column.render("Header")}</th>
+              <th
+                  {...column.getHeaderProps(column.getSortByToggleProps())}
+                  className={
+                    column.isSorted
+                      ? column.isSortedDesc
+                        ? "sort-desc"
+                        : "sort-asc"
+                      : ""
+                  }
+                >
+                  {column.render("Header")}
+                </th>
             ))}
           </tr>
         ))}

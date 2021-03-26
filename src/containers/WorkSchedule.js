@@ -61,7 +61,8 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
           },
           {
             Header: "מספר פרויקט",
-            accessor: "project_id"
+            accessor: "project_id",
+            disableSortBy: true
           },
           {
             Header: "תאריך דיווח",
@@ -77,7 +78,8 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
           },
           {
             Header: "תיאור",
-            accessor: "description"
+            accessor: "description",
+            disableSortBy: true
           },
     ],
     []
