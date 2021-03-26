@@ -56,7 +56,7 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
     function loadCars(){
         try{
         return(
-        cars.map(car => (
+        cars.map(car => ( ///////// 6al3eha lbra al- return
             <div class = "row ">
            <div class='col-6'>
                 <h2 >רכב מספר {car.id}</h2>
