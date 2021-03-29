@@ -32,7 +32,7 @@ class WorkerView(viewsets.ModelViewSet):
     queryset = Worker.objects.all()
     serializer_class = WorkerCreateSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['my_business', 'first_name', 'last_name']
+    filterset_fields = ['my_business', 'first_name', 'last_name', 'id']
 
 
 class ReportView(viewsets.ModelViewSet):
