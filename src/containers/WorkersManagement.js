@@ -247,11 +247,10 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
         }
     }
 
+   //<p>Workers: {JSON.stringify(workers)}</p>
     return(
     <div>
-    <p>Workers: {JSON.stringify(workers)}</p>
-
-    <html lang="he" >
+     <html lang="he" >
         <head>
         <meta charset="utf-8"></meta>
         </head>

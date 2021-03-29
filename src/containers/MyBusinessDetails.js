@@ -56,7 +56,7 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
     function loadCars(){
         try{
         return(
-        cars.map(car => ( ///////// 6al3eha lbra al- return
+        cars.map(car => (
             <div class = "row ">
            <div class='col-6'>
                 <h2 >רכב מספר {car.id}</h2>
@@ -75,15 +75,14 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
         }
     }
 
+//    <p>API: {JSON.stringify(manager)}</p>
+//    <p>Director: {JSON.stringify(director)}</p>
+//    <p>Cars: {JSON.stringify(cars)}</p>
+//    <p>NewUser: {JSON.stringify(newUser)}</p>
+//    <p>business: {JSON.stringify(business)}</p>
+
         return(
     <div>
-
-    <p>API: {JSON.stringify(manager)}</p>
-    <p>Director: {JSON.stringify(director)}</p>
-    <p>Cars: {JSON.stringify(cars)}</p>
-    <p>NewUser: {JSON.stringify(newUser)}</p>
-    <p>business: {JSON.stringify(business)}</p>
-
     <html lang="he" >
         <head>
         <meta charset="utf-8"></meta>

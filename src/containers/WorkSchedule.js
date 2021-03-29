@@ -99,16 +99,16 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
 
 
   };
+  
   //date_filter();
 
-
-
+//
+//    <p>Reports: {JSON.stringify(reports)}</p>
+//        <p>Workerss: {JSON.stringify(workers)}</p>
+//        <p>newReports: {JSON.stringify(newReports)}</p>
     return(
 
     <html lang="he" >
-        <p>Reports: {JSON.stringify(reports)}</p>
-        <p>Workerss: {JSON.stringify(workers)}</p>
-        <p>newReports: {JSON.stringify(newReports)}</p>
          <div dir='rtl' class=' container-fluid jumbotron mt-5' lang="he"  style={{  justifyContent:'center'}}>
          <Table
           columns={columns}
