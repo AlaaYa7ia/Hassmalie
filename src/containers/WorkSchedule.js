@@ -7,31 +7,42 @@ import { Link, Redirect } from 'react-router-dom';
 import Table from "../components/Table";
 import generatePDF from "../components/reportGenerator";
 
+
 const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
     const [reports, setReports] = useState([]);
     const [workers, setWorkers] = useState([]);
-    const [newReports, setNewReports] = useState([])
+    const [newReports, setNewReports] = useState([]);
+    const [dataRes, setDataRes]= useState([]);
     let data = [];
     let dataf = new Set();
-    useEffect(() => {
-    (async () => {
-        await get_user_data().then((dataRes) => {
-             axios
-          .get("/api/reports/?my_business=" +dataRes.id )
-          .then((dataRes) => {
-            setReports(dataRes.data);
-            return dataRes.data[0].my_business
-            }).then((dataRes) => {
-             axios
-          .get("/api/workers/?my_business=" +dataRes )
-          .then((dataRes) => {
-            setWorkers(dataRes.data);
-            }).then(() => {
-                setNewReports(fix_data())
-            })
-            })
-         })})();
-    }, []);
+
+    const get_reports = async (dataRes) =>{
+    const Report_Res = await axios.get('/api/reports/?my_business=' + dataRes)
+    setReports(Report_Res.data);
+    }
+
+    const get_worker_data = async (dataRes)=>{
+       const Worker_Res = await axios.get('/api/workers/?my_business=' + dataRes)
+       setWorkers(Worker_Res.data);
+    }
+    const get_user = async (dataRes)=>{
+       const user_Res = await get_user_data()
+       setDataRes(user_Res);
+    }
+
+    useEffect(()=>{
+      get_user()
+    },[])
+
+    useEffect(()=>{
+      get_worker_data(dataRes)
+      get_reports(dataRes)
+
+    },[dataRes])
+
+    useEffect(()=>{
+      setNewReports(fix_data())
+    },[reports, workers])
 
 
     function fix_data(){
@@ -50,7 +61,6 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
         ))
         return rep
     }
-
 
     const columns = useMemo(
     () => [
@@ -103,12 +113,12 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
   //date_filter();
 
 //
-//    <p>Reports: {JSON.stringify(reports)}</p>
-//        <p>Workerss: {JSON.stringify(workers)}</p>
-//        <p>newReports: {JSON.stringify(newReports)}</p>
-    return(
 
+    return(
     <html lang="he" >
+            <p>Reports: {JSON.stringify(reports)}</p>
+        <p>Workerss: {JSON.stringify(workers)}</p>
+        <p>newReports: {JSON.stringify(newReports)}</p>
          <div dir='rtl' class=' container-fluid jumbotron mt-5' lang="he"  style={{  justifyContent:'center'}}>
          <Table
           columns={columns}
