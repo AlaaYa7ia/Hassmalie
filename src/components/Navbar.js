@@ -7,11 +7,19 @@ import { logout, get_user_data } from '../actions/auth';
 const Navbar = ({ get_user_data,logout, isAuthenticated}) => {
     const [data, setData] = useState("");
 
-    useEffect(() => {
-        get_user_data().then((dataRes) => {
-            setData(dataRes);
-        });
-    }, []);
+//    useEffect(() => {
+//        get_user_data().then((dataRes) => {
+//            setData(dataRes);
+//        });
+//    }, []);
+
+    const get_user = async (dataRes)=>{
+       const user_Res = await get_user_data()
+       setData(user_Res);
+    }
+    useEffect(()=>{
+      get_user()
+    },[])
 
 
     const guestLinks = () => (
