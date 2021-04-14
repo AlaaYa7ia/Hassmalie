@@ -26,7 +26,7 @@ const Login = ({ login, isAuthenticated }) => {
 
     return (
     <html  lang="he" dir="rtl" >
-    <div  class='col-4 container-fluid jumbotron mt-5' lang="he"  style={{display: 'flex',  justifyContent:'center', alignItems:'center', height: '70vh'}}>
+    <div  class='col-4 container-fluid jumbotron mt-5 right-text' lang="he"  style={{display: 'flex',  justifyContent:'center', alignItems:'center', height: '70vh'}}>
         <div className='container mt-5' dir= "rtl" >
             <h1 dir= "rtl">כניסה</h1>
             <p dir= "rtl">כניסה לחשבון שלך</p>

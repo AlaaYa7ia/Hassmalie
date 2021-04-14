@@ -25,7 +25,7 @@ const ResetPassword = ({ reset_password }) => {
     }
 
     return (
-        <div className='container mt-5'>
+        <div className='container mt-5 right-text'>
             <h1>בקש איפוס סיסמה:</h1>
             <form onSubmit={e => onSubmit(e)}>
                 <div className='form-group'>

@@ -7,7 +7,7 @@ const Homepage = () => (
         <meta charset="utf-8"></meta>
         </head>
         <body lang="he" dir="rtl">
-        <div class = "container-fluid" lang="he" dir="rtl">
+        <div class = "container-fluid right-text" lang="he" dir="rtl">
         <div class = "row " lang="he" dir="rtl">
         <div className='container' lang="he" dir="rtl"class="col-6" >
            <div class='jumbotron mt-5'>

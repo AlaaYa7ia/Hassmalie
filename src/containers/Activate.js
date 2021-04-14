@@ -19,7 +19,7 @@ const Activate = ({ verify, match }) => {
     }
 
     return (
-        <div className='container' >
+        <div className='container right-text' >
             <div
                 className='d-flex flex-column justify-content-right align-items-center'
                 style={{ marginTop: '200px' }}

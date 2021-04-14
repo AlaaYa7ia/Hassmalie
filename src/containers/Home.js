@@ -7,7 +7,7 @@ const Home = () => (
         <meta charset="utf-8"></meta>
         </head>
         <body dir="rtl" >
-        <div className='container' lang="he" dir="rtl" style={{display: 'flex',  justifyContent:'center', alignItems:'right', height: '70vh'}}>
+        <div className='container right-text' lang="he" dir="rtl" style={{display: 'flex',  justifyContent:'center', alignItems:'right', height: '70vh'}}>
             <div class='jumbotron mt-5'>
                 <h1 class='display-4' dir= "rtl">החשמלאי</h1>
                 <p class='lead'>מערכת להנהלת עסק עבודות חשמל</p>

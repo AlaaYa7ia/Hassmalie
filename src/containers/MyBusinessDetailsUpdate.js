@@ -207,7 +207,7 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
     return (
 
 
-    <div dir='rtl' class=' container-fluid jumbotron mt-5' lang="he"  style={{  justifyContent:'right'}}>
+    <div dir='rtl' class=' container-fluid jumbotron mt-5 right-text' lang="he"  style={{  justifyContent:'right'}}>
             <h1 dir='rtl'>עדכון הפרטים העסק שלי</h1>
 
             <form dir='rtl' onSubmit={e => businessSubmit(e)}>

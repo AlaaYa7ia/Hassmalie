@@ -87,11 +87,11 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
         <head>
         <meta charset="utf-8"></meta>
         </head>
-        <body dir="rtl">
+        <body dir="rtl" className="right-text">
 
 
 
-        <div class = "container-fluid">
+        <div class = "container-fluid right-text">
         <div className='container' >
            <div class = "row ">
            <div class='jumbotron mt-5 col-6'>
@@ -104,7 +104,7 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
         </div>
         </div>
 
-        <div class = "container-fluid">
+        <div class = "container-fluid right-text">
         <div class = "row ">
         <div className='container' class="col-6" >
            <div class = "row ">

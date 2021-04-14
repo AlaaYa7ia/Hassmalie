@@ -48,7 +48,7 @@ const Signup = ({ signup, isAuthenticated }) => {
     }
 
     return (
-    <div dir='rtl' class='col-6 container-fluid jumbotron mt-5' lang="he"  style={{  justifyContent:'right'}}>
+    <div dir='rtl' class='col-6 container-fluid jumbotron mt-5 right-text' lang="he"  style={{  justifyContent:'right'}}>
                 <h1 dir='rtl'>הרשמה</h1>
             <p>תיצור את המשתמש שלך</p>
             <form dir='rtl' onSubmit={e => onSubmit(e)}>

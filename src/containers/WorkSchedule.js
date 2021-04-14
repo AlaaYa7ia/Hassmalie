@@ -115,7 +115,7 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
 //
 
     return(
-    <html lang="he" >
+    <html lang="he" className="right-text" >
             <p>Reports: {JSON.stringify(reports)}</p>
         <p>Workerss: {JSON.stringify(workers)}</p>
         <p>newReports: {JSON.stringify(newReports)}</p>

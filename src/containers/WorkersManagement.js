@@ -108,7 +108,7 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
 
     function workerForm(){
     return(
-    <form dir='rtl' onSubmit={e => newWorkerSubmit(e)}>
+    <form className="right-text" dir='rtl' onSubmit={e => newWorkerSubmit(e)}>
         <input
              className='form-control'
              type='text'
