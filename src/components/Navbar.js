@@ -5,7 +5,7 @@ import { logout, get_user_data } from '../actions/auth';
 
 
 const Navbar = ({ get_user_data,logout, isAuthenticated}) => {
-    const [data, setData] = useState("");
+    const [data, setData] = useState([]);
 
 //    useEffect(() => {
 //        get_user_data().then((dataRes) => {
@@ -13,7 +13,7 @@ const Navbar = ({ get_user_data,logout, isAuthenticated}) => {
 //        });
 //    }, []);
 
-    const get_user = async (dataRes)=>{
+    const get_user = async (data)=>{
        const user_Res = await get_user_data()
        setData(user_Res);
     }
