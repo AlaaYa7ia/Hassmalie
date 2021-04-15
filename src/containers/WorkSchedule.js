@@ -13,6 +13,8 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
     const [workers, setWorkers] = useState([]);
     const [newReports, setNewReports] = useState([]);
     const [dataRes, setDataRes]= useState([]);
+    const [newReport, setNewReport] = useState("");
+    const [myBusiness, setMyBusiness] = useState({my_business: null});
     let data = [];
     let dataf = new Set();
 
@@ -27,6 +29,7 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
     }
     const get_user = async (dataRes)=>{
        const user_Res = await get_user_data()
+       setMyBusiness({my_business: user_Res.id})
        setDataRes(user_Res);
     }
 
@@ -46,6 +49,7 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
 
 
     function fix_data(){
+        try{
         let rep = []
         if(reports.length !== 0 && workers.length !== 0){
             let w ={}
@@ -53,10 +57,10 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
             reports.forEach(report => (
                 w[report.worker_id]=workers.find((worker)=>worker.id === report.worker_id)
             ))
-            if(w.lenght !== 0){
+            if(w.length !== 0){
                reports.forEach(report => (
                     r = report,
-                    r.worker_id=w[report.worker_id].first_name +" "+ w[report.worker_id].last_name,
+                    r.worker_id={worker_id: report.worker_id, worker_name: w[report.worker_id].first_name +" "+ w[report.worker_id].last_name},
                     rep.push(r)
                 ))
 
@@ -64,14 +68,110 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
 
         }
         return rep
+        }
+        catch(err){
+            console.log(err.response)
+        }
+    }
+
+    const newReportChange = e => setNewReport({ ...newReport, [e.target.name]: e.target.value });
+
+    const newReportWorkerIdChange = e =>{
+        let first_last_name = e.target.value.split(" ");
+        let w = workers.find((worker)=>worker.first_name === first_last_name[0] && worker.last_name === first_last_name[1])
+        console.log(w.id);
+        setNewReport({ ...newReport, worker_id: w.id })
+    }
+
+    const newReportSubmit = e => {
+        e.preventDefault();
+        axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+        axios.defaults.xsrfCookieName = "csrftoken";
+        axios.defaults.withCredentials = true;
+        const formData = new FormData();
+        formData.append('my_business', myBusiness.my_business);
+        formData.append('worker_id', newReport.worker_id);
+        formData.append('project_id', newReport.project_id);
+        formData.append('reporting_date', newReport.reporting_date);
+        formData.append('start_time', newReport.start_time);
+        formData.append('end_time', newReport.end_time);
+        formData.append('description', newReport.description);
+        setNewReport("");
+
+        axios({
+            method: 'post',
+            url: "/api/reports/",
+            data: formData,
+        })
+        .then((dataRes) => {
+            setReports(dataRes.data)
+        }).catch(err=>{ console.log("err", err.response)})
+    }
+
+    function scheduleForm(){
+        return(
+         <form className="right-text" dir='rtl' onSubmit={e => newReportSubmit(e)}>
+         <div className="row">
+         <input
+             className='form-control col-2'
+             type='text'
+             placeholder= "שם עובד"
+             name='worker_id.worker_name'
+             value={newReport.worker_id}
+             onChange={e => newReportWorkerIdChange(e)}
+        />
+        <input
+             className='form-control col-2'
+             type='number'
+             placeholder="מספר פרויקט"
+             name='project_id'
+             value={newReport.project_id}
+             onChange={e => newReportChange(e)}
+             minLength='1'
+        />
+        <input
+             className='form-control col-2'
+             type='date'
+             placeholder="תאריך דיוח"
+             name='reporting_date'
+             value={newReport.reporting_date}
+             onChange={e => newReportChange(e)}
+        />
+        <input
+             className='form-control col-2'
+             type='time'
+             placeholder="כניסה"
+             name='start_time'
+             value={newReport.start_time}
+             onChange={e => newReportChange(e)}
+        />
+        <input
+             className='form-control col-2'
+             type='time'
+             placeholder="יציאה"
+             name='end_time'
+             value={newReport.end_time}
+             onChange={e => newReportChange(e)}
+        />
+        <input
+             className='form-control col-10'
+             type='text'
+             placeholder="תיאור"
+             name='description'
+             value={newReport.description}
+             onChange={e => newReportChange(e)}
+        />
+        </div>
+        <button className='btn btn-success' type='submit'>הוספת דוח</button>
+         </form>
+        )
     }
 
     const columns = useMemo(
     () => [
-
            {
             Header: "שם עובד",
-            accessor: "worker_id",
+            accessor: "worker_id.worker_name",
             filterable: true
           },
           {
@@ -105,19 +205,6 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
     []
   );
 
-  function date_filter(){
-        let format = new Date('2021-03-25')
-        console.log(typeof(format))
-        data = reports.filter(report => new Date(report.reporting_date)>format)
-        console.log(data)
-
-
-  };
-
-  //date_filter();
-
-//
-
     return(
     <html lang="he" className="right-text" >
             <p>Reports: {JSON.stringify(reports)}</p>
@@ -129,6 +216,8 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
           data={newReports}
           dataf={dataf}
           />
+
+          {scheduleForm()}
          </div>
          <button
               className="btn btn-primary"
