@@ -35,10 +35,16 @@ export default function Table({ columns, data, dataf }) {
       setFilterInput({ ...filterInput, worker_id: value });
     };
 
-    const handleDateFilterChange = e => {
+    const handleFirstDateFilterChange = e => {
       const value = e.target.value || undefined;
-      setFilter("reporting_date", value);
-      setFilterInput({ ...filterInput, reporting_date: value });
+      //setFilter("reporting_date", value);
+      setFilterInput({ ...filterInput, first_reporting_date: value });
+
+    };
+     const handleLastDateFilterChange = e => {
+      const value = e.target.value || undefined;
+      //setFilter("reporting_date", value);
+      setFilterInput({ ...filterInput, last_reporting_date: value });
 
     };
 
@@ -46,31 +52,24 @@ export default function Table({ columns, data, dataf }) {
     console.log(e); // native Date object
     };
 
-    const selectionRange = {
-      startDate: new Date(),
-      endDate: new Date(),
-      key: 'selection',
-    };
+    function in_date_range(date){
+        let my_date = new Date(date);
+        let first = new Date(filterInput.first_reporting_date);
+        let last = new Date(filterInput.last_reporting_date);
+        if(filterInput.first_reporting_date === undefined && filterInput.last_reporting_date === undefined){
+            return true;
+        }
+        if(filterInput.first_reporting_date !== undefined && filterInput.last_reporting_date !== undefined){
+            return my_date >= first && my_date <= last;
+        }
+        if(filterInput.first_reporting_date !== undefined){
+            return my_date >= first
+        }
+        if(filterInput.last_reporting_date !== undefined){
+            return my_date <= last
+        }
+    }
 
-    const handleSelectRange= e => {
-    console.log(e.selection.startDate);
-    // {
-    //   selection: {
-    //     startDate: [native Date Object],
-    //     endDate: [native Date Object],
-    //   }
-    // }
-    };
-
-
-  //    <DateRangePicker
-//        ranges={[selectionRange]}
-//        onChange={handleSelectRange}
-//      />
-//     <Calendar
-//        date={new Date()}
-//        onChange={handleSelect}
-//      />
   return (
     <div dir='rtl' class=' container-fluid jumbotron mt-5' lang="he"  style={{  justifyContent:'right'}}>
     <h1>דיווחים של העובדים</h1>
@@ -88,9 +87,15 @@ export default function Table({ columns, data, dataf }) {
     />
     <input
       type='date'
-      value={filterInput.reporting_date}
-      onChange={handleDateFilterChange}
-      placeholder={"סננן לפי תאריך דיווח"}
+      value={filterInput.first_reporting_date}
+      onChange={handleFirstDateFilterChange}
+      placeholder={"סננן מתאיך"}
+    />
+    <input
+      type='date'
+      value={filterInput.last_reporting_date}
+      onChange={handleLastDateFilterChange}
+      placeholder={"עד תאריך"}
     />
     <p>תלחץ על עמודה כדי למיין אותה</p>
     <table class="table" {...getTableProps()}>
@@ -122,8 +127,11 @@ export default function Table({ columns, data, dataf }) {
             <tr {...row.getRowProps()}>
               {
               row.cells.map(cell => {
-                dataf.add(cell.row.values)
-                return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
+                if (in_date_range(cell.row.values.reporting_date)){
+                    dataf.add(cell.row.values)
+                    return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
+                }
+
               })}
             </tr>
           );
