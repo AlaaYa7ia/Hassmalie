@@ -46,19 +46,23 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
 
 
     function fix_data(){
-
-        let w ={}
-        let r = {}
         let rep = []
+        if(reports.length !== 0 && workers.length !== 0){
+            let w ={}
+            let r = {}
+            reports.forEach(report => (
+                w[report.worker_id]=workers.find((worker)=>worker.id === report.worker_id)
+            ))
+            if(w.lenght !== 0){
+               reports.forEach(report => (
+                    r = report,
+                    r.worker_id=w[report.worker_id].first_name +" "+ w[report.worker_id].last_name,
+                    rep.push(r)
+                ))
 
-        reports.forEach(report => (
-            w[report.worker_id]=workers.find((worker)=>worker.id === report.worker_id)
-        ))
-       reports.forEach(report => (
-            r = report,
-            r.worker_id=w[report.worker_id].first_name +" "+ w[report.worker_id].last_name,
-            rep.push(r)
-        ))
+            }
+
+        }
         return rep
     }
 
