@@ -47,7 +47,6 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
 
     const newWorkerSubmit = e => {
         e.preventDefault();
-        e.preventDefault();
         axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
         axios.defaults.xsrfCookieName = "csrftoken";
         axios.defaults.withCredentials = true;
