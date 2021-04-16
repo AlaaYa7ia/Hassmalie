@@ -6,6 +6,7 @@ import { Calendar, DateRangePicker } from 'react-date-range';
 export default function Table({ columns, data, dataf }) {
 // Table component logic and UI come here
     // Use the useTable Hook to send the columns and data to build the table
+
   const {
     getTableProps, // table props from react-table
     getTableBodyProps, // table body props from react-table
@@ -31,8 +32,8 @@ export default function Table({ columns, data, dataf }) {
 
      const handleNameFilterChange = e => {
       const value = e.target.value || undefined;
-      setFilter("worker_id", value); // Update the report.project_id filter. Now our table will filter and show only the rows which have a matching value
-      setFilterInput({ ...filterInput, worker_id: value });
+      setFilter("worker_name", value); // Update the report.project_id filter. Now our table will filter and show only the rows which have a matching value
+      setFilterInput({ ...filterInput, worker_name: value});
     };
 
     const handleFirstDateFilterChange = e => {
@@ -75,7 +76,7 @@ export default function Table({ columns, data, dataf }) {
     <h1>דיווחים של העובדים</h1>
     <p>מסננים:</p>
     <input
-      value={filterInput.worker_id}
+      value={filterInput.worker_name}
       onChange={handleNameFilterChange}
       placeholder={"סנן לפי שם עובד"}
     />
