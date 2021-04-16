@@ -9,9 +9,9 @@ import generatePDF from "../components/reportGenerator";
 
 
 const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
-    const [reports, setReports] = useState([]);
+    const [reports, setReports] = useState({reports:[]});
     const [workers, setWorkers] = useState([]);
-    const [newReports, setNewReports] = useState([]);
+    const [fixed, setFixed] = useState(false);
     const [dataRes, setDataRes]= useState([]);
     const [newReport, setNewReport] = useState("");
     const [myBusiness, setMyBusiness] = useState({my_business: null});
@@ -20,7 +20,9 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
 
     const get_reports = async (dataRes) =>{
     const Report_Res = await axios.get('/api/reports/?my_business=' + dataRes)
-    setReports(Report_Res.data);
+    console.log("Report_Res.data", Report_Res.data)
+    setReports({reports: Report_Res.data});
+    setFixed(false);
     }
 
     const get_worker_data = async (dataRes)=>{
@@ -39,38 +41,31 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
 
     useEffect(()=>{
       get_worker_data(dataRes)
+      console.log(workers);
       get_reports(dataRes)
 
     },[dataRes])
 
     useEffect(()=>{
-      setNewReports(fix_data())
+      fix_data()
     },[reports, workers])
 
 
     function fix_data(){
         try{
-        let rep = []
-        if(reports.length !== 0 && workers.length !== 0){
-            let w ={}
-            let r = {}
-            reports.forEach(report => (
-                w[report.worker_id]=workers.find((worker)=>worker.id === report.worker_id)
-            ))
-            if(w.length !== 0){
-               reports.forEach(report => (
-                    r = report,
-                    r.worker_id={worker_id: report.worker_id, worker_name: w[report.worker_id].first_name +" "+ w[report.worker_id].last_name},
-                    rep.push(r)
+        if(reports.reports.length !== 0 && workers.length !== 0){
+            let workerData;
+            console.log("reports",reports.reports, reports.reports.length)
+            reports.reports.forEach(report => (
+                    workerData = workers.find((worker)=>worker.id === report.worker_id),
+                    report.worker_name=workerData.first_name +" "+ workerData.last_name
                 ))
-
-            }
-
+            setFixed(true);
         }
-        return rep
+        console.log("reports after",reports.reports, reports.reports.length)
         }
         catch(err){
-            console.log(err.response)
+            console.log(err)
         }
     }
 
@@ -78,9 +73,11 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
 
     const newReportWorkerIdChange = e =>{
         let first_last_name = e.target.value.split(" ");
-        let w = workers.find((worker)=>worker.first_name === first_last_name[0] && worker.last_name === first_last_name[1])
-        console.log(w.id);
-        setNewReport({ ...newReport, worker_id: w.id })
+        let w = workers.find((worker)=>worker.first_name === first_last_name[0] &&
+         worker.last_name === first_last_name[1]);
+         if(w !== undefined){
+        setNewReport({ ...newReport, worker_id: w.id });
+        }
     }
 
     const newReportSubmit = e => {
@@ -103,9 +100,10 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
             url: "/api/reports/",
             data: formData,
         })
-        .then((dataRes) => {
-            setReports(dataRes.data)
-        }).catch(err=>{ console.log("err", err.response)})
+        .then((Res) => {
+            setFixed(false);
+            setReports({reports:[...reports.reports, Res.data]});
+        }).catch(err=>{ console.log("err", err)})
     }
 
     function scheduleForm(){
@@ -116,8 +114,8 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
              className='form-control col-2'
              type='text'
              placeholder= "שם עובד"
-             name='worker_id.worker_name'
-             value={newReport.worker_id}
+             name='worker_name'
+             value={newReport.worker_name}
              onChange={e => newReportWorkerIdChange(e)}
         />
         <input
@@ -171,7 +169,7 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
     () => [
            {
             Header: "שם עובד",
-            accessor: "worker_id.worker_name",
+            accessor: "worker_name",
             filterable: true
           },
           {
@@ -204,19 +202,26 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
     ],
     []
   );
+//        <p>Reports: {JSON.stringify(reports)}</p>
+//        <p>Workerss: {JSON.stringify(workers)}</p>
+//        <p>newReports: {JSON.stringify(newReports)}</p>
 
+    function showTable(){
+    if (fixed === true){
     return(
-    <html lang="he" className="right-text" >
-            <p>Reports: {JSON.stringify(reports)}</p>
-        <p>Workerss: {JSON.stringify(workers)}</p>
-        <p>newReports: {JSON.stringify(newReports)}</p>
-         <div dir='rtl' class=' container-fluid jumbotron mt-5' lang="he"  style={{  justifyContent:'center'}}>
-         <Table
+          <Table
           columns={columns}
-          data={newReports}
+          data={reports.reports}
           dataf={dataf}
           />
+          )
+    }
+    }
+    return(
+    <html lang="he" className="right-text" >
 
+         <div dir='rtl' class=' container-fluid jumbotron mt-5' lang="he"  style={{  justifyContent:'center'}}>
+          {showTable()}
           {scheduleForm()}
          </div>
          <button
