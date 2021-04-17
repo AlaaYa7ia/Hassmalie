@@ -199,8 +199,34 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
             disableSortBy: true,
             filterable: true
           },
+          {
+        Header: "",
+        id: "delete",
+        accessor: (str) => "delete",
+
+        Cell: (tableProps) => (
+          <span
+            style={{
+              cursor: "pointer",
+              color: "red",
+              textDecoration: "bold"
+            }}
+            onClick={() => {
+              console.log(reports.reports)
+              // ES6 Syntax use the rvalue if your data is an array.
+              const dataCopy = [...reports.reports];
+              // It should not matter what you name tableProps. It made the most sense to me.
+              dataCopy.splice(tableProps.row.index, 1);
+              console.log("dataCopy",dataCopy)
+              setReports({reports: dataCopy});
+            }}
+          >
+           X
+          </span>
+        )
+      }
     ],
-    []
+    [reports]
   );
 //        <p>Reports: {JSON.stringify(reports)}</p>
 //        <p>Workerss: {JSON.stringify(workers)}</p>
