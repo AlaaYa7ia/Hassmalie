@@ -14,25 +14,29 @@ from django_filters.rest_framework import DjangoFilterBackend
 class UserView(viewsets.ModelViewSet):
     serializer_class = UserCreateSerializer
     queryset = UserAccount.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['email', 'first_name', 'last_name', 'title']
 
 
 class CarView(viewsets.ModelViewSet):
     queryset = Car.objects.all()
     serializer_class = CarCreateSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['my_business']
+    filterset_fields = ['my_business', 'license_number']
 
 
 class MyBusinessView(viewsets.ModelViewSet):
     serializer_class = MyBusinessCreateSerializer
     queryset = MyBusiness.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['manager', 'name']
 
 
 class WorkerView(viewsets.ModelViewSet):
     queryset = Worker.objects.all()
     serializer_class = WorkerCreateSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['my_business', 'first_name', 'last_name', 'id']
+    filterset_fields = ['my_business','email','title', 'first_name', 'last_name', 'id']
 
 
 class ReportView(viewsets.ModelViewSet):
@@ -45,8 +49,12 @@ class ReportView(viewsets.ModelViewSet):
 class CostumerView(viewsets.ModelViewSet):
     serializer_class = CostumerCreateSerializer
     queryset = Costumer.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['email', 'first_name', 'last_name']
 
 
 class ProjectView(viewsets.ModelViewSet):
     serializer_class = ProjectCreateSerializer
     queryset = Project.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['address', 'contractor_id', 'owner_id']
