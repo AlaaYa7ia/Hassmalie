@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack://src/TextStyle.css"],"names":[],"mappings":"AAAA,YACE,gBACF","file":"main.21b9eff2.chunk.css","sourcesContent":[".right-text {\r\n  text-align: right;\r\n}\r\n"]}
