@@ -111,14 +111,17 @@ WSGI_APPLICATION = 'hashmalie.wsgi.application'
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 DATABASES = {
-    # 'default': { #sqlite3
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    # }
-    'default': {  # Mongo database
+    'default': { #sqlite3
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'hassmalieDB',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
+    # 'default': {  # Mongo database
+    #     'ENGINE': 'djongo',
+    #     'NAME': 'hassmalieDB',
+    #     # 'CLIENT': {
+    #     #     'host': 'https://hassmalie.herokuapp.com/',
+    #     # }
+    # }
 }
 
 # Email: hassmalie.project@gmail.com

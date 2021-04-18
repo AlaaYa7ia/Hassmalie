@@ -37,7 +37,7 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     address = models.CharField(max_length=255)
     age = models.IntegerField(default=0)
     is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=True)
     title = models.CharField(max_length=1, choices=USER_TYPE, default='M')
     photo = models.ImageField(upload_to='usersphotos/')
     objects = UserAccountManager()
