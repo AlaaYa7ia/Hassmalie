@@ -43,7 +43,8 @@ class ReportView(viewsets.ModelViewSet):
     queryset = Report.objects.all()
     serializer_class = ReportCreateSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['my_business', 'project_id', 'reporting_date', 'worker_id']
+    filterset_fields = ['my_business', 'project_id', 'reporting_date', 'worker_id', 'reporting_date', 'start_time',
+                        'end_time']
 
 
 class CostumerView(viewsets.ModelViewSet):
