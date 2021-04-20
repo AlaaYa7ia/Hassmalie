@@ -15,6 +15,7 @@ import WorkSchedule from './containers/WorkSchedule';
 import ProjectsManagement from './containers/ProjectsManagement';
 import Financial from './containers/Financial';
 import MyBusinessDetailsUpdate from './containers/MyBusinessDetailsUpdate';
+import FileRepository from './containers/FileRepository';
 import Bid from './containers/Bid';
 
 
@@ -41,6 +42,7 @@ const App = () => (
                     <Route exact path='/work-schedule' component={WorkSchedule} />
                     <Route exact path='/financial' component={Financial} />
                     <Route exact path='/projects-management' component={ProjectsManagement} />
+                    <Route exact path='/file-repository' component={FileRepository} />
                     <Route exact path='/bid' component={Bid} />
                 </Switch>
             </Layout>
