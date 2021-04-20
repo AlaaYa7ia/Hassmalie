@@ -15,12 +15,15 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
     const [dataRes, setDataRes]= useState([]);
     const [newReport, setNewReport] = useState("");
     const [myBusiness, setMyBusiness] = useState({my_business: null});
+    const [showEditReport, setShowEditReport] = useState(false)
+    const [rowToEdit, setRowToEdit]=useState("");
+    const [editReport, setEditReport] = useState("");
     let data = [];
     let dataf = new Set();
 
     const get_reports = async (dataRes) =>{
     const Report_Res = await axios.get('/api/reports/?my_business=' + dataRes)
-    console.log("Report_Res.data", Report_Res.data)
+    //console.log("Report_Res.data", Report_Res.data)
     setReports({reports: Report_Res.data});
     setFixed(false);
     }
@@ -41,7 +44,7 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
 
     useEffect(()=>{
       get_worker_data(dataRes)
-      console.log(workers);
+      //console.log(workers);
       get_reports(dataRes)
 
     },[dataRes])
@@ -55,18 +58,60 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
         try{
         if(reports.reports.length !== 0 && workers.length !== 0){
             let workerData;
-            console.log("reports",reports.reports, reports.reports.length)
+            //console.log("reports",reports.reports, reports.reports.length)
             reports.reports.forEach(report => (
                     workerData = workers.find((worker)=>worker.id === report.worker_id),
                     report.worker_name=workerData.first_name +" "+ workerData.last_name
                 ))
             setFixed(true);
         }
-        console.log("reports after",reports.reports, reports.reports.length)
+        //console.log("reports after",reports.reports, reports.reports.length)
         }
         catch(err){
             console.log(err)
         }
+    }
+
+    const editReportChange = e => setEditReport({ ...editReport, [e.target.name]: e.target.value });
+
+    const editReportWorkerIdChange = e =>{
+        let first_last_name = e.target.value.split(" ");
+        setEditReport({ ...editReport, first_name: first_last_name[0],
+        last_name: first_last_name[1]})
+
+    }
+
+    const editReportSubmit = e =>{
+        e.preventDefault();
+        axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+        axios.defaults.xsrfCookieName = "csrftoken";
+        axios.defaults.withCredentials = true;
+        const formData = new FormData();
+        formData.append('my_business', myBusiness.my_business);
+        formData.append('id', editReport.id);
+        formData.append('worker_id', editReport.worker_id);
+        formData.append('project_id', editReport.project_id);
+        formData.append('reporting_date', editReport.reporting_date);
+        formData.append('start_time', editReport.start_time);
+        formData.append('end_time', editReport.end_time);
+        formData.append('description', editReport.description);
+        setEditReport("");
+
+        axios({
+            method: 'put',
+            url: "/api/reports/"+editReport.id+"/",
+            data: formData,
+        })
+        .then((Res) => {
+            setFixed(false);
+            setShowEditReport(false);
+            const dataCopy = [...reports.reports];
+            dataCopy[rowToEdit] = Res.data
+            //console.log("dataCopy", dataCopy);
+            setReports({reports: dataCopy});
+            setRowToEdit("");
+            //setReports({reports:[...reports.reports, Res.data]});
+        }).catch(err=>{ console.log("err",err, err.response)})
     }
 
     const newReportChange = e => setNewReport({ ...newReport, [e.target.name]: e.target.value });
@@ -212,16 +257,41 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
               textDecoration: "bold"
             }}
             onClick={() => {
-              console.log(reports.reports)
               // ES6 Syntax use the rvalue if your data is an array.
               const dataCopy = [...reports.reports];
               // It should not matter what you name tableProps. It made the most sense to me.
               dataCopy.splice(tableProps.row.index, 1);
-              console.log("dataCopy",dataCopy)
               setReports({reports: dataCopy});
             }}
           >
            X
+          </span>
+        )
+      },
+      {
+        Header: "",
+        id: "edit",
+        accessor: (str) => "edit",
+
+        Cell: (tableProps) => (
+          <span
+            style={{
+              cursor: "pointer",
+              color: "blue",
+              textDecoration: "bold"
+            }}
+            onClick={() => {
+              // ES6 Syntax use the rvalue if your data is an array.
+              //const dataCopy = [...reports.reports];
+              // It should not matter what you name tableProps. It made the most sense to me.
+              //editReport(tableProps.row);
+              //setReports({reports: dataCopy});
+              setRowToEdit(tableProps.row.index);
+              setEditReport(tableProps.row.original)
+              setShowEditReport(true);
+            }}
+          >
+           עריכה
           </span>
         )
       }
@@ -231,6 +301,66 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
 //        <p>Reports: {JSON.stringify(reports)}</p>
 //        <p>Workerss: {JSON.stringify(workers)}</p>
 //        <p>newReports: {JSON.stringify(newReports)}</p>
+
+    function editMyReport(){
+        console.log(rowToEdit)
+        return(
+         <form className="right-text" dir='rtl' onSubmit={e => editReportSubmit(e)}>
+         <div className="row">
+         <input
+             className='form-control col-2'
+             type='text'
+             placeholder= {editReport.worker_name}
+             name='worker_name'
+             value={editReport.worker_name}
+             onChange={e => editReportWorkerIdChange(e)}
+        />
+        <input
+             className='form-control col-2'
+             type='number'
+             placeholder={editReport.project_id}
+             name='project_id'
+             value={editReport.project_id}
+             onChange={e => editReportChange(e)}
+             minLength='1'
+        />
+        <input
+             className='form-control col-2'
+             type='date'
+             placeholder={editReport.reporting_date}
+             name='reporting_date'
+             value={editReport.reporting_date}
+             onChange={e => editReportChange(e)}
+        />
+        <input
+             className='form-control col-2'
+             type='time'
+             placeholder={editReport.start_time}
+             name='start_time'
+             value={editReport.start_time}
+             onChange={e => editReportChange(e)}
+        />
+        <input
+             className='form-control col-2'
+             type='time'
+             placeholder={editReport.end_time}
+             name='end_time'
+             value={editReport.end_time}
+             onChange={e => editReportChange(e)}
+        />
+        <input
+             className='form-control col-10'
+             type='text'
+             placeholder={editReport.description}
+             name='description'
+             value={editReport.description}
+             onChange={e => editReportChange(e)}
+        />
+        </div>
+        <button className='btn btn-success' type='submit'>עדכן דוח</button>
+         </form>
+        )
+    }
 
     function showTable(){
     if (fixed === true){
@@ -248,6 +378,7 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
 
          <div dir='rtl' class=' container-fluid jumbotron mt-5' lang="he"  style={{  justifyContent:'center'}}>
           {showTable()}
+          {showEditReport ? editMyReport(): ""}
           {scheduleForm()}
          </div>
          <button
