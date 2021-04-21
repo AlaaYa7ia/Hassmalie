@@ -1,5 +1,7 @@
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+import "../components/David-normal.js";
+
 
 // Date Fns is used to format the dates we receive
 // from our API call
@@ -9,46 +11,44 @@ import { format } from "date-fns";
 const generatePDF = reports => {
   //initialize jsPDF
   const doc = new jsPDF();
-//  var font = 'Rubik';
-//  var callAddFont = function () {
-//      this.addFileToVFS('Rubik-Regular.ttf', font);
-//      this.addFont('Rubik-Regular.ttf', 'Rubik', 'normal');
-//  };
-//  jsPDF.API.events.push(['addFonts', callAddFont])
-//  doc.addFont("Rubik")
-//  doc.setFont("Rubik"); // set font
+  doc.addFont("David-normal.ttf", "David", "normal");
+   doc.setFont("David"); // set font
+   doc.setFontSize(12);
 
 
-
+  function fix(str){
+   return str.split('').reverse().join('');
+  }
 
   // define the columns we want and their titles
-  const tableColumn = [ "worker name", "project id", "reporting date", "start time", "end time", "description"];
+  //const tableColumn = [     fix("שם עובד"),fix("מספר פרויקט"),fix("תאריך דיוח"),fix("כניסה"),fix("יציאה"),fix("תיאור") ];
+  const tableColumn = [fix("תיאור"),fix("יציאה"),fix("כניסה"),fix("תאריך דיווח"),fix("מספר פרויקט"),fix("שם עובד")]
   // define an empty array of rows
   const tableRows = [];
 
   // for each report pass all its data into an array
   reports.forEach(report => {
     const reportData = [
-      report.worker_id,
-      report.project_id,
-      report.reporting_date,
-      report.start_time,
+      report.description.split('').reverse().join(''),
       report.end_time,
-      report.description,
-      // called date-fns to format the date on the ticket
+      report.start_time,
+      report.reporting_date,
+      report.project_id,
+      report.worker_name.split('').reverse().join(''),
+      // called date-fns to format the date on the report
       format(new Date(report.reporting_date), "yyyy-MM-dd")
     ];
-    // push each tickcet's info into a row
+    // push each reports's info into a row
     tableRows.push(reportData);
   });
   // startY is basically margin-top
-  doc.autoTable(tableColumn, tableRows, { startY: 20 });
+  doc.autoTable(tableColumn, tableRows, {styles: {font: "David", align: 'right', isSymmetricSwapping: true, isInputVisual: true, isOutputVisual: false}});
   const date = Date().split(" ");
   // we use a date string to generate our filename.
   const dateStr = date[0] + date[1] + date[2] + date[3] + date[4];
   // ticket title. and margin-top + margin-left
-  let text = "PDF report by Hassmalie:"
-  doc.text(text, 14, 15);
+  let text = "דוח שעות:".split('').reverse().join('');
+  doc.text(text, 100, 10, {styles: {font: "David" }});//, {align: 'right', isSymmetricSwapping: true, isInputVisual: true, isOutputVisual: false}
   // we define the name of our PDF file.
   doc.save(`report_${dateStr}.pdf`);
 };
