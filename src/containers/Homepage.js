@@ -25,7 +25,8 @@ const Homepage = () => (
                 <h1 class='display-4'>פרויקטים</h1>
                 <hr class='my-4' />
                 <p class='lead'><li> <Link to='/projects-management'>ניהול פרויקטים</Link></li></p>
-
+                <p class='lead'><li> <Link to='/file-repository'>מאגר הקבצים</Link></li></p>
+                <p class='lead'><li> <Link to='/bid'>הפקת הצעת מחיר</Link></li></p>
            </div>
            </div>
             </div>
