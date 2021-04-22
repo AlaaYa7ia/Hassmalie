@@ -23,7 +23,7 @@ import { deleteRow } from 'ka-table/actionCreators';
 //
 
 
-const dataArray = Array(10).fill(undefined).map(
+const dataArray = Array(4).fill(undefined).map(
     (_, index) => ({
         column1: `column:1 row:${index}`,
         column2: `column:2 row:${index}`,
@@ -139,10 +139,10 @@ const SaveButton = ({dispatch, rowKeyValue}) => {
 const tablePropsInit: ITableProps = {
     columns: [
         { key: ':delete', style: { width: 60, textAlign: 'center' } },
-        { key: 'column1', title: 'Column 1', dataType: DataType.String },
-        { key: 'column2', title: 'Column 2', dataType: DataType.String },
-        { key: 'column3', title: 'Column 3', dataType: DataType.String },
-        { key: 'column4', title: 'Column 4', dataType: DataType.String },
+        { key: 'column1', title: 'מחיר כולל ', dataType: DataType.String , style: { width: 160, textAlign: 'center' } },
+        { key: 'column2', title: 'כמות', dataType: DataType.String , style: { width: 160, textAlign: 'center' } },
+        { key: 'column3', title: 'מחיר  ליחידה', dataType: DataType.String , style: { width: 160, textAlign: 'center' } },
+        { key: 'column4', title: 'סוג', dataType: DataType.String , style: { width: 160, textAlign: 'center' } },
         { key: 'editColumn', style: { width: 100, textAlign: 'center' } },
         { key: 'addColumn',style: {width: 100} },
     ],
