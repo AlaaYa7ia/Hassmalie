@@ -1,10 +1,169 @@
 import React, {useState} from 'react';
-import {Link} from 'react-router-dom';
+import "ka-table/style.css";
 import {Annotator} from "image-labeler-react";
-import {Link} from 'react-router';
+import { ITableProps, kaReducer, Table } from 'ka-table';
+import { DataType, EditingMode, SortingMode } from 'ka-table/enums';
+import { DispatchFunc } from 'ka-table/types';
+import 'jspdf-autotable';
+import { getValueByColumn } from 'ka-table/Utils/DataUtils';
+
+import jsPDF from "jspdf";
+import {
+    closeRowEditors,
+    hideNewRow,
+    openRowEditors,
+    saveNewRow,
+    saveRowEditors,
+    showNewRow
+} from 'ka-table/actionCreators';
+
+import { ICellEditorProps, ICellTextProps } from 'ka-table/props';
+import { deleteRow } from 'ka-table/actionCreators';
+
+//
 
 
-const Bid = () => {
+const dataArray = Array(10).fill(undefined).map(
+    (_, index) => ({
+        column1: `column:1 row:${index}`,
+        column2: `column:2 row:${index}`,
+        column3: `column:3 row:${index}`,
+        column4: `column:4 row:${index}`,
+        id: index,
+    }),
+);
+
+var addCol = false;
+
+let maxValue = Math.max(...dataArray.map(i => i.id));
+const generateNewId = () => {
+    maxValue++;
+    return maxValue;
+};
+
+const AddButton = ({
+                       dispatch,
+                   }) => {
+    return (
+        <div className='plus-cell-button'>
+            <img
+                src='https://komarovalexander.github.io/ka-table/static/icons/plus.svg'
+                alt='Add New Row'
+                title='Add New Row'
+                onClick={() => {
+                    dispatch(showNewRow())
+                    addCol=true
+                }}
+            />
+        </div>
+    );
+};
+
+const DeleteRow: React.FC<ICellTextProps> = ({
+                                                 dispatch, rowKeyValue,
+                                             }) => {
+    return (
+        <img
+            src='https://komarovalexander.github.io/ka-table/static/icons/delete.svg'
+            className='delete-row-column-button'
+            onClick={() => dispatch(deleteRow(rowKeyValue))}
+            alt=''
+        />
+    );
+};
+
+const EditButton = ({
+                        dispatch, rowKeyValue
+                    }) => {
+    return (
+        <div className='edit-cell-button'>
+            <img
+                src='https://komarovalexander.github.io/ka-table/static/icons/edit.svg'
+                alt='Edit Row'
+                title='Edit Row'
+                onClick={() => dispatch(openRowEditors(rowKeyValue))}
+            />
+        </div>
+    );
+};
+
+
+
+
+const SaveButton = ({dispatch, rowKeyValue}) => {
+    const saveNewData = () => {
+        const rowKeyValue = generateNewId();
+        dispatch(saveNewRow(rowKeyValue, {
+            validate: true
+        }));
+    };
+    return (
+        <div className='buttons'
+             style={{display: 'flex', justifyContent: 'space-between'}} >
+            <img
+                src='https://komarovalexander.github.io/ka-table/static/icons/save.svg'
+                className='save-cell-button'
+                alt='Save'
+                title='Save'
+                onClick={() => {
+                    if(addCol) {
+                        saveNewData();
+                        addCol=false;
+                    }
+                    else {
+                        dispatch(saveRowEditors(rowKeyValue, {
+                                validate: true,
+                            })
+                        );
+                    }
+                }}
+            />
+            <img
+                src='https://komarovalexander.github.io/ka-table/static/icons/close.svg'
+                className='close-cell-button'
+                alt='Cancel'
+                title='Cancel'
+                onClick={() => {
+                    if (addCol){
+                        dispatch(hideNewRow())
+                        addCol=false
+                    }
+                    else
+                        dispatch(closeRowEditors(rowKeyValue));
+                }}
+            />
+        </div >
+    );
+};
+
+const tablePropsInit: ITableProps = {
+    columns: [
+        { key: ':delete', style: { width: 60, textAlign: 'center' } },
+        { key: 'column1', title: 'Column 1', dataType: DataType.String },
+        { key: 'column2', title: 'Column 2', dataType: DataType.String },
+        { key: 'column3', title: 'Column 3', dataType: DataType.String },
+        { key: 'column4', title: 'Column 4', dataType: DataType.String },
+        { key: 'editColumn', style: { width: 100, textAlign: 'center' } },
+        { key: 'addColumn',style: {width: 100} },
+    ],
+    virtualScrolling: {
+        enabled: true
+    },
+    data: dataArray,
+    editingMode: EditingMode.Cell,
+    rowKeyField: 'id',
+    sortingMode: SortingMode.Single,
+};
+
+
+
+const Bid: React.FC = () => {
+    const [tableProps, changeTableProps] = useState(tablePropsInit);
+    const dispatch: DispatchFunc = action => {
+        changeTableProps((prevState: ITableProps) => kaReducer(prevState, action));
+    };
+
+
     const [newMap, setNewMap] = useState("");
 
     /*        const mapSubmit = e => {
@@ -36,8 +195,7 @@ const Bid = () => {
                 setMap(dataRes.data)
                 console.log(dataRes.data)
             }).catch(err=>{ console.log("err", err.response)})
-         };*/
-    /*
+         };
 
     function symbolData(symbolName,price,symbolNum){
             let symbol={};
@@ -73,22 +231,32 @@ const Bid = () => {
         symbolList['שקע יחיד מוגן מים רגיל']=symbolData('שקע יחיד מוגן מים רגיל',2,0)
 
     */
+    const exportClick = orientation => {
+        const doc = new jsPDF(orientation);
+        const head = [tableProps.columns.map(c => c.title)];
+        const body = tableProps.data.map(d =>
+            tableProps.columns.map(c => getValueByColumn(d, c))
+        );
+        doc.autoTable({
+            margin: 1,
+            headStyles: { fillColor: "#F1F5F7", textColor: "#747D86" },
+            alternateRowStyles: { fillColor: "#F9FBFC" },
+            head,
+            body
+        });
 
+        doc.save("table.pdf");
+    };
 
     return (
-        <html lang="HE" dir="rtl">
+        <html >
         <head>
-            <meta charset="utf-8"
-                  name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+            <meta charset="utf-8">
             </meta>
-            <link rel='stylesheet' href='https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css'>
-                <link rel='stylesheet' href='https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css'>
-                    <link rel="stylesheet" href="src/TextStyle.css">
-
         </head>
-        <body lang="he" dir="rtl">
-        <div dir="rtl" className=" container-fluid " lang="he" style={{justifyContent: 'right'}}>
-            <div className=" alert alert-primary " role="alert">
+        <body class="container container-fluid alert alert-primary " role="alert">
+        <div>
+            <div >
                 <h1 >הצעת מחיר</h1>
                 <div class="row " lang="he" dir="rtl">
                     <form dir="rtl">
@@ -106,7 +274,7 @@ const Bid = () => {
                     </form>
                 </div>
             </div>
-            <div className="App">
+            <div className="App ">
                 <Annotator
                     height={700}
                     width={1000}
@@ -119,6 +287,10 @@ const Bid = () => {
                         let price = 0
                         const electricObject = document.getElementById("addThing")
                         document.getElementById("BidExplanation").style.display = "block"
+                        document.addEventListener("DOMContentLoaded",()=>
+                        {
+                            document.querySelector(".ant-btn").nextElementSibling.innerText = "extract as table"
+                        });
 
                         if (labeledData.boxes != null) {
 
@@ -154,6 +326,7 @@ const Bid = () => {
                         , 'שקע כח יחיד', 'שקע כח כפול'
                     ]}
                     //array.push to save data
+
                     showButton={true}
                     /*defaultBoxes={[{
                         x: 316,
@@ -172,7 +345,6 @@ const Bid = () => {
                         padding: 10
                     }}
                     // sceneTypes={['1', '2', '3']}
-
                 />
             </div>
 
@@ -193,63 +365,62 @@ const Bid = () => {
                 </div>
             </div>
 
-
-
         </div>
 
-        <div className="container">
-            <h1>HTML5 Editable Table</h1>
-            <p>Through the powers of <strong>contenteditable</strong> and some simple jQuery you can easily create a
-                custom editable table. No need for a robust JavaScript library anymore these days.</p>
+        <div id="bid-table">
+            <div>
+                <div
+                    style={{
+                        marginBottom: 20,
+                        marginLeft: 20
+                    }}
+                >
+                    <button onClick={() => exportClick()}>Export to PDF</button>
+                    <button
+                        style={{ marginLeft: 40 }}
+                        onClick={() => exportClick("landscape")}
+                    >
+                        Export to PDF (Landscape)
+                    </button>
+                </div>
 
-            <ul>
-                <li>An editable table that exports a hash array. Dynamically compiles rows from headers</li>
-                <li>Simple / powerful features such as add row, remove row, move row up/down.</li>
-            </ul>
-
-            <div id="table" className="table-editable">
-                <span className="table-add glyphicon glyphicon-plus"></span>
-                <table className="table">
-                    <tr>
-                        <th>Name</th>
-                        <th>Value</th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td contentEditable="true">Stir Fry</td>
-                        <td contentEditable="true">stir-fry</td>
-                        <td>
-                            <span className="table-remove glyphicon glyphicon-remove"></span>
-                        </td>
-                        <td>
-                            <span className="table-up glyphicon glyphicon-arrow-up"></span>
-                            <span className="table-down glyphicon glyphicon-arrow-down"></span>
-                        </td>
-                    </tr>
-                    <tr className="hide">
-                        <td contentEditable="true">Untitled</td>
-                        <td contentEditable="true">undefined</td>
-                        <td>
-                            <span className="table-remove glyphicon glyphicon-remove"></span>
-                        </td>
-                        <td>
-                            <span className="table-up glyphicon glyphicon-arrow-up"></span>
-                            <span className="table-down glyphicon glyphicon-arrow-down"></span>
-                        </td>
-                    </tr>
-                </table>
             </div>
+            <div className='add-row-demo'>
+                <Table
+                    {...tableProps}
+                    childComponents={{
+                        cellText: {
+                            content: (props) => {
+                                if (props.column.key === 'editColumn')
+                                    return <EditButton {...props}/>
 
-            <button id="export-btn" className="btn btn-primary">Export Data</button>
-            <p id="export"></p>
+                                switch (props.column.key){
+                                    case ':delete': return <DeleteRow {...props}/>;
+                                }
+                            }
+                        },
+                        cellEditor: {
+                            content: (props) => {
+                                if (props.column.key === 'editColumn'){
+                                    return <SaveButton {...props}/>
+                                }
+                            }
+                        },
+                        headCell: {
+                            content: (props) => {
+                                if (props.column.key === 'addColumn') {
+                                    return <AddButton {...props}/>;
+                                }
+                            }
+                        }
+                    }}
+                    dispatch={dispatch}
+                />
+            </div>
         </div>
-
-        <script  src="./script.js"></script>
-
         </body>
         </html>
-);
+    );
 };
 
 export default Bid;
