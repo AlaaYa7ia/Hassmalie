@@ -7,7 +7,6 @@ import { Link, Redirect } from 'react-router-dom';
 import Table from "../components/Table";
 import generatePDF from "../components/reportGenerator";
 
-
 const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
     const [reports, setReports] = useState({reports:[]});
     const [workers, setWorkers] = useState([]);

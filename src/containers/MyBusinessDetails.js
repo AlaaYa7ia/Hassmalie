@@ -47,10 +47,11 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
     }, []);
 
     function getImgUrl(image, instance) {
-    if (image === null) {
-        return '/default_'+instance+'_pic.png';
-    }
-     return image;
+        console.log(image, instance);
+        if (image === null) {
+            return process.env.REACT_APP_API_URL+'/media/defaultpictuers/default_'+instance+'_pic.png';
+        }
+        return image;
     }
 
     function loadCars(){
