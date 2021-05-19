@@ -9,12 +9,6 @@ const Navbar = ({ get_user_data,logout, isAuthenticated}) => {
      first_name:"",
      last_name:""});
 
-//    useEffect(() => {
-//        get_user_data().then((dataRes) => {
-//            setData(dataRes);
-//        });
-//    }, []);
-
     const get_user = async (data)=>{
        const user_Res = await get_user_data()
        if(user_Res.first_name !== undefined){
@@ -30,10 +24,10 @@ const Navbar = ({ get_user_data,logout, isAuthenticated}) => {
     const guestLinks = () => (
         <Fragment>
             <li className='nav-item'>
-                <Link className='nav-link' to='/login'>לכניסה</Link>
+                <Link className='nav-link text-warning' to='/login'>לכניסה</Link>
             </li>
             <li className='nav-item'>
-                <Link className='nav-link' to='/signup'>להרשמה</Link>
+                <Link className='nav-link text-warning' to='/signup'>להרשמה</Link>
             </li>
         </Fragment>
     );
@@ -42,13 +36,13 @@ const Navbar = ({ get_user_data,logout, isAuthenticated}) => {
 
     <Fragment>
         <li className='nav-item'>
-            <a className='nav-link' href='#!' onClick={logout}>ליציאה</a>
+            <a className='nav-link text-danger' href='#!' onClick={logout}>ליציאה</a>
         </li>
         <li className='nav-item'>
-                <Link className='nav-link' to='/homepage'>העסק שלי</Link>
+                <Link className='nav-link text-warning' to='/homepage'>העסק שלי</Link>
         </li>
         {<li className='nav-item'>
-            <Link className='nav-link'>ברוך הבא {data.first_name+ " " + data.last_name}</Link>
+            <Link className='nav-link text-warning'>ברוך הבא {data.first_name+ " " + data.last_name}</Link>
         </li>}
 
 
@@ -57,8 +51,8 @@ const Navbar = ({ get_user_data,logout, isAuthenticated}) => {
 
     return (
 
-            <nav className='navbar navbar-expand-lg navbar-light bg-light' lang="he" dir="rtl">
-                <Link className='navbar-brand' to='/'>החשמלאי</Link>
+            <nav className='navbar navbar-expand-lg nav-tabs' lang="he" dir="rtl" style={{ backgroundColor: 'rgba(60, 60, 60, 0.9)'}}>
+                <Link className='navbar-brand text-warning' to='/'>החשמלאי</Link>
                 <button
                     className='navbar-toggler'
                     type='button'
@@ -73,7 +67,7 @@ const Navbar = ({ get_user_data,logout, isAuthenticated}) => {
                 <div className='collapse navbar-collapse' id='navbarNav'>
                     <ul className='navbar-nav'>
                         <li className='nav-item active'>
-                            <Link className='nav-link' to='/'>עמוד הבית <span className='sr-only'>(current)</span></Link>
+                            <Link className='nav-link text-warning' to='/'>עמוד הבית <span className='sr-only'>(current)</span></Link>
                         </li>
 
                         {isAuthenticated ? authLinks() : guestLinks()}
