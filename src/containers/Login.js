@@ -59,10 +59,11 @@ const Login = ({ login, isAuthenticated }) => {
                         required
                     />
                 </div>
-                <button className='btn btn-primary' dir= "rtl" type='submit'>כניסה</button>
                 {alert.showAlert && <div className="alert alert-danger" role="alert">
                     {alert.alert}
                 </div>}
+                <button className='btn btn-primary' dir= "rtl" type='submit'>כניסה</button>
+
 
             </form>
             <p className='mt-3' dir= "rtl">
