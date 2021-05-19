@@ -9,14 +9,19 @@ const Login = ({ login, isAuthenticated }) => {
         password: ''
     });
 
+    const [alert, setAlert] = useState({showAlert: false, alert:""});
+
     const { email, password } = formData;
 
     const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
 
-    const onSubmit = e => {
+    const onSubmit = async e => {
         e.preventDefault();
-
-        login(email, password);
+        let flag;
+        await login(email, password).then(result => flag = result);
+        if (!flag) {
+            setAlert({showAlert: true, alert:"האיימיל או הסיסמה שהזנת שגויים, נסה שוב בבקשה."})
+        }
     };
 
 
@@ -55,6 +60,10 @@ const Login = ({ login, isAuthenticated }) => {
                     />
                 </div>
                 <button className='btn btn-primary' dir= "rtl" type='submit'>כניסה</button>
+                {alert.showAlert && <div className="alert alert-danger" role="alert">
+                    {alert.alert}
+                </div>}
+
             </form>
             <p className='mt-3' dir= "rtl">
                 עדין לא עשית חשבון? <Link to='/signup'>תירשם</Link>
