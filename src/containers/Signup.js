@@ -16,13 +16,6 @@ const Signup = ({ signup, isAuthenticated }) => {
         password: '',
         re_password: ''
     });
-    const options = [
-  { value: 'M', label: 'מנהל' },
-  { value: 'D', label: 'סגן מנהל' },
-  { value: 'R', label: 'עובד חשמל' }
-]
-
-
     const { first_name, last_name, email,title, phone_number, address, password, re_password } = formData;
 
     const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -86,16 +79,20 @@ const Signup = ({ signup, isAuthenticated }) => {
                     />
                 </div>
 
-                <div className='form-group'>
-                    <input
-                        className='form-control'
-                        type='text'
+                <div className='form-group dropdown'>
+                    <select
+                        className='form-control right-text'
                         placeholder='סוג עובד*'
                         name='title'
                         value={title}
                         onChange={e => onChange(e)}
                         required
-                    />
+                    >
+                        <option>סוג עובד*</option>
+                        <option value="M">מנהל</option>
+                        <option value="D">סגן מנהל</option>
+                        {/*<option value="R">עובד אחר</option>*/}
+                    </select>
                 </div>
 
                 <div className='form-group'>
