@@ -51,8 +51,11 @@ const Signup = ({ signup, isAuthenticated }) => {
     // };
 
     return (
-    <div dir='rtl' class='col-6 container-fluid jumbotron mt-5 right-text' lang="he"  style={{  justifyContent:'right'}}>
-                <h1 dir='rtl'>הרשמה</h1>
+        <html  lang="he" dir="rtl" style={{ backgroundColor: 'rgba(184, 160, 191)' }}>
+        <div><br></br> <br></br> <br></br><br></br></div>
+    <div dir='rtl' class='col-3 container-fluid right-text ' lang="he" style={{display: 'flex',  justifyContent:'center', alignItems:'center', height: '70vh'}} >
+        <div className='container' dir= "rtl" >
+        <h1 dir='rtl'>הרשמה</h1>
             <p>תיצור את המשתמש שלך</p>
             <form dir='rtl' onSubmit={e => onSubmit(e)}>
                 <div className='form-group'>
@@ -193,6 +196,10 @@ const Signup = ({ signup, isAuthenticated }) => {
                 כבר יש לך חשבון? <Link to='/login'>תתחבר</Link>
             </p>
         </div>
+    </div>
+    <div><br></br><br></br><br></br> <br></br> <br></br> <br></br> <br></br><br></br></div>
+
+        </html>
     );
 };
 
