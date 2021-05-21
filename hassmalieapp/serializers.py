@@ -56,9 +56,11 @@ class CostumerCreateSerializer(serializers.ModelSerializer):
 
 
 class ProjectCreateSerializer(serializers.ModelSerializer):
+    buildingimages = serializers.ImageField(max_length=None, use_url=True, required=False)
+
     class Meta:
         model = Project
-        fields = ('id', 'type_of_building', 'address', 'contractor_id', 'architect_id', 'owner_id')
+        fields = ('id', 'type_of_building', 'address', 'contractor_id', 'architect_id', 'owner_id', 'buildingimages')
 
 
 class ReportCreateSerializer(serializers.ModelSerializer):

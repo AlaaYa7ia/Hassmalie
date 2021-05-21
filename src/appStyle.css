@@ -31,4 +31,12 @@
   border: 3px solid whitesmoke;
   padding: 10px;
 }
+.center1 {
+  margin: auto;
+  padding: 10px;
+}
+
+.line:hover {
+  background-color: #e6f7ff;
+}
 

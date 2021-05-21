@@ -129,6 +129,7 @@ class Project(models.Model):
     contractor_id = models.ForeignKey(Worker, related_name='contractor_id', on_delete=models.PROTECT)
     architect_id = models.ForeignKey(Worker, related_name='architect_id', on_delete=models.PROTECT)
     owner_id = models.ForeignKey(Costumer, on_delete=models.PROTECT)
+    buildingImage = models.ImageField(upload_to='buildingimages/')
 
     def __str__(self):
         return str(self.type_of_building)

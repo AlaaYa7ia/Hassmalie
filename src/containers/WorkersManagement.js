@@ -230,7 +230,7 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
         try{
             return(
         workers.map(worker => (
-            <div id={"accordion"+ worker.id}  className='col-3'>
+            <div id={"accordion"+ worker.id}  className='col-2'>
                 <div className="card">
                     <div className="card-header" id={"heading"+worker.id.toString()} >
 
