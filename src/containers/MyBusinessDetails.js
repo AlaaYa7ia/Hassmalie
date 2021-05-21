@@ -68,7 +68,7 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
                     </h5>
                 </div>
 
-                <div id={"collapse"+car.id} className="collapse show" aria-labelledby={"heading"+car.id} data-parent="#accordion">
+                <div id={"collapse"+car.id} className="collapse" aria-labelledby={"heading"+car.id} data-parent="#accordion">
                     <div className="card-body">
                         <div className="row ">
                             <div className='col-5'>
