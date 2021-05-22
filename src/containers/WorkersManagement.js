@@ -1,42 +1,63 @@
-import React, { Component, useEffect, setState, useState } from "react";
-import ReactDOM from "react-dom";
+import React, {useEffect, useState } from "react";
 import axios from "axios";
 import { connect } from 'react-redux';
 import {get_user_data } from '../actions/auth';
-import { Link, Redirect } from 'react-router-dom';
 
 const WORKER_TYPE =
         {'R': 'Regular Worker',
         'C': 'Contractor',
         'A': 'Architect'};
 
-const TOGGLE_MSG ={true: "תציג כל הפרטים", false: "צמצם פרטים"}
-
 const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
     const [workers, setWorkers] = useState([]);
-    const [state, setState] = useState({showMessage: false, msg: "תציג כל הפרטים"});
     const [addWorker, setAddWorker] = useState({showForm: false, showButton: true})
     const [newWorker, setNewWorker] = useState("");
     const [myBusiness, setMyBusiness] = useState({my_business: null});
+    const [dataRes, setDataRes]= useState([]);
+    const[changed, setChanged]= useState(false);
 
-    useEffect(() => {
-    (async () => {
-        await get_user_data().then((dataRes) => {
-            setMyBusiness({my_business: dataRes.id})
-             axios
-          .get("/api/workers/?my_business=" +dataRes.id )
-          .then((dataRes) => {
-            setWorkers(dataRes.data);
-            })
 
-        })})();
-    }, []);
 
-   function getImgUrl(image, instance) {
-    if (image === null) {
-        return '/default_'+instance+'_pic.png';
+    // useEffect(() => {
+    // (async () => {
+    //     await get_user_data().then((dataRes) => {
+    //         setMyBusiness({my_business: dataRes.id})
+    //          axios
+    //       .get("/api/workers/?my_business=" +dataRes.id )
+    //       .then((dataRes) => {
+    //         setWorkers(dataRes.data);
+    //         })
+    //
+    //     })})();
+    // }, []);
+
+    const get_workers = async (dataRes) =>{
+        const projects_Res = await axios.get('/api/workers/?my_business=' + dataRes)
+        setWorkers(projects_Res.data);
     }
-     return image;
+
+    const get_user = async (dataRes)=>{
+        const user_Res = await get_user_data()
+        setMyBusiness({my_business: user_Res.id})
+        setDataRes(user_Res);
+    }
+
+    useEffect(()=>{
+        get_user()
+    },[])
+
+    useEffect(()=>{
+        get_workers(dataRes);
+        setChanged(false);
+    },[dataRes, changed])
+
+
+    function getImgUrl(image, instance) {
+        console.log(image, instance);
+        if (image === null) {
+            return process.env.REACT_APP_API_URL+'/media/defaultpictuers/default_'+instance+'_pic.png';
+        }
+        return image;
     }
 
 
@@ -86,15 +107,16 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
         .then((dataRes) => {
             setWorkers(dataRes.data)
             console.log("workers data", dataRes.data)
+            setAddWorker({showForm: false, showButton: true});
+            setChanged(true);
         }).catch(err=>{ console.log("err", err.response)})
 
-        setAddWorker({showForm: false, showButton: true});
     }
 
-    let onLinkClickHandler = () => {
-        let showOrHide = state.showMessage;
-        setState({showMessage: !showOrHide, msg: TOGGLE_MSG[showOrHide]});
-    };
+    // let onLinkClickHandler = () => {
+    //     let showOrHide = state.showMessage;
+    //     setState({showMessage: !showOrHide, msg: TOGGLE_MSG[showOrHide]});
+    // };
 
     let addWorkerClickHandler = () => {
         setAddWorker({showForm: true, showButton:  false});
