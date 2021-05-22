@@ -79,6 +79,18 @@ const MapBid = () => {
              };*/
 
 
+    const showList = () => {
+
+        document.getElementById("addThing").style.display = "block"
+
+
+    }
+    document.addEventListener("DOMContentLoaded",()=>
+    {
+        document.getElementById("imgUpload").addEventListener("click", showList);
+
+    });
+
     const buildArr= () => {
         var arr=[]
         for(let key in symbolList){
@@ -100,7 +112,7 @@ const MapBid = () => {
             <div>
                 <h1>הצעת מחיר</h1>
                 <div className="row " lang="he" dir="rtl">
-                    <form dir="rtl">
+                  {/*  <form dir="rtl">*/}
                         <div className="row">
                             <div className="col-12 col-md-4">
                                 <h3>הוספת מפה:</h3>
@@ -109,14 +121,14 @@ const MapBid = () => {
                                 <input className="form-group" type="file"></input>
                             </div>
                             <div className="col-12 col-md-4">
-                                <button className="btn btn-primary" type="submit">הוספה</button>
+                                <button className="btn btn-primary" onClick={showList} id="imgUpload">הוספה</button>
                             </div>
                         </div>
-                    </form>
+                {/*    </form>*/}
                 </div>
             </div>
-            <div className="App ">
-                <Annotator
+            <div className="App "   id="addThing"   style={{display: "none"}}>
+                <Annotator id="annotationField"
                     height={700}
                     width={1000}
                     imageUrl={"https://i.pinimg.com/originals/a6/49/96/a649969f30f6bba48af384878bcc57c2.jpg"}
@@ -133,47 +145,47 @@ const MapBid = () => {
 
                         console.log(dataArray)
                         window.location.href = "/TableBid";
-/*
-                        let html = " <tr>     <th scope=\"col\">" + 'סוג' + "</th>" +
-                            "   <td> " + "מחיר ליח'" + "</td>" /!*+
-                                "   <td> " + "כמות" + "</td>" +
-                                "   <td> " + "מחיר כללי" + "</td>"*!/;
-                        let price = 0
-                        const electricObject = document.getElementById("addThing")
-                        document.getElementById("BidExplanation").style.display = "block"
-                        document.addEventListener("DOMContentLoaded",()=>
-                        {
-                            document.querySelector(".ant-btn").nextElementSibling.innerText = "extract as table"
-                        });
+                        /*
+                                                let html = " <tr>     <th scope=\"col\">" + 'סוג' + "</th>" +
+                                                    "   <td> " + "מחיר ליח'" + "</td>" /!*+
+                                                        "   <td> " + "כמות" + "</td>" +
+                                                        "   <td> " + "מחיר כללי" + "</td>"*!/;
+                                                let price = 0
+                                                const electricObject = document.getElementById("addThing")
+                                                document.getElementById("BidExplanation").style.display = "block"
+                                                document.addEventListener("DOMContentLoaded",()=>
+                                                {
+                                                    document.querySelector(".ant-btn").nextElementSibling.innerText = "extract as table"
+                                                });
 
-                        if (labeledData.boxes != null) {
+                                                if (labeledData.boxes != null) {
 
-                            electricObject.style.display = "block"
+                                                    electricObject.style.display = "block"
 
-                            // reports.forEach(report => (
-                            //     w[report.worker_id]=workers.find((worker)=>worker.id === report.worker_id)
-                            // ))
+                                                    // reports.forEach(report => (
+                                                    //     w[report.worker_id]=workers.find((worker)=>worker.id === report.worker_id)
+                                                    // ))
 
-                            for (let i in labeledData.boxes) {
-                                symbolList[labeledData.boxes[i].annotation].setSymbolNum();
-                            }
-                            for (let i in  symbolList) {
-                                // symbolList[labeledData.boxes[i].annotation].price
-                                //symbolList[labeledData.boxes[i].annotation].num++
-                                html += " <tr>     <th scope=\"col\">" +symbolList[i].getName() + "</th>" +
-                                    "   <td> " + symbolList[i].getPrice() + "</td>"/!*+
-                                        "   <td> " + "100" + "</td>"+
-                                        "   <td> " + //symbolList[labeledData.boxes[i].annotation].num++
-                                         + "</td>"*!/;//symbolList[labeledData.boxes[i].annotation].price
-                                price += symbolList[i].getPrice()//symbolList[labeledData.boxes[i].annotation].price
+                                                    for (let i in labeledData.boxes) {
+                                                        symbolList[labeledData.boxes[i].annotation].setSymbolNum();
+                                                    }
+                                                    for (let i in  symbolList) {
+                                                        // symbolList[labeledData.boxes[i].annotation].price
+                                                        //symbolList[labeledData.boxes[i].annotation].num++
+                                                        html += " <tr>     <th scope=\"col\">" +symbolList[i].getName() + "</th>" +
+                                                            "   <td> " + symbolList[i].getPrice() + "</td>"/!*+
+                                                                "   <td> " + "100" + "</td>"+
+                                                                "   <td> " + //symbolList[labeledData.boxes[i].annotation].num++
+                                                                 + "</td>"*!/;//symbolList[labeledData.boxes[i].annotation].price
+                                                        price += symbolList[i].getPrice()//symbolList[labeledData.boxes[i].annotation].price
 
-                            }
-                            console.log(symbolList)
-                            // electricObject.appendChild(html) ;
-                        }
-                        html += " <tr>     <th scope=\"col\">" + 'סכום' + "</th>" +
-                            "   <td> " + price + "</td>";
-                        electricObject.innerHTML = html;*/
+                                                    }
+                                                    console.log(symbolList)
+                                                    // electricObject.appendChild(html) ;
+                                                }
+                                                html += " <tr>     <th scope=\"col\">" + 'סכום' + "</th>" +
+                                                    "   <td> " + price + "</td>";
+                                                electricObject.innerHTML = html;*/
                     }}
                     //disableAnnotation={true}
                     types={buildArr()}
