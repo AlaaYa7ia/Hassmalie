@@ -1,8 +1,9 @@
-import React, {useState} from 'react';
+import React, {useEffect,useState} from 'react';
 import "ka-table/style.css";
 import {Annotator} from "image-labeler-react";
 import 'jspdf-autotable';
 import {Link} from "react-router-dom";
+import { connect } from 'react-redux';
 import axios from "axios";
 
 
@@ -50,7 +51,7 @@ const MapBid = () => {
     const [imgUploaded,setImgUploaded] = useState(false);
     let fileSelectedHandler  = e =>{
         setNewMap({[e.target.name]: e.target.files[0] })
-        setImgUploaded(true)
+
     }
     const mapSubmit = e => {
         e.preventDefault();
@@ -61,14 +62,18 @@ const MapBid = () => {
         const formData = new FormData();
         try{formData.append("photo", newMap.photo,newMap.photo.name);
         } catch(err){console.log("didn't change photo.")}
+        formData.append("project_id",1);
+
+        console.log(formData);
         axios({
             method: 'post',
-            url: process.env.REACT_APP_API_URL+'/media/defaultpictuers/',
-            data: formData.photo,
+            url: process.env.REACT_APP_API_URL+'/api/bids/',
+            data: formData,
         })
             .then((dataRes) => {
-                setNewMap(dataRes.data)
-                console.log("workers data", dataRes.data)
+                console.log("bid data", dataRes.data)
+                setNewMap(dataRes.data.photo)
+                setImgUploaded(true)
             }).catch(err=>{ console.log("err", err.response)})
     };
 
@@ -100,13 +105,13 @@ const MapBid = () => {
 
 
     function uploadAnnotation() {
+        setImgUploaded(false)
         return (
         <div className="App "   id="addThing"   style={{display: "none"}}>
             <Annotator id="annotationField"
                        height={700}
                        width={1000}
-                       imageUrl={/*process.env.REACT_APP_API_URL+'/media/defaultpictuers/'+newMap.photo.name*/
-                           "https://images.edrawsoft.com/articles/home-wiring-plan/electrical-wiring-example.jpg"}
+                       imageUrl={process.env.REACT_APP_API_URL+'/media/projects/projectsfiles/'+newMap.photo.name}
                        asyncUpload={async (labeledData) => {
 
                            for (var i in labeledData.boxes)
