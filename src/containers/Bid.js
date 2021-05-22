@@ -161,10 +161,10 @@ const Bid = () => {
         <div  class="jumbotron mt-5  row">
             <div className='col-12 col-md-4'>
                 <h1 className='lead'>
-                    <li><Link to='/MapBid.js'>עידכון פריטים בהמפה</Link></li>
+                    <li><Link to='/MapBid'>עידכון פריטים בהמפה</Link></li>
                 </h1>
                 <h1 className='lead'>
-                    <li><Link to='/TableBid.js'>עידכון פריטים בטבלה</Link></li>
+                    <li><Link to='/TableBid'>עידכון פריטים בטבלה</Link></li>
                 </h1>
 
             </div>
