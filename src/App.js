@@ -18,6 +18,8 @@ import Financial from './containers/Financial';
 import MyBusinessDetailsUpdate from './containers/MyBusinessDetailsUpdate';
 import FileRepository from './containers/FileRepository';
 import Bid from './containers/Bid';
+import MapBid from './containers/MapBid';
+import TableBid from './containers/TableBid';
 
 
 import { Provider } from 'react-redux';
@@ -46,6 +48,8 @@ const App = () => (
                     <Route exact path='/projects-management' component={ProjectsManagement} />
                     <Route exact path='/file-repository' component={FileRepository} />
                     <Route exact path='/bid' component={Bid} />
+                    <Route exact path='/TableBid' component={TableBid} />
+                    <Route exact path='/MapBid' component={MapBid} />
                     <Redirect to='/login'/>
                 </Switch>
             </Layout>

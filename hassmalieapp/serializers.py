@@ -76,3 +76,25 @@ class ProjectFileCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProjectFile
         fields = ('id', 'project_id', 'category', 'file')
+
+
+class BidCreateSerializer(serializers.ModelSerializer):
+    photo = serializers.FileField(max_length=None, use_url=True, required=True)
+
+    class Meta:
+        model = Bid
+        fields = ('id', 'project_id', 'photo')
+
+
+class SymbolCreateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Symbol
+        fields = ('id', 'bid_id','type','count','price')
+
+class LabelCreateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Label
+        fields = ('id','bid_id', 'x','y','w','h','annotation')
+

@@ -163,3 +163,31 @@ class ProjectFile(models.Model):
     REQUIRED_FIELDS = ['project_id', 'file']
     def __str__(self):
         return str(self.file.name)
+
+# Bid tabels
+class Bid(models.Model):
+    project_id = models.ForeignKey(Project, on_delete=models.PROTECT)
+    photo = models.FileField(upload_to='projects/projectsfiles/')
+    REQUIRED_FIELDS = ['photo','project_id']
+    def __str__(self):
+            return str(self.photo.name)
+
+class Symbol(models.Model):
+    bid_id = models.ForeignKey(Bid, on_delete=models.PROTECT)
+    type = models.CharField(max_length=255)
+    count = models.IntegerField()
+    price = models.FloatField()
+    REQUIRED_FIELDS = ['bid_id','type','count','price']
+    def __str__(self):
+            return str(self.type)
+
+class Label(models.Model):
+     bid_id = models.ForeignKey(Bid, on_delete=models.PROTECT)
+     x= models.IntegerField()
+     y = models.IntegerField()
+     w = models.IntegerField()
+     h = models.IntegerField()
+     annotation= models.CharField(max_length=255)
+     REQUIRED_FIELDS = ['bid_id','x','y','w','h','annotation']
+     def __str__(self):
+             return str(self.annotation)

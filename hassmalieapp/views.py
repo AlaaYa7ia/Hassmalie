@@ -66,3 +66,24 @@ class ProjectFileView(viewsets.ModelViewSet):
     queryset = ProjectFile.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['project_id', 'category']
+
+
+class BidView(viewsets.ModelViewSet):
+    serializer_class = BidCreateSerializer
+    queryset = Bid.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['project_id']
+
+
+class SymbolView(viewsets.ModelViewSet):
+    serializer_class = SymbolCreateSerializer
+    queryset = Symbol.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['bid_id', 'price','type','count']
+
+class LabelView(viewsets.ModelViewSet):
+    serializer_class = LabelCreateSerializer
+    queryset = Label.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['bid_id', 'annotation']
+

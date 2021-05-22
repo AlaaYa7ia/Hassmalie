@@ -14,6 +14,9 @@ router.register(r'my-business', views.MyBusinessView, 'my-business')
 router.register(r'reports', views.ReportView, 'report')
 router.register(r'costumers', views.CostumerView, 'costumer')
 router.register(r'projects', views.ProjectView, 'project')
+router.register(r'bids', views.BidView, 'bid')
+router.register(r'symbols', views.SymbolView, 'symbol')
+router.register(r'labels', views.LabelView, 'label')
 #router.register(r'projects-files', views.ProjectFileView, 'projects-files')
 
 urlpatterns = [
