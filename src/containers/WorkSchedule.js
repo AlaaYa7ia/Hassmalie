@@ -152,7 +152,7 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
 
     function scheduleForm(){
         return(
-         <form className="right-text" dir='rtl' onSubmit={e => newReportSubmit(e)}>
+         <form className="right-text col-8 mt-5 center1" dir='rtl' onSubmit={e => newReportSubmit(e)}>
          <div className="row">
          <input
              className='form-control col-2'
@@ -250,11 +250,7 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
 
         Cell: (tableProps) => (
           <span
-            style={{
-              cursor: "pointer",
-              color: "red",
-              textDecoration: "bold"
-            }}
+            style={{cursor: "pointer"}}
             onClick={() => {
               // ES6 Syntax use the rvalue if your data is an array.
               const dataCopy = [...reports.reports];
@@ -263,7 +259,7 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
               setReports({reports: dataCopy});
             }}
           >
-           X
+           <img src={process.env.REACT_APP_API_URL+"/media/defaultpictuers/x.png"} height={20} width={20}/>
           </span>
         )
       },
@@ -274,23 +270,14 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
 
         Cell: (tableProps) => (
           <span
-            style={{
-              cursor: "pointer",
-              color: "blue",
-              textDecoration: "bold"
-            }}
+            style={{cursor: "pointer"}}
             onClick={() => {
-              // ES6 Syntax use the rvalue if your data is an array.
-              //const dataCopy = [...reports.reports];
-              // It should not matter what you name tableProps. It made the most sense to me.
-              //editReport(tableProps.row);
-              //setReports({reports: dataCopy});
               setRowToEdit(tableProps.row.index);
               setEditReport(tableProps.row.original)
               setShowEditReport(true);
             }}
           >
-           עריכה
+           <img src={process.env.REACT_APP_API_URL+"/media/defaultpictuers/edit.png"} height={20} width={20}/>
           </span>
         )
       }
@@ -304,7 +291,7 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
     function editMyReport(){
         console.log(rowToEdit)
         return(
-         <form className="right-text" dir='rtl' onSubmit={e => editReportSubmit(e)}>
+         <form className="right-text col-8 mt-5 center1" dir='rtl' onSubmit={e => editReportSubmit(e)}>
          <div className="row">
          <input
              className='form-control col-2'
@@ -373,19 +360,25 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
     }
     }
     return(
-    <html lang="he" className="right-text" >
+    <html lang="he" className="right-text" style={{backgroundColor: 'rgba(145, 255, 0, 0.1)'}}>
 
-         <div dir='rtl' class=' container-fluid jumbotron mt-5' lang="he"  style={{  justifyContent:'center'}}>
+         <div class=' container-fluid mb-5 center1' lang="he"  style={{  justifyContent:'center' }}>
+             <div className="right-text col-8 mt-5 center1" dir='rtl'>
+             <h1>דיווחים של העובדים</h1>
+             <button
+                 className="btn btn-primary mt-5"
+                 onClick={() => generatePDF(dataf)}
+             >
+                 Generate monthly report
+             </button>
+             </div>
           {showTable()}
+
           {showEditReport ? editMyReport(): ""}
           {scheduleForm()}
+             <div><br></br><br></br><br></br></div>
          </div>
-         <button
-              className="btn btn-primary"
-              onClick={() => generatePDF(dataf)}
-         >
-            Generate monthly report
-         </button>
+
     </html>
     )
 }

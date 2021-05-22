@@ -30,8 +30,8 @@ const Login = ({ login, isAuthenticated }) => {
     }
 
     return (
-    <html  lang="he" dir="rtl" >
-    <div  class='col-4 container-fluid jumbotron mt-5 right-text' lang="he"  style={{display: 'flex',  justifyContent:'center', alignItems:'center', height: '70vh'}}>
+    <html  lang="he" dir="rtl" style={{ backgroundColor: 'rgba(184, 160, 191)' }} >
+    <div  class='col-3 container-fluid right-text mb-5' lang="he"  style={{display: 'flex',  justifyContent:'center', alignItems:'center', height: '70vh'}}>
         <div className='container mt-5' dir= "rtl" >
             <h1 dir= "rtl">כניסה</h1>
             <p dir= "rtl">כניסה לחשבון שלך</p>
@@ -59,10 +59,11 @@ const Login = ({ login, isAuthenticated }) => {
                         required
                     />
                 </div>
-                <button className='btn btn-primary' dir= "rtl" type='submit'>כניסה</button>
                 {alert.showAlert && <div className="alert alert-danger" role="alert">
                     {alert.alert}
                 </div>}
+                <button className='btn btn-primary' dir= "rtl" type='submit'>כניסה</button>
+
 
             </form>
             <p className='mt-3' dir= "rtl">
@@ -73,6 +74,7 @@ const Login = ({ login, isAuthenticated }) => {
             </p>
         </div>
         </div>
+    <div><br></br><br></br><br></br> <br></br> <br></br> <br></br> <br></br><br></br></div>
         </html>
     );
 };

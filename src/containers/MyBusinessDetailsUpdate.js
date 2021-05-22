@@ -207,12 +207,12 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
     return (
 
 
-    <div dir='rtl' class=' container-fluid jumbotron mt-5 right-text' lang="he"  style={{  justifyContent:'right'}}>
+    <div dir='rtl' className='container-fluid mt-5 right-text center' lang="he" >
             <h1 dir='rtl'>עדכון הפרטים העסק שלי</h1>
 
             <form dir='rtl' onSubmit={e => businessSubmit(e)}>
                 <p>תעדכן את פרטי העסק</p>
-                <div className='form-group'>
+                <div className='form-group col-6'>
                     <input
                         className='form-control'
                         type='text'
@@ -424,7 +424,7 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
                 <button className='btn btn-primary' type='submit'>תוסיף רכב חדש</button>
             </form>
             </div>
-            <p> <Link className='nav-link' to='/my-business-details'>סיימתי עדכון</Link></p>
+            <p> <Link className='nav-link btn btn-outline-warning mt-5' to='/my-business-details'>סיימתי עדכון</Link></p>
         </div>
     );
 };

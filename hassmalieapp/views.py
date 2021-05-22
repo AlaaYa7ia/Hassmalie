@@ -59,3 +59,10 @@ class ProjectView(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['address', 'contractor_id', 'owner_id']
+
+
+class ProjectFileView(viewsets.ModelViewSet):
+    serializer_class = ProjectFileCreateSerializer
+    queryset = ProjectFile.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['project_id', 'category']
