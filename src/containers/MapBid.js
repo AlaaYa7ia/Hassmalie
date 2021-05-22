@@ -3,6 +3,7 @@ import "ka-table/style.css";
 import {Annotator} from "image-labeler-react";
 import 'jspdf-autotable';
 import {Link} from "react-router-dom";
+import axios from "axios";
 
 
 
@@ -45,38 +46,31 @@ symbolList['שקע יחיד מוגן מים רגיל']=symbolData('שקע יחי
 const MapBid = () => {
 
 
-    /*    const [newMap, setNewMap] = useState("");
-
-                const mapSubmit = e => {
-                e.preventDefault();
-                //console.log("bus befir submit: ",map)
-
-                const formData = new FormData();
-                try{
-                formData.append(
-                "pic",
-               map.pic,
-                );
-                } catch(err){
-                    console.log("didn't change image.")
-                }
-                formData.append('name',map.name);
-
-
-                axios({
-                    method: 'put',
-                    url: "/api/my-business/"+business.manager+"/",
-                    data: formData,
-                    header: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'multipart/form-data',
-                    },
-                })
-                .then((dataRes) => {
-                    setMap(dataRes.data)
-                    console.log(dataRes.data)
-                }).catch(err=>{ console.log("err", err.response)})
-             };*/
+    const [newMap, setNewMap] = useState([]);
+    const [imgUploaded,setImgUploaded] = useState(false);
+    let fileSelectedHandler  = e =>{
+        setNewMap({[e.target.name]: e.target.files[0] })
+        setImgUploaded(true)
+    }
+    const mapSubmit = e => {
+        e.preventDefault();
+        //console.log("bus befir submit: ",map)
+        axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+        axios.defaults.xsrfCookieName = "csrftoken";
+        axios.defaults.withCredentials = true;
+        const formData = new FormData();
+        try{formData.append("photo", newMap.photo,newMap.photo.name);
+        } catch(err){console.log("didn't change photo.")}
+        axios({
+            method: 'post',
+            url: process.env.REACT_APP_API_URL+'/media/defaultpictuers/',
+            data: formData.photo,
+        })
+            .then((dataRes) => {
+                setNewMap(dataRes.data)
+                console.log("workers data", dataRes.data)
+            }).catch(err=>{ console.log("err", err.response)})
+    };
 
 
     const showList = () => {
@@ -91,6 +85,10 @@ const MapBid = () => {
 
     });
 
+    const LoadImgFunc= () => {
+
+
+    }
     const buildArr= () => {
         var arr=[]
         for(let key in symbolList){
@@ -100,6 +98,99 @@ const MapBid = () => {
         return arr
     }
 
+
+    function uploadAnnotation() {
+        return (
+        <div className="App "   id="addThing"   style={{display: "none"}}>
+            <Annotator id="annotationField"
+                       height={700}
+                       width={1000}
+                       imageUrl={/*process.env.REACT_APP_API_URL+'/media/defaultpictuers/'+newMap.photo.name*/
+                           "https://images.edrawsoft.com/articles/home-wiring-plan/electrical-wiring-example.jpg"}
+                       asyncUpload={async (labeledData) => {
+
+                           for (var i in labeledData.boxes)
+                               dataArray.push({
+                                   column1: symbolList[[labeledData.boxes[i].annotation]].getName(),
+                                   column2: symbolList[[labeledData.boxes[i].annotation]].getPrice(),
+                                   column3: symbolList[[labeledData.boxes[i].annotation]].getSymbolNum(),
+                                   column4: symbolList[[labeledData.boxes[i].annotation]].getPrice()* symbolList[[labeledData.boxes[i].annotation]].getSymbolNum(),
+                                   id: i,
+                               })
+
+                           console.log(dataArray)
+                           window.location.href = "/TableBid";
+                           /*
+                                                   let html = " <tr>     <th scope=\"col\">" + 'סוג' + "</th>" +
+                                                       "   <td> " + "מחיר ליח'" + "</td>" /!*+
+                                                           "   <td> " + "כמות" + "</td>" +
+                                                           "   <td> " + "מחיר כללי" + "</td>"*!/;
+                                                   let price = 0
+                                                   const electricObject = document.getElementById("addThing")
+                                                   document.getElementById("BidExplanation").style.display = "block"
+                                                   document.addEventListener("DOMContentLoaded",()=>
+                                                   {
+                                                       document.querySelector(".ant-btn").nextElementSibling.innerText = "extract as table"
+                                                   });
+
+                                                   if (labeledData.boxes != null) {
+
+                                                       electricObject.style.display = "block"
+
+                                                       // reports.forEach(report => (
+                                                       //     w[report.worker_id]=workers.find((worker)=>worker.id === report.worker_id)
+                                                       // ))
+
+                                                       for (let i in labeledData.boxes) {
+                                                           symbolList[labeledData.boxes[i].annotation].setSymbolNum();
+                                                       }
+                                                       for (let i in  symbolList) {
+                                                           // symbolList[labeledData.boxes[i].annotation].price
+                                                           //symbolList[labeledData.boxes[i].annotation].num++
+                                                           html += " <tr>     <th scope=\"col\">" +symbolList[i].getName() + "</th>" +
+                                                               "   <td> " + symbolList[i].getPrice() + "</td>"/!*+
+                                                                   "   <td> " + "100" + "</td>"+
+                                                                   "   <td> " + //symbolList[labeledData.boxes[i].annotation].num++
+                                                                    + "</td>"*!/;//symbolList[labeledData.boxes[i].annotation].price
+                                                           price += symbolList[i].getPrice()//symbolList[labeledData.boxes[i].annotation].price
+
+                                                       }
+                                                       console.log(symbolList)
+                                                       // electricObject.appendChild(html) ;
+                                                   }
+                                                   html += " <tr>     <th scope=\"col\">" + 'סכום' + "</th>" +
+                                                       "   <td> " + price + "</td>";
+                                                   electricObject.innerHTML = html;*/
+                       }}
+                //disableAnnotation={true}
+                       types={buildArr()}
+
+
+                //array.push to save data
+
+                       showButton={true}
+                defaultBoxes={[{
+                    x: 316,
+                    y: 305,
+                    w: 65,
+                    h: 61,
+                    annotation: 'this is deafult'
+                }]}
+
+                       style={{
+                           width: 1100,
+                           height: 800,
+                           margin: "20px auto",
+                           position: "relative",
+                           backgroundColor: "#368",
+                           borderRadius: 8,
+                           padding: 10
+                       }}
+                // sceneTypes={['1', '2', '3']}
+            />
+        </div>
+        );
+    }
 
     return (
         <html >
@@ -112,108 +203,26 @@ const MapBid = () => {
             <div>
                 <h1>הצעת מחיר</h1>
                 <div className="row " lang="he" dir="rtl">
-                  {/*  <form dir="rtl">*/}
+                    <form dir="rtl" onSubmit={e => mapSubmit(e)}>
                         <div className="row">
                             <div className="col-12 col-md-4">
                                 <h3>הוספת מפה:</h3>
                             </div>
                             <div className="col-12 col-md-4">
-                                <input className="form-group" type="file"></input>
+                                <input className="form-group"
+                                       type = 'file'
+                                       name='photo'
+                                       onChange={e => fileSelectedHandler(e)}></input>
                             </div>
                             <div className="col-12 col-md-4">
-                                <button className="btn btn-primary" onClick={showList} id="imgUpload">הוספה</button>
+                                <button className="btn btn-primary" onClick={showList}
+                                        id="imgUpload" type="submit">הוספה</button>
                             </div>
                         </div>
-                {/*    </form>*/}
+                    </form>
                 </div>
             </div>
-            <div className="App "   id="addThing"   style={{display: "none"}}>
-                <Annotator id="annotationField"
-                    height={700}
-                    width={1000}
-                    imageUrl={"https://i.pinimg.com/originals/a6/49/96/a649969f30f6bba48af384878bcc57c2.jpg"}
-                    asyncUpload={async (labeledData) => {
-
-                        for (var i in labeledData.boxes)
-                            dataArray.push({
-                                column1: symbolList[[labeledData.boxes[i].annotation]].getName(),
-                                column2: symbolList[[labeledData.boxes[i].annotation]].getPrice(),
-                                column3: symbolList[[labeledData.boxes[i].annotation]].getSymbolNum(),
-                                column4: symbolList[[labeledData.boxes[i].annotation]].getPrice()* symbolList[[labeledData.boxes[i].annotation]].getSymbolNum(),
-                                id: i,
-                            })
-
-                        console.log(dataArray)
-                        window.location.href = "/TableBid";
-                        /*
-                                                let html = " <tr>     <th scope=\"col\">" + 'סוג' + "</th>" +
-                                                    "   <td> " + "מחיר ליח'" + "</td>" /!*+
-                                                        "   <td> " + "כמות" + "</td>" +
-                                                        "   <td> " + "מחיר כללי" + "</td>"*!/;
-                                                let price = 0
-                                                const electricObject = document.getElementById("addThing")
-                                                document.getElementById("BidExplanation").style.display = "block"
-                                                document.addEventListener("DOMContentLoaded",()=>
-                                                {
-                                                    document.querySelector(".ant-btn").nextElementSibling.innerText = "extract as table"
-                                                });
-
-                                                if (labeledData.boxes != null) {
-
-                                                    electricObject.style.display = "block"
-
-                                                    // reports.forEach(report => (
-                                                    //     w[report.worker_id]=workers.find((worker)=>worker.id === report.worker_id)
-                                                    // ))
-
-                                                    for (let i in labeledData.boxes) {
-                                                        symbolList[labeledData.boxes[i].annotation].setSymbolNum();
-                                                    }
-                                                    for (let i in  symbolList) {
-                                                        // symbolList[labeledData.boxes[i].annotation].price
-                                                        //symbolList[labeledData.boxes[i].annotation].num++
-                                                        html += " <tr>     <th scope=\"col\">" +symbolList[i].getName() + "</th>" +
-                                                            "   <td> " + symbolList[i].getPrice() + "</td>"/!*+
-                                                                "   <td> " + "100" + "</td>"+
-                                                                "   <td> " + //symbolList[labeledData.boxes[i].annotation].num++
-                                                                 + "</td>"*!/;//symbolList[labeledData.boxes[i].annotation].price
-                                                        price += symbolList[i].getPrice()//symbolList[labeledData.boxes[i].annotation].price
-
-                                                    }
-                                                    console.log(symbolList)
-                                                    // electricObject.appendChild(html) ;
-                                                }
-                                                html += " <tr>     <th scope=\"col\">" + 'סכום' + "</th>" +
-                                                    "   <td> " + price + "</td>";
-                                                electricObject.innerHTML = html;*/
-                    }}
-                    //disableAnnotation={true}
-                    types={buildArr()}
-
-
-                    //array.push to save data
-
-                    showButton={true}
-                    /*defaultBoxes={[{
-                        x: 316,
-                        y: 305,
-                        w: 65,
-                        h: 61,
-                        annotation: ''
-                    }]}*/
-
-                    style={{
-                        width: 1100,
-                        height: 800,
-                        margin: "20px auto",
-                        position: "relative",
-                        backgroundColor: "#368",
-                        borderRadius: 8,
-                        padding: 10
-                    }}
-                    // sceneTypes={['1', '2', '3']}
-                />
-            </div>
+            {imgUploaded && uploadAnnotation()}
 
             <div className="row" id="BidExplanation" style={{display: "none"}}>
 
