@@ -47,21 +47,22 @@ symbolList['שקע יחיד מוגן מים רגיל']=symbolData('שקע יחי
 const MapBid = () => {
 
 
-    const [newMap, setNewMap] = useState([]);
+    const [newMap, setNewMap] = useState(null);
     const [imgUploaded,setImgUploaded] = useState(false);
     let fileSelectedHandler  = e =>{
-        setNewMap({[e.target.name]: e.target.files[0] })
+        setNewMap(e.target.files[0])
 
     }
     const mapSubmit = e => {
         e.preventDefault();
         //console.log("bus befir submit: ",map)
-        axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
-        axios.defaults.xsrfCookieName = "csrftoken";
-        axios.defaults.withCredentials = true;
+        // axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+        // axios.defaults.xsrfCookieName = "csrftoken";
+        // axios.defaults.withCredentials = true;
         const formData = new FormData();
-        try{formData.append("photo", newMap.photo,newMap.photo.name);
+        try{formData.append("photo", newMap,newMap.name);
         } catch(err){console.log("didn't change photo.")}
+        console.log(formData.toString());
         formData.append("project_id",1);
 
         console.log(formData);
@@ -111,7 +112,7 @@ const MapBid = () => {
             <Annotator id="annotationField"
                        height={700}
                        width={1000}
-                       imageUrl={process.env.REACT_APP_API_URL+'/media/projects/projectsfiles/'+newMap.photo.name}
+                       imageUrl={process.env.REACT_APP_API_URL+'/media/projects/projectsfiles/'+newMap.name}
                        asyncUpload={async (labeledData) => {
 
                            for (var i in labeledData.boxes)
@@ -227,6 +228,7 @@ const MapBid = () => {
                     </form>
                 </div>
             </div>
+            {console.log(imgUploaded)}
             {imgUploaded && uploadAnnotation()}
 
             <div className="row" id="BidExplanation" style={{display: "none"}}>
