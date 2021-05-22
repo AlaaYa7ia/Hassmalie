@@ -72,7 +72,8 @@ export default function Table({ columns, data, dataf }) {
     }
 
   return (
-    <div dir='rtl' class=' container-fluid col-8 mt-2' lang="he"  style={{  justifyContent:'right'}}>
+    <div dir='rtl' class=' container-fluid jumbotron mt-5' lang="he"  style={{  justifyContent:'right'}}>
+    <h1>דיווחים של העובדים</h1>
     <p>מסננים:</p>
     <input
       value={filterInput.worker_name}
@@ -120,12 +121,11 @@ export default function Table({ columns, data, dataf }) {
         ))}
       </thead>
       <tbody {...getTableBodyProps()}>
-        {dataf.clear()}
-        {
+        {dataf.clear(),
         rows.map((row, i) => {
           prepareRow(row);
           return (
-            <tr class='line' {...row.getRowProps()}>
+            <tr {...row.getRowProps()}>
               {
               row.cells.map(cell => {
                 if (in_date_range(cell.row.values.reporting_date)){

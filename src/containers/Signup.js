@@ -2,13 +2,10 @@ import React, { useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { signup } from '../actions/auth';
-//import PlacesAutocomplete from "react-places-autocomplete";
+//import Select from 'react-select'
 
 const Signup = ({ signup, isAuthenticated }) => {
     const [accountCreated, setAccountCreated] = useState(false);
-    const [alert, setAlert] = useState({showAlert: false, alert:""});
-
-    //const [address1, setAddress1] = React.useState("");
     const [formData, setFormData] = useState({
         first_name: '',
         last_name: '',
@@ -23,18 +20,15 @@ const Signup = ({ signup, isAuthenticated }) => {
 
     const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
 
-    const onSubmit = async e => {
+    const onSubmit = e => {
         e.preventDefault();
 
         if (password === re_password) {
-            let flag;
-            await signup(first_name, last_name, email, title, phone_number, address, password, re_password)
-                .then(result => flag = result);
-            if (!flag) {
-                setAlert({showAlert: true, alert: "האיימיל שהזנת קיים כבר במערכת, נא לבחור איימיל אחר."})
-            }else {
-                setAccountCreated(true);
-            }
+            signup(first_name, last_name, email,title, phone_number, address, password, re_password);
+            setAccountCreated(true);
+            console.log("form Data", formData)
+            localStorage.setItem('user' , JSON.stringify(formData))//check if you added this or from the original
+            console.log(localStorage.getItem('user'))
 
         }
     };
@@ -46,23 +40,15 @@ const Signup = ({ signup, isAuthenticated }) => {
         return <Redirect to='/login' />
     }
 
-    // const handleSelect = async value => {
-    //     setAddress1(value);
-    // };
-
     return (
-        <html  lang="he" dir="rtl" style={{ backgroundColor: 'rgba(184, 160, 191)' }}>
-        <div><br></br> <br></br> <br></br><br></br></div>
-    <div dir='rtl' class='col-3 container-fluid right-text ' lang="he" style={{display: 'flex',  justifyContent:'center', alignItems:'center', height: '70vh'}} >
-        <div className='container' dir= "rtl" >
-        <h1 dir='rtl'>הרשמה</h1>
+    <div dir='rtl' class='col-6 container-fluid jumbotron mt-5 right-text' lang="he"  style={{  justifyContent:'right'}}>
+                <h1 dir='rtl'>הרשמה</h1>
             <p>תיצור את המשתמש שלך</p>
             <form dir='rtl' onSubmit={e => onSubmit(e)}>
                 <div className='form-group'>
                     <input
                         className='form-control'
                         type='text'
-                        pattern="^[^0-9]*$"
                         placeholder='שם פרטי*'
                         name='first_name'
                         value={first_name}
@@ -74,7 +60,6 @@ const Signup = ({ signup, isAuthenticated }) => {
                     <input
                         className='form-control'
                         type='text'
-                        pattern="^[^0-9]*$"
                         placeholder='שם משפחה*'
                         name='last_name'
                         value={last_name}
@@ -93,9 +78,7 @@ const Signup = ({ signup, isAuthenticated }) => {
                         required
                     />
                 </div>
-                {alert.showAlert && <div className="alert alert-danger" role="alert">
-                    {alert.alert}
-                </div>}
+
                 <div className='form-group dropdown'>
                     <select
                         className='form-control right-text'
@@ -108,6 +91,7 @@ const Signup = ({ signup, isAuthenticated }) => {
                         <option>סוג עובד*</option>
                         <option value="M">מנהל</option>
                         <option value="D">סגן מנהל</option>
+                        {/*<option value="R">עובד אחר</option>*/}
                     </select>
                 </div>
 
@@ -123,38 +107,6 @@ const Signup = ({ signup, isAuthenticated }) => {
                         required
                     />
                 </div>
-
-                {/*<div>*/}
-                {/*    <PlacesAutocomplete*/}
-                {/*        value={address}*/}
-                {/*        onChange={setAddress1}*/}
-                {/*        onSelect={handleSelect}*/}
-                {/*    >*/}
-                {/*        {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (*/}
-                {/*            <div>*/}
-
-                {/*                <input {...getInputProps({ placeholder: "Type address" })} />*/}
-
-                {/*                <div>*/}
-                {/*                    {loading ? <div>...loading</div> : null}*/}
-
-                {/*                    {suggestions.map(suggestion => {*/}
-                {/*                        const style = {*/}
-                {/*                            backgroundColor: suggestion.active ? "#41b6e6" : "#fff"*/}
-                {/*                        };*/}
-
-                {/*                        return (*/}
-                {/*                            <div {...getSuggestionItemProps(suggestion, { style })}>*/}
-                {/*                                {suggestion.description}*/}
-                {/*                            </div>*/}
-                {/*                        );*/}
-                {/*                    })}*/}
-                {/*                </div>*/}
-                {/*            </div>*/}
-                {/*        )}*/}
-                {/*    </PlacesAutocomplete>*/}
-                {/*</div>*/}
-
                 <div className='form-group'>
                     <input
                         className='form-control'
@@ -196,10 +148,6 @@ const Signup = ({ signup, isAuthenticated }) => {
                 כבר יש לך חשבון? <Link to='/login'>תתחבר</Link>
             </p>
         </div>
-    </div>
-    <div><br></br><br></br><br></br> <br></br> <br></br> <br></br> <br></br><br></br></div>
-
-        </html>
     );
 };
 

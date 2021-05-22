@@ -104,7 +104,7 @@ class Car(models.Model):
     license_validity = models.DateField(default=None)
     insurance_validity = models.DateField(default=None)
     insurance_up_to_age = models.IntegerField(default=None)
-    image = models.ImageField(upload_to='carimages/', default=None)
+    image = models.ImageField(upload_to='carimages/')
 
     def __str__(self):
         return str(self.license_number)
@@ -129,7 +129,6 @@ class Project(models.Model):
     contractor_id = models.ForeignKey(Worker, related_name='contractor_id', on_delete=models.PROTECT)
     architect_id = models.ForeignKey(Worker, related_name='architect_id', on_delete=models.PROTECT)
     owner_id = models.ForeignKey(Costumer, on_delete=models.PROTECT)
-    buildingImage = models.ImageField(upload_to='projects/buildingimages/',  default=None)
 
     def __str__(self):
         return str(self.type_of_building)
@@ -148,18 +147,3 @@ class Report(models.Model):
 
     def __str__(self):
         return str(self.worker_id)
-
-
-class ProjectFile(models.Model):
-    project_id = models.ForeignKey(Project, on_delete=models.PROTECT)
-    FILE_CATEGORY = (
-            ('P', 'Plans'),
-            ('B', 'Bids'),
-            ('I', 'Images'),
-            ('Pay', 'Payments'),
-    )
-    category = models.CharField(max_length=3, choices=FILE_CATEGORY, default='I')
-    file = models.FileField(upload_to='projects/projectsfiles/')
-    REQUIRED_FIELDS = ['project_id', 'file']
-    def __str__(self):
-        return str(self.file.name)

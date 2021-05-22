@@ -129,12 +129,11 @@ export const signup = (first_name, last_name, email, title, phone_number, addres
             payload: res.data
         });
     } catch (err) {
+        
         dispatch({
             type: SIGNUP_FAIL
         })
-        return false;
     }
-    return true;
 };
 
 export const verify = (uid, token) => async dispatch => {

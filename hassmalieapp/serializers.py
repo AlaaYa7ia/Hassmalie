@@ -56,11 +56,9 @@ class CostumerCreateSerializer(serializers.ModelSerializer):
 
 
 class ProjectCreateSerializer(serializers.ModelSerializer):
-    buildingImage = serializers.ImageField(max_length=None, use_url=True, required=False)
-
     class Meta:
         model = Project
-        fields = ('id', 'type_of_building', 'address', 'contractor_id', 'architect_id', 'owner_id', 'buildingImage')
+        fields = ('id', 'type_of_building', 'address', 'contractor_id', 'architect_id', 'owner_id')
 
 
 class ReportCreateSerializer(serializers.ModelSerializer):
@@ -68,11 +66,3 @@ class ReportCreateSerializer(serializers.ModelSerializer):
         model = Report
         fields = (
             'id', 'my_business', 'worker_id', 'project_id', 'reporting_date', 'start_time', 'end_time', 'description')
-
-
-class ProjectFileCreateSerializer(serializers.ModelSerializer):
-    file = serializers.FileField(max_length=None, use_url=True, required=True)
-
-    class Meta:
-        model = ProjectFile
-        fields = ('id', 'project_id', 'category', 'file')

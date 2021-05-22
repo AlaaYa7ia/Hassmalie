@@ -129,7 +129,7 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
 
     function workerForm(){
     return(
-    <form className="right-text col-6" dir='rtl' onSubmit={e => newWorkerSubmit(e)}>
+    <form className="right-text" dir='rtl' onSubmit={e => newWorkerSubmit(e)}>
         <input
              className='form-control'
              type='text'
@@ -248,39 +248,23 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
     )
     }
 
-    function loadWorkers(){
+    function loadWorker(worker){
         try{
-            return(
-        workers.map(worker => (
-            <div id={"accordion"+ worker.id}  className='col-2'>
-                <div className="card">
-                    <div className="card-header" id={"heading"+worker.id.toString()} >
+        return(
+        <div>
+        <p>{worker.email}</p>
+        <p>{worker.app_password}</p>
+        <p>{worker.phone_number}</p>
+        <p>{worker.address}</p>
+        <p>{worker.rate_per_day}</p>
+        <p>{worker.id_photo}</p>
+        <p>{worker.license}</p>
+        <p>{worker.permit}</p>
 
-                        <button className="btn btn-link " data-toggle="collapse" data-target={"#collapse"+worker.id}
-                                aria-expanded="true" aria-controls={"collapse"+worker.id}>
-                            <img src={getImgUrl(worker.photo, "worker")} height={150} width={150}></img>
-                            <p className='lead'>{worker.first_name} {worker.last_name} - {WORKER_TYPE[worker.title]}</p>
-                        </button>
-
-                    </div>
-
-                    <div id={"collapse"+worker.id} className="collapse " aria-labelledby={"heading"+worker.id} data-parent={"#accordion"+worker.id}>
-                        <div className="card-body">
-                            <p>{worker.email}</p>
-                            <p>{worker.app_password}</p>
-                            <p>{worker.phone_number}</p>
-                            <p>{worker.address}</p>
-                            <p>{worker.rate_per_day}</p>
-                            <p>{worker.id_photo}</p>
-                            <p>{worker.license}</p>
-                            <p>{worker.permit}</p>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        )))
-        } catch(err){
+        </div>
+        )}
+        catch(err){
+           console.log(err)
         }
     }
 
@@ -289,15 +273,33 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
     <div>
      <html lang="he" >
         <head>
-        <meta charSet="utf-8"></meta>
+        <meta charset="utf-8"></meta>
         </head>
         <body dir="rtl">
-        <div class = "container-fluid row mt-5 mr-5">
-             {loadWorkers()}
+
+
+
+        <div class = "container-fluid row">
+             {
+        workers.map(worker => (
+            <div >
+            <div class='col-12'>
+                <img src={getImgUrl(worker.photo, "worker")} height={150} width={150}></img>
+           </div>
+           <div class='col-12'>
+                 <p class='lead'>{worker.first_name} {worker.last_name} - {WORKER_TYPE[worker.title]}</p>
+                 <p>{state.showMessage && loadWorker(worker)}</p>
+
+                  <Link onClick={onLinkClickHandler} >{state.msg}</Link>
+           </div>
+
+
+           </div>
+          ))}
         </div>
 
-            <div  class=' container-fluid  mt-5'  style={{  justifyContent:'right'}} >
-                 {addWorker.showButton && <button  className='btn btn-primary mr-5' onClick={addWorkerClickHandler} style={{ display: 'flex', alignItems:'right'}} >תוסיף עובד חדש</button>}
+            <div dir='rtl' class=' container-fluid jumbotron mt-5' lang="he"  style={{  justifyContent:'right'}}>
+                 {addWorker.showButton && <button  className='btn btn-primary' onClick={addWorkerClickHandler}  >תוסיף עובד חדש</button>}
                  {addWorker.showForm && workerForm()}
 
             </div>
