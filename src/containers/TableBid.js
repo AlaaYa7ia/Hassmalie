@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import "ka-table/style.css";
 import {Annotator} from "image-labeler-react";
 import { ITableProps, kaReducer, Table } from 'ka-table';
-import {ActionType, DataType, EditingMode, SortingMode} from 'ka-table/enums';
+import {ActionType, DataType, EditingMode, FilteringMode, SortingMode} from 'ka-table/enums';
 import { DispatchFunc } from 'ka-table/types';
 import 'jspdf-autotable';
 import { getValueByColumn } from 'ka-table/Utils/DataUtils';
@@ -143,6 +143,32 @@ const tablePropsInit: ITableProps = {
     rowKeyField: 'id',
     sortingMode: SortingMode.Single,
 };
+const dataArray2 = [
+    { id: 2, column1: 'Billi Bob', column2: 55,  column3: new Date(2020, 10, 8, 10),column4: "visa",column6: "Bob@gmail.com", column5: "100% הכנת קירות וצנרות מרתף ", },
+    { id: 3, column1: 'Tom Williams', column2: 45,  column3: new Date(2019, 11, 8, 10),column4: "direct",column6: "Williams@gmail.com" , column5: "50% נרת פנימית וחוטים ,  50%הרכבת אבזרים ולוחות חשמל", },
+    { id: 6, column1: 'Sunny Fox', column2: 33,  column3: new Date(2021, 10, 9, 10) ,column4: "masterCrd",column6: "Wims@gmail.com"  , column5: "70% הכנת קירות וצנרות מרתף, 30% לאחר ביקורת חברת חשמל או בודק פרטי", },
+    { id: 1, column1: 'Mike Wazowski', column2: 80, column3: new Date(2010, 10, 8, 10) ,column4: "מזומן",column6: "ms@gmail.com" , column5: "100% הכנת קירות וצנרות מרתף ", },
+];
+
+const tablePropsInit2: ITableProps = {
+    columns: [
+        { key: ':delete', style: { width: 60, textAlign: 'center' } },
+        { key: 'column1', title: 'שולם על ידי', dataType: DataType.String , style: { width: 100, textAlign: 'center' } },
+        { key: 'column2', title: 'סכום', dataType: DataType.String , style: { width: 100, textAlign: 'center' } },
+        { key: 'column3', title: 'תאריך', dataType: DataType.Date, style: { width: 100, textAlign: 'center' } },
+        { key: 'column4', title: 'סוג תשלום', dataType: DataType.String , style: { width: 100, textAlign: 'center' } },
+        { key: 'column6', title: 'שליח הודעה', dataType: DataType.String , style: { width: 100, textAlign: 'center' } },
+        { key: 'column5', title: 'תנאי תשלום', dataType: DataType.String , style: { width: 100, textAlign: 'center' } },
+        { key: 'editColumn', style: { width: 100, textAlign: 'center' } },
+        { key: 'addColumn',style: {width: 100} },
+    ],
+    data: dataArray2,
+    virtualScrolling: {
+        enabled: true
+    },
+    rowKeyField: 'id',
+    sortingMode: SortingMode.Single,
+};
 
 
 function symbolData(symbolName,price,symbolNum){
@@ -199,6 +225,13 @@ const TableBid = () => {
         }
 
     };
+
+    const [tableProps2, changeTableProps2] = useState(tablePropsInit2);
+    const dispatch2= (action) => {
+        changeTableProps2((prevState) => kaReducer(prevState, action));
+
+    };
+
     function fetchPrice() {
 
        var totalPrice=0
@@ -352,6 +385,42 @@ const TableBid = () => {
                     dispatch={dispatch}
                 />
                 <h6 class="p-3 mb-2 bg-light ">{fetchPrice()}</h6>
+            </div>
+
+            <h2 className="text-center text-warning">תשלומים </h2>
+
+            <div className="remote-data">
+                <Table
+                    {...tableProps2}
+                    childComponents={{
+                        cellText: {
+                            content: (props) => {
+                                if (props.column.key === 'editColumn')
+                                    return <EditButton {...props}/>
+
+                                switch (props.column.key) {
+                                    case ':delete':
+                                        return <DeleteRow {...props}/>;
+                                }
+                            }
+                        },
+                        cellEditor: {
+                            content: (props) => {
+                                if (props.column.key === 'editColumn') {
+                                    return <SaveButton {...props}/>
+                                }
+                            }
+                        },
+                        headCell: {
+                            content: (props) => {
+                                if (props.column.key === 'addColumn') {
+                                    return <AddButton {...props}/>;
+                                }
+                            }
+                        }
+                    }}
+                    dispatch={dispatch2}
+                />
             </div>
 
         </div>
