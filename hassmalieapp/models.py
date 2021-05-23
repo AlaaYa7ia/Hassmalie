@@ -177,7 +177,8 @@ class Symbol(models.Model):
     type = models.CharField(max_length=255)
     count = models.IntegerField()
     price = models.FloatField()
-    REQUIRED_FIELDS = ['bid_id','type','count','price']
+    total_item_price = models.FloatField()
+    REQUIRED_FIELDS = ['bid_id','type','count','price','total_item_price']
     def __str__(self):
             return str(self.type)
 

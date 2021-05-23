@@ -90,7 +90,7 @@ class SymbolCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Symbol
-        fields = ('id', 'bid_id','type','count','price')
+        fields = ('id', 'bid_id','type','count','price','total_item_price')
 
 class LabelCreateSerializer(serializers.ModelSerializer):
 

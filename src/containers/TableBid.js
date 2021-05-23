@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import "ka-table/style.css";
 import {Annotator} from "image-labeler-react";
 import { ITableProps, kaReducer, Table } from 'ka-table';
-import { DataType, EditingMode, SortingMode } from 'ka-table/enums';
+import {ActionType, DataType, EditingMode, SortingMode} from 'ka-table/enums';
 import { DispatchFunc } from 'ka-table/types';
 import 'jspdf-autotable';
 import { getValueByColumn } from 'ka-table/Utils/DataUtils';
@@ -10,11 +10,11 @@ import { getValueByColumn } from 'ka-table/Utils/DataUtils';
 import jsPDF from "jspdf";
 import {
     closeRowEditors,
-    hideNewRow,
+    hideNewRow, loadData,
     openRowEditors,
     saveNewRow,
     saveRowEditors,
-    showNewRow
+    showNewRow, updateData
 } from 'ka-table/actionCreators';
 
 import { ICellEditorProps, ICellTextProps } from 'ka-table/props';
@@ -128,17 +128,17 @@ const SaveButton = ({dispatch, rowKeyValue}) => {
 const tablePropsInit: ITableProps = {
     columns: [
         { key: ':delete', style: { width: 60, textAlign: 'center' } },
-        { key: 'column1', title: 'מחיר כולל ', dataType: DataType.String , style: { width: 160, textAlign: 'center' } },
-        { key: 'column2', title: 'כמות', dataType: DataType.String , style: { width: 160, textAlign: 'center' } },
-        { key: 'column3', title: 'מחיר  ליחידה', dataType: DataType.String , style: { width: 160, textAlign: 'center' } },
-        { key: 'column4', title: 'סוג', dataType: DataType.String , style: { width: 160, textAlign: 'center' } },
+        { key: 'total_item_price', title: 'מחיר כולל', dataType: DataType.Number , style: { width: 160, textAlign: 'center' } },
+        { key: 'count', title: 'כמות', dataType: DataType.Number , style: { width: 160, textAlign: 'center' } },
+        { key: 'price', title: 'מחיר  ליחידה', dataType: DataType.Number , style: { width: 160, textAlign: 'center' } },
+        { key: 'type', title: 'סוג', dataType: DataType.String , style: { width: 160, textAlign: 'center' } },
         { key: 'editColumn', style: { width: 100, textAlign: 'center' } },
         { key: 'addColumn',style: {width: 100} },
     ],
     virtualScrolling: {
         enabled: true
     },
-    data: dataArray,
+    singleAction: loadData(),
     editingMode: EditingMode.Cell,
     rowKeyField: 'id',
     sortingMode: SortingMode.Single,
@@ -178,11 +178,38 @@ symbolList['שקע יחיד רגיל']=symbolData('שקע יחיד רגיל',5,0
 symbolList['שקע כפול מוגן מים רגיל']=symbolData('שקע כפול מוגן מים רגיל',8,0)
 symbolList['שקע יחיד מוגן מים רגיל']=symbolData('שקע יחיד מוגן מים רגיל',6,0)
 
+var fetchedData;
+var fetched=false;
+
+
 const TableBid = () => {
     const [tableProps, changeTableProps] = useState(tablePropsInit);
-    const dispatch: DispatchFunc = action => {
+    const dispatch: DispatchFunc = async action => {
         changeTableProps((prevState: ITableProps) => kaReducer(prevState, action));
+
+        if (action.type === ActionType.LoadData) {
+            const response = await fetch(
+                "http://127.0.0.1:8000/api/symbols/"
+            );
+            fetchedData = await response.json();
+            console.log(fetchedData)
+            dispatch(updateData(fetchedData));
+            fetched=true
+
+        }
+
     };
+    function fetchPrice() {
+
+       var totalPrice=0
+        if(fetched){
+        for(var i in fetchedData)
+            totalPrice+=fetchedData[i].total_item_price
+
+        return "     [₪ "+totalPrice+"]:   מחיר סופי"
+        }
+        else return ""
+    }
 
 
     /*    const [newMap, setNewMap] = useState("");
@@ -252,8 +279,9 @@ const TableBid = () => {
             <meta charset="utf-8">
             </meta>
         </head>
-        <body class="container container-fluid alert alert-primary " role="alert">
+        <body class="container container-fluid p-3 mb-2 bg-dark " role="alert">
         <div>
+        <h2 className="text-center text-warning">פירוט הצעת מחיר </h2>
 
             <div className="row" >
                 <div className="col-12 col-md-4">
@@ -292,7 +320,7 @@ const TableBid = () => {
                 </div>
 
             </div>
-            <div className='add-row-demo'>
+            <div className="remote-data-demo">
                 <Table
                     {...tableProps}
                     childComponents={{
@@ -323,7 +351,9 @@ const TableBid = () => {
                     }}
                     dispatch={dispatch}
                 />
+                <h6 class="p-3 mb-2 bg-light ">{fetchPrice()}</h6>
             </div>
+
         </div>
         </body>
         </html>

@@ -74,27 +74,22 @@ const MapBid = () => {
             .then((dataRes) => {
                 console.log("bid data", dataRes.data)
                 setNewMap(dataRes.data.photo)
-                setImgUploaded(true)
+                demo().then(() => setImgUploaded(true));
+                document.getElementById("buttonToHide").style.display="none"
             }).catch(err=>{ console.log("err", err.response)})
+
+
     };
-
-
-    const showList = () => {
-
-        document.getElementById("addThing").style.display = "block"
-
-
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
     }
-    document.addEventListener("DOMContentLoaded",()=>
-    {
-        document.getElementById("imgUpload").addEventListener("click", showList);
 
-    });
-
-    const LoadImgFunc= () => {
-
-
+    async function demo() {
+        await sleep(2000);
+        console.log(process.env.REACT_APP_API_URL+'/media/projects/projectsfiles/'+newMap.name)
     }
+
+
     const buildArr= () => {
         var arr=[]
         for(let key in symbolList){
@@ -105,14 +100,33 @@ const MapBid = () => {
     }
 
 
+    const labeledBoxesFetching=async action => {
+
+        const response = await fetch(
+            "http://127.0.0.1:8000/api/labels/"
+        );
+
+        const fetchedData = await response.json();
+        console.log(fetchedData)
+        for(var i in fetchedData) {
+
+            console.log(i)
+            delete fetchedData[i]["id"];
+            delete fetchedData[i]["bid_id"];
+
+        }
+        return fetchedData
+    }
+
     function uploadAnnotation() {
-        setImgUploaded(false)
+        // setImgUploaded(false)
         return (
-        <div className="App "   id="addThing"   style={{display: "none"}}>
+        <div className="App "   id="addThing" >
             <Annotator id="annotationField"
                        height={700}
                        width={1000}
-                       imageUrl={process.env.REACT_APP_API_URL+'/media/projects/projectsfiles/'+newMap.name}
+                       imageUrl={/*process.env.REACT_APP_API_URL+'/media/projects/projectsfiles/'+newMap.name*/
+                      "http://127.0.0.1:8000/media/projects/projectsfiles/electrical-wiring-example_QzGkf0q.jpg"}
                        asyncUpload={async (labeledData) => {
 
                            for (var i in labeledData.boxes)
@@ -175,20 +189,14 @@ const MapBid = () => {
                 //array.push to save data
 
                        showButton={true}
-                defaultBoxes={[{
-                    x: 316,
-                    y: 305,
-                    w: 65,
-                    h: 61,
-                    annotation: 'this is deafult'
-                }]}
+                /*defaultBoxes={labeledBoxesFetching()}*/
 
                        style={{
                            width: 1100,
                            height: 800,
                            margin: "20px auto",
                            position: "relative",
-                           backgroundColor: "#368",
+                           backgroundColor: "#413b1a",
                            borderRadius: 8,
                            padding: 10
                        }}
@@ -204,15 +212,15 @@ const MapBid = () => {
             <meta charset="utf-8">
             </meta>
         </head>
-        <body class="container container-fluid alert alert-primary " role="alert">
+        <body class="container container-fluid p-3 mb-2 bg-secondary text-white " role="alert">
         <div>
             <div>
-                <h1>הצעת מחיר</h1>
+                <h1 class="text-right  text-warning">מפת הפרויקט</h1>
                 <div className="row " lang="he" dir="rtl">
                     <form dir="rtl" onSubmit={e => mapSubmit(e)}>
-                        <div className="row">
+                        <div className="row" id="buttonToHide">
                             <div className="col-12 col-md-4">
-                                <h3>הוספת מפה:</h3>
+                                <h3 class={" text-warning"}>הוספת מפה:</h3>
                             </div>
                             <div className="col-12 col-md-4">
                                 <input className="form-group"
@@ -220,8 +228,8 @@ const MapBid = () => {
                                        name='photo'
                                        onChange={e => fileSelectedHandler(e)}></input>
                             </div>
-                            <div className="col-12 col-md-4">
-                                <button className="btn btn-primary" onClick={showList}
+                            <div className="col-12 col-md-4" >
+                                <button className="addBtn btn btn-dark"
                                         id="imgUpload" type="submit">הוספה</button>
                             </div>
                         </div>
