@@ -65,25 +65,25 @@ const Homepage = () => {
                            <p className="centered lead">ניהול פרויקטים</p>
                        </Link>
                    </div>
-                   <div className="text-container">
-                       <Link to='/file-repository'>
-                           <img className='img-link'
-                                src={process.env.REACT_APP_API_URL + '/media/defaultpictuers/icon1.png'} height={210}
-                                width={210}/>
-                           <p className="centered lead">מאגר הקבצים</p>
-                       </Link>
-                   </div>
+                   {/*<div className="text-container">*/}
+                   {/*    <Link to='/file-repository'>*/}
+                   {/*        <img className='img-link'*/}
+                   {/*             src={process.env.REACT_APP_API_URL + '/media/defaultpictuers/icon1.png'} height={210}*/}
+                   {/*             width={210}/>*/}
+                   {/*        <p className="centered lead">מאגר הקבצים</p>*/}
+                   {/*    </Link>*/}
+                   {/*</div>*/}
                </div>
-               <div className='row'>
-               <div className="text-container">
-                   <Link to='/bid'>
-                       <img className='img-link'
-                            src={process.env.REACT_APP_API_URL + '/media/defaultpictuers/icon1.png'} height={210}
-                            width={210}/>
-                       <p className="centered lead ">הפקת הצעת מחיר</p>
-                   </Link>
-               </div>
-               </div>
+               {/*<div className='row'>*/}
+               {/*<div className="text-container">*/}
+               {/*    <Link to='/bid'>*/}
+               {/*        <img className='img-link'*/}
+               {/*             src={process.env.REACT_APP_API_URL + '/media/defaultpictuers/icon1.png'} height={210}*/}
+               {/*             width={210}/>*/}
+               {/*        <p className="centered lead ">הפקת הצעת מחיר</p>*/}
+               {/*    </Link>*/}
+               {/*</div>*/}
+               {/*</div>*/}
            </div>
         </div>
             <div className='container col-1 align-center'></div>

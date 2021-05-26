@@ -2,6 +2,7 @@ import React, { useEffect,useState } from "react";
 import axios from "axios";
 import { connect } from 'react-redux';
 import {get_user_data } from '../actions/auth';
+import {Link} from 'react-router-dom';
 
 const ProjectsManagement  = ({ get_user_data, isAuthenticated}) => {
     const [dataRes, setDataRes]= useState([]);
@@ -177,6 +178,8 @@ const ProjectsManagement  = ({ get_user_data, isAuthenticated}) => {
                                     <p>{project.contractor_id}</p>
                                     <p>{project.architect_id}</p>
                                     <p>{project.owner_id}</p>
+                                    <p><Link to={"/bid/:"+project.id} >הצעת מחיר</Link></p>
+                                    <p><Link to={"/file-repository/"+project.id}>מאגר הקבצים</Link></p>
                                 </div>
                             </div>
                         </div>
