@@ -76,47 +76,58 @@ class Worker(models.Model):
         ('A', 'Architect'),
     )
     my_business = models.ForeignKey(MyBusiness, on_delete=models.CASCADE)
+    manager = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
     email = models.EmailField(max_length=255, unique=True, default=None)  # username
-    app_password = models.CharField(max_length=255)
-    first_name = models.CharField(max_length=255, default=None)
-    last_name = models.CharField(max_length=255, default=None)
+    password = models.CharField(max_length=255)  # for the mobile app! we can't allow them to access our web
+    # application!
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
     photo = models.ImageField(upload_to='workers/photos/')
-    phone_number = models.IntegerField(default=None)
-    address = models.CharField(max_length=255, default=None)
+    phone_number = models.IntegerField()
+    address = models.CharField(max_length=255)
     age = models.IntegerField(default=0)
     title = models.CharField(max_length=1, choices=WORKER_TYPE, default='R')
     id_photo = models.ImageField(upload_to='workers/ids/')
     rate_per_day = models.FloatField(null=True, default=None)
-    license = models.ImageField(upload_to='workers/licenses/')
+    license = models.ImageField(upload_to='workers/licenses/',default=None)
     permit = models.ImageField(upload_to='workers/permits/', default=None)
     permit_type = models.CharField(null=True, max_length=255, default=None)  # we should change it to options
     permit_validity = models.DateField(null=True, default=None)
+    REQUIRED_FIELDS = ['my_business', 'manager', 'email', 'first_name', 'last_name', 'phone_number', 'password',
+                  'address', 'title']
 
     def __str__(self):
-        return str(self.email)
+        return str(self.first_name) + " " + str(self.last_name)
 
 
 # car model
 class Car(models.Model):
     # many to one relation
     my_business = models.ForeignKey(MyBusiness, on_delete=models.CASCADE)
-    license_number = models.IntegerField(default=None)
+    license_number = models.IntegerField(default=None, unique=True)
     license_validity = models.DateField(default=None)
     insurance_validity = models.DateField(default=None)
     insurance_up_to_age = models.IntegerField(default=None)
+    description = models.TextField()
     image = models.ImageField(upload_to='carimages/', default=None)
+    REQUIRED_FIELDS = ["my_business", "license_number", "license_validity", "insurance_validity", "insurance_up_to_age"]
 
     def __str__(self):
         return str(self.license_number)
 
 
 # costumer model, it's a regular model, not a user model.
-class Costumer(models.Model):
+class Customer(models.Model):
+    my_business = models.ForeignKey(MyBusiness, on_delete=models.CASCADE)
     email = models.EmailField(max_length=255, unique=True)
+    password = models.CharField(max_length=255)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
-    phone_number = models.IntegerField(default=None)
+    age = models.IntegerField(default=0)
+    phone_number = models.IntegerField()
     address = models.CharField(max_length=255)
+    photo = models.ImageField(upload_to='customers/photos/')
+    REQUIRED_FIELDS = ['my_business', 'email', 'password', 'first_name', 'last_name', 'phone_number', 'address']
 
     def __str__(self):
         return self.first_name
@@ -124,12 +135,14 @@ class Costumer(models.Model):
 
 # constricting project model.
 class Project(models.Model):
+    my_business = models.ForeignKey(MyBusiness, on_delete=models.CASCADE)
     type_of_building = models.CharField(max_length=255)
     address = models.CharField(max_length=255)
     contractor_id = models.ForeignKey(Worker, related_name='contractor_id', on_delete=models.PROTECT)
     architect_id = models.ForeignKey(Worker, related_name='architect_id', on_delete=models.PROTECT)
-    owner_id = models.ForeignKey(Costumer, on_delete=models.PROTECT)
+    customer_id = models.ForeignKey(Customer, on_delete=models.PROTECT)
     buildingImage = models.ImageField(upload_to='projects/buildingimages/',  default=None)
+    REQUIRED_FIELDS = ['my_business', 'address', 'contractor_id', 'architect_id', 'customer_id']
 
     def __str__(self):
         return str(self.type_of_building)
@@ -143,52 +156,86 @@ class Report(models.Model):
     reporting_date = models.DateField(default=None)
     start_time = models.TimeField()
     end_time = models.TimeField()
-    # file storage id
     description = models.TextField()
+    photo = models.ImageField(upload_to='reports/')
+    REQUIRED_FIELDS = ['my_business', 'worker_id', 'project_id', 'reporting_date', 'start_time', 'end_time']
 
     def __str__(self):
         return str(self.worker_id)
 
 
 class ProjectFile(models.Model):
+    my_business = models.ForeignKey(MyBusiness, on_delete=models.CASCADE)
     project_id = models.ForeignKey(Project, on_delete=models.PROTECT)
     FILE_CATEGORY = (
             ('P', 'Plans'),
-            ('B', 'Bids'),
             ('I', 'Images'),
             ('Pay', 'Payments'),
     )
     category = models.CharField(max_length=3, choices=FILE_CATEGORY, default='I')
     file = models.FileField(upload_to='projects/projectsfiles/')
-    REQUIRED_FIELDS = ['project_id', 'file']
+    REQUIRED_FIELDS = ['my_business', 'project_id', 'file']
+
     def __str__(self):
         return str(self.file.name)
 
+
 # Bid tabels
 class Bid(models.Model):
+    my_business = models.ForeignKey(MyBusiness, on_delete=models.CASCADE)
     project_id = models.ForeignKey(Project, on_delete=models.PROTECT)
-    photo = models.FileField(upload_to='projects/projectsfiles/')
-    REQUIRED_FIELDS = ['photo','project_id']
+    photo = models.FileField(upload_to='bids/')
+    REQUIRED_FIELDS = ['my_business', 'photo', 'project_id']
+
     def __str__(self):
             return str(self.photo.name)
 
+
 class Symbol(models.Model):
+    my_business = models.ForeignKey(MyBusiness, on_delete=models.CASCADE)
     bid_id = models.ForeignKey(Bid, on_delete=models.PROTECT)
     type = models.CharField(max_length=255)
     count = models.IntegerField()
     price = models.FloatField()
     total_item_price = models.FloatField()
-    REQUIRED_FIELDS = ['bid_id','type','count','price','total_item_price']
+    photo = models.ImageField(upload_to='bids/symbols/')
+
+    REQUIRED_FIELDS = ['my_business', 'bid_id', 'type', 'count', 'price', 'total_item_price']
+
     def __str__(self):
-            return str(self.type)
+        return str(self.type)
+
 
 class Label(models.Model):
-     bid_id = models.ForeignKey(Bid, on_delete=models.PROTECT)
-     x= models.IntegerField()
-     y = models.IntegerField()
-     w = models.IntegerField()
-     h = models.IntegerField()
-     annotation= models.CharField(max_length=255)
-     REQUIRED_FIELDS = ['bid_id','x','y','w','h','annotation']
-     def __str__(self):
-             return str(self.annotation)
+    my_business = models.ForeignKey(MyBusiness, on_delete=models.CASCADE)
+    bid_id = models.ForeignKey(Bid, on_delete=models.PROTECT)
+    x = models.IntegerField()
+    y = models.IntegerField()
+    w = models.IntegerField()
+    h = models.IntegerField()
+    annotation = models.CharField(max_length=255)
+    REQUIRED_FIELDS = ['my_business', 'bid_id', 'x', 'y', 'w', 'h', 'annotation']
+
+    def __str__(self):
+        return str(self.annotation)
+
+
+class Task(models.Model):
+    AUTHOR_TYPE = (
+        ('U', 'user'),
+        ('W', 'worker'),
+        ('C', 'customer'),
+    )
+    my_business = models.ForeignKey(MyBusiness, on_delete=models.CASCADE)
+    author_type = models.CharField(max_length=1, choices=AUTHOR_TYPE, default='W')
+    author_id = models.IntegerField()
+    project_id = models.ForeignKey(Project, on_delete=models.PROTECT)
+    date = models.DateField(default=None)
+    time = models.TimeField()
+    description = models.TextField()
+    photo = models.FileField(upload_to='tasks/')
+    REQUIRED_FIELDS = ['my_business', 'author_type', 'author_id', 'project_id', 'date', 'time', 'description']
+
+    def __str__(self):
+        return str(self.author_id) + " " + str(self.project_id)
+

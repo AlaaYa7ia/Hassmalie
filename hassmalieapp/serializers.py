@@ -22,7 +22,7 @@ class CarCreateSerializer(serializers.ModelSerializer):
         model = Car
         fields = (
             "id", "my_business", "license_number", "license_validity", "insurance_validity", "insurance_up_to_age",
-            "image")
+            "description", "image")
 
 
 class WorkerCreateSerializer(serializers.ModelSerializer):
@@ -36,8 +36,8 @@ class WorkerCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Worker
-        fields = ('id', 'my_business', 'email', 'first_name', 'last_name', 'photo', 'phone_number', 'app_password',
-                  'address', 'age', 'title', 'id_photo', 'rate_per_day', 'license', 'permit', 'permit_type',
+        fields = ('id', 'my_business', 'manager', 'email', 'first_name', 'last_name', 'photo', 'phone_number',
+                  'password', 'address', 'age', 'title', 'id_photo', 'rate_per_day', 'license', 'permit', 'permit_type',
                   'permit_validity')
 
 
@@ -50,9 +50,12 @@ class MyBusinessCreateSerializer(serializers.ModelSerializer):
 
 
 class CostumerCreateSerializer(serializers.ModelSerializer):
+    photo = serializers.ImageField(max_length=None, use_url=True, required=False)
+
     class Meta:
-        model = Costumer
-        fields = ('id', 'email', 'first_name', 'last_name', 'phone_number', 'address')
+        model = Customer
+        fields = ('id', 'my_business', 'email', 'password', 'first_name', 'last_name', 'age',
+                  'phone_number', 'address', 'photo')
 
 
 class ProjectCreateSerializer(serializers.ModelSerializer):
@@ -60,14 +63,17 @@ class ProjectCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = ('id', 'type_of_building', 'address', 'contractor_id', 'architect_id', 'owner_id', 'buildingImage')
+        fields = ('id', 'my_business','type_of_building', 'address', 'contractor_id', 'architect_id', 'customer_id', 'buildingImage')
 
 
 class ReportCreateSerializer(serializers.ModelSerializer):
+    photo = serializers.FileField(max_length=None, use_url=True, required=False)
+
     class Meta:
         model = Report
         fields = (
-            'id', 'my_business', 'worker_id', 'project_id', 'reporting_date', 'start_time', 'end_time', 'description')
+            'id', 'my_business', 'worker_id', 'project_id', 'reporting_date', 'start_time', 'end_time', 'description',
+            'photo')
 
 
 class ProjectFileCreateSerializer(serializers.ModelSerializer):
@@ -75,7 +81,7 @@ class ProjectFileCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProjectFile
-        fields = ('id', 'project_id', 'category', 'file')
+        fields = ('id', 'my_business', 'project_id', 'category', 'file')
 
 
 class BidCreateSerializer(serializers.ModelSerializer):
@@ -83,18 +89,27 @@ class BidCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Bid
-        fields = ('id', 'project_id', 'photo')
+        fields = ('id', 'my_business', 'project_id', 'photo')
 
 
 class SymbolCreateSerializer(serializers.ModelSerializer):
+    photo = serializers.ImageField(max_length=None, use_url=True, required=False)
 
     class Meta:
         model = Symbol
-        fields = ('id', 'bid_id','type','count','price','total_item_price')
+        fields = ('id','my_business', 'bid_id','type','count','price','total_item_price', 'photo')
+
 
 class LabelCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Label
-        fields = ('id','bid_id', 'x','y','w','h','annotation')
+        fields = ('id', 'my_business', 'bid_id', 'x', 'y', 'w', 'h', 'annotation')
 
+
+class TaskCreateSerializer(serializers.ModelSerializer):
+    photo = serializers.FileField(max_length=None, use_url=True, required=False)
+
+    class Meta:
+        model = Task
+        fields = ('id', 'my_business', 'author_type', 'author_id', 'project_id', 'date', 'time','description', 'photo')

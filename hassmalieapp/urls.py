@@ -17,7 +17,8 @@ router.register(r'projects', views.ProjectView, 'project')
 router.register(r'bids', views.BidView, 'bid')
 router.register(r'symbols', views.SymbolView, 'symbol')
 router.register(r'labels', views.LabelView, 'label')
-#router.register(r'projects-files', views.ProjectFileView, 'projects-files')
+router.register(r'projects-files', views.ProjectFileView, 'project-file')
+router.register(r'tasks', views.TaskView, 'task')
 
 urlpatterns = [
     path('api/', include(router.urls)),

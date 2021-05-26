@@ -46,11 +46,11 @@ const App = () => (
                     <Route exact path='/work-schedule' component={WorkSchedule} />
                     <Route exact path='/financial' component={Financial} />
                     <Route exact path='/projects-management' component={ProjectsManagement} />
-                    <Route exact path='/file-repository' component={FileRepository} />
-                    <Route exact path='/bid' component={Bid} />
+                    <Route path='/file-repository/:id' component={FileRepository} />
+                    <Route  path='/bid/:id' component={Bid} />
                     <Route exact path='/TableBid' component={TableBid} />
                     <Route exact path='/MapBid' component={MapBid} />
-                    <Redirect to='/login'/>
+                    {/*<Redirect to='/login'/>*/}
                 </Switch>
             </Layout>
         </Router>
