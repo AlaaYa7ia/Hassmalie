@@ -4,42 +4,27 @@ import { connect } from 'react-redux';
 import {get_user_data } from '../actions/auth';
 
 const WORKER_TYPE =
-        {'R': 'Regular Worker',
-        'C': 'Contractor',
-        'A': 'Architect'};
+        {'R': 'חשמלאי רגיל',
+        'C': 'קבלן',
+        'A': 'מהנדס'};
 
 const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
     const [workers, setWorkers] = useState([]);
     const [addWorker, setAddWorker] = useState({showForm: false, showButton: true})
     const [newWorker, setNewWorker] = useState("");
     const [myBusiness, setMyBusiness] = useState({my_business: null});
-    const [dataRes, setDataRes]= useState([]);
+    // const [dataRes, setDataRes]= useState([]);
     const[changed, setChanged]= useState(false);
 
 
-
-    // useEffect(() => {
-    // (async () => {
-    //     await get_user_data().then((dataRes) => {
-    //         setMyBusiness({my_business: dataRes.id})
-    //          axios
-    //       .get("/api/workers/?my_business=" +dataRes.id )
-    //       .then((dataRes) => {
-    //         setWorkers(dataRes.data);
-    //         })
-    //
-    //     })})();
-    // }, []);
-
-    const get_workers = async (dataRes) =>{
-        const projects_Res = await axios.get('/api/workers/?my_business=' + dataRes)
+    const get_workers = async () =>{
+        const projects_Res = await axios.get('/api/workers/?my_business=' + myBusiness.my_business)
         setWorkers(projects_Res.data);
     }
 
-    const get_user = async (dataRes)=>{
+    const get_user = async ()=>{
         const user_Res = await get_user_data()
-        setMyBusiness({my_business: user_Res.id})
-        setDataRes(user_Res);
+        setMyBusiness({my_business: user_Res.id});
     }
 
     useEffect(()=>{
@@ -47,9 +32,9 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
     },[])
 
     useEffect(()=>{
-        get_workers(dataRes);
+        get_workers();
         setChanged(false);
-    },[dataRes, changed])
+    },[myBusiness, changed])
 
 
     function getImgUrl(image, instance) {
@@ -85,8 +70,9 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
         } catch(err){console.log("didn't change permit.")}
 
         formData.append('my_business', myBusiness.my_business);
+        formData.append('manager', myBusiness.my_business);
         formData.append('email', newWorker.email);
-        formData.append('app_password', newWorker.app_password);
+        formData.append('password', newWorker.password);
         formData.append('first_name', newWorker.first_name);
         formData.append('last_name', newWorker.last_name);
         formData.append('phone_number', newWorker.phone_number);
@@ -112,11 +98,6 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
         }).catch(err=>{ console.log("err", err.response)})
 
     }
-
-    // let onLinkClickHandler = () => {
-    //     let showOrHide = state.showMessage;
-    //     setState({showMessage: !showOrHide, msg: TOGGLE_MSG[showOrHide]});
-    // };
 
     let addWorkerClickHandler = () => {
         setAddWorker({showForm: true, showButton:  false});
@@ -158,8 +139,8 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
              className='form-control'
              type='text'
              placeholder= "סיסמת אפליקציה"
-             name='app_password'
-             value={newWorker.app_password}
+             name='password'
+             value={newWorker.password}
              onChange={e => newWorkerChange(e)}
         />
         <input className='form-group'
@@ -267,13 +248,13 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
                     <div id={"collapse"+worker.id} className="collapse " aria-labelledby={"heading"+worker.id} data-parent={"#accordion"+worker.id}>
                         <div className="card-body">
                             <p>{worker.email}</p>
-                            <p>{worker.app_password}</p>
+                            <p>{worker.password}</p>
                             <p>{worker.phone_number}</p>
                             <p>{worker.address}</p>
                             <p>{worker.rate_per_day}</p>
-                            <p>{worker.id_photo}</p>
-                            <p>{worker.license}</p>
-                            <p>{worker.permit}</p>
+                            <p><a href={worker.id_photo} >תעודת זהות</a></p>
+                            <p> <a href={worker.license} >רשיון נהיגה</a></p>
+                            <p><a href={worker.permit}>רשיון עבודה</a></p>
 
                         </div>
                     </div>

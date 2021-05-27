@@ -130,7 +130,12 @@ export default function Table({ columns, data, dataf }) {
               row.cells.map(cell => {
                 if (in_date_range(cell.row.values.reporting_date)){
                     dataf.add(cell.row.values)
-                    return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
+                    console.log("cell: ", cell);
+                    if(cell.column.Header === 'קובץ מצורף'){
+                        return <td {...cell.getCellProps()}><a href={cell.value}>{cell.render("Cell")}</a></td>;
+                    }else{
+                        return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
+                    }
                 }
 
               })}

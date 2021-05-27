@@ -16,7 +16,7 @@ const FileRepository = ({match}) => {
         setPlans(files_Res.data);
     }
     const get_bids = async () =>{
-        const files_Res = await axios.get(process.env.REACT_APP_API_URL+'/api/projects-files/?category=B&project_id='+projectId);
+        const files_Res = await axios.get(process.env.REACT_APP_API_URL+'/api/bids/?project_id='+projectId);
         console.log("files_Res>>>>>>>>>",files_Res.data)
         setPlans(files_Res.data);
     }
@@ -44,11 +44,11 @@ const FileRepository = ({match}) => {
 
     },[projectId])
 
-    function showFiles(){
+    function showFiles(list){
         try{
             return (
-            plans.map(file => (
-                <div><p><a herf={file.file} download>{ file.file}</a></p></div>
+            list.map(file => (
+                <div><p><a href={file.file}>{ file.file}</a></p></div>
             ))
             )
         }catch (err){
@@ -61,10 +61,13 @@ const FileRepository = ({match}) => {
     <body>
         FileRepository
         <h1>Plans Files:</h1>
-        {uplaoded && showFiles()}
+        {uplaoded && showFiles(plans)}
         <h1>Bids Files:</h1>
+        {uplaoded && showFiles(bids)}
         <h1>Images:</h1>
+        {uplaoded && showFiles(images)}
         <h1>Payment Files:</h1>
+        {uplaoded && showFiles(payments)}
     </body>
 
     </html>

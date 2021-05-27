@@ -184,12 +184,14 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
         formData.append('license_validity', newCar.license_validity)
         formData.append('insurance_validity', newCar.insurance_validity)
         formData.append('insurance_up_to_age', newCar.insurance_up_to_age)
+         formData.append('description', newCar.description)
 
         console.log("new car", newCar)
         setNewCar({license_number: "",
         license_validity: "",
         insurance_validity: "",
         insurance_up_to_age: "",
+        description: "",
         image: "",
         })
         axios({
@@ -411,6 +413,16 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
                         value={newCar.insurance_up_to_age}
                         onChange={e => newCarChange(e)}
                         minLength='2'
+                    />
+                </div>
+                <div className='form-group'>
+                    <input
+                        className='form-control'
+                        type='text'
+                        placeholder="תיאור הרכב/ הערות"
+                        name='description'
+                        value={newCar.description}
+                        onChange={e => newCarChange(e)}
                     />
                 </div>
                 תמונת רכב

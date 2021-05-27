@@ -72,6 +72,7 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
     }
 
     const editReportChange = e => setEditReport({ ...editReport, [e.target.name]: e.target.value });
+    let fileSelectedHandlerEdit  = e =>{setEditReport({...editReport, [e.target.name]: e.target.files[0] })}
 
     const editReportWorkerIdChange = e =>{
         let first_last_name = e.target.value.split(" ");
@@ -94,6 +95,8 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
         formData.append('start_time', editReport.start_time);
         formData.append('end_time', editReport.end_time);
         formData.append('description', editReport.description);
+        try{formData.append("photo", editReport.photo,editReport.photo.name);
+        } catch(err){console.log("didn't change photo.")}
         setEditReport("");
 
         axios({
@@ -114,6 +117,7 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
     }
 
     const newReportChange = e => setNewReport({ ...newReport, [e.target.name]: e.target.value });
+    let fileSelectedHandler  = e =>{setNewReport({...newReport, [e.target.name]: e.target.files[0] })}
 
     const newReportWorkerIdChange = e =>{
         let first_last_name = e.target.value.split(" ");
@@ -137,6 +141,8 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
         formData.append('start_time', newReport.start_time);
         formData.append('end_time', newReport.end_time);
         formData.append('description', newReport.description);
+        try{formData.append("photo", newReport.photo,newReport.photo.name);
+        } catch(err){console.log("didn't change photo.")}
         setNewReport("");
 
         axios({
@@ -147,7 +153,7 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
         .then((Res) => {
             setFixed(false);
             setReports({reports:[...reports.reports, Res.data]});
-        }).catch(err=>{ console.log("err", err)})
+        }).catch(err=>{ console.log("err", err.response)})
     }
 
     function scheduleForm(){
@@ -203,6 +209,11 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
              value={newReport.description}
              onChange={e => newReportChange(e)}
         />
+        <input className='form-group'
+               type = 'file'
+               name='photo'
+               onChange={e => fileSelectedHandler(e)}
+        />
         </div>
         <button className='btn btn-success' type='submit'>הוספת דוח</button>
          </form>
@@ -243,6 +254,12 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
             disableSortBy: true,
             filterable: true
           },
+        {
+            Header: "קובץ מצורף",
+            accessor: "photo",
+            disableSortBy: true,
+            filterable: false
+        },
           {
         Header: "",
         id: "delete",
@@ -284,9 +301,6 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
     ],
     [reports]
   );
-//        <p>Reports: {JSON.stringify(reports)}</p>
-//        <p>Workerss: {JSON.stringify(workers)}</p>
-//        <p>newReports: {JSON.stringify(newReports)}</p>
 
     function editMyReport(){
         console.log(rowToEdit)
@@ -342,6 +356,11 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
              value={editReport.description}
              onChange={e => editReportChange(e)}
         />
+             <input className='form-group'
+                    type = 'file'
+                    name='photo'
+                    onChange={e => fileSelectedHandlerEdit(e)}
+             />
         </div>
         <button className='btn btn-success' type='submit'>עדכן דוח</button>
          </form>

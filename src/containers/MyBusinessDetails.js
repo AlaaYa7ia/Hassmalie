@@ -12,7 +12,7 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
     const [business, setBusiness] = useState("");
     const [newUser, setNewUser] = useState("");
 
-     useEffect(() => {
+     useEffect(() => { ///change the use effect so you can set the manager anf the director according to the user title
         (async () => {
         await get_user_data().then((dataRes) => {
             let userData = dataRes;
@@ -76,6 +76,7 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
                                 <p className='lead'>תוקף רישוי: {car.license_validity} </p>
                                 <p className='lead'>תוקף ביטוח: {car.insurance_validity}</p>
                                 <p className='lead'>ביטוח עד גיל: {car.insurance_up_to_age}</p>
+                                <p className='lead'>תיאור הרכב: {car.description}</p>
                             </div>
                             <div className='col-5'>
                                 <img src={getImgUrl(car.image, "car")} height={150} width={150}></img>
