@@ -8,7 +8,7 @@ const FileRepository = ({match}) => {
     const [images, setImages] = useState([]);
     const [payments, setPayments] = useState([]);
     const [projectId, setProjectId] = useState("")
-    const [uplaoded, setUplaoded] = useState(false);
+    const [uploaded, setUploaded] = useState(false);
     const get_plans = async () =>{
         //const projects_Res = await axios.get('/api/projects/?my_business=' + dataRes)
         const files_Res = await axios.get(process.env.REACT_APP_API_URL+'/api/projects-files/?category=P&project_id='+projectId);
@@ -39,7 +39,7 @@ const FileRepository = ({match}) => {
             .then(get_bids())
             .then(get_images())
             .then(get_payments())
-            .then(setUplaoded(true))
+            .then(setUploaded(true))
 
 
     },[projectId])
@@ -61,13 +61,13 @@ const FileRepository = ({match}) => {
     <body>
         FileRepository
         <h1>Plans Files:</h1>
-        {uplaoded && showFiles(plans)}
+        {uploaded && showFiles(plans)}
         <h1>Bids Files:</h1>
-        {uplaoded && showFiles(bids)}
+        {uploaded && showFiles(bids)}
         <h1>Images:</h1>
-        {uplaoded && showFiles(images)}
+        {uploaded && showFiles(images)}
         <h1>Payment Files:</h1>
-        {uplaoded && showFiles(payments)}
+        {uploaded && showFiles(payments)}
     </body>
 
     </html>

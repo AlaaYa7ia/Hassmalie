@@ -224,8 +224,8 @@ export const get_user_data = () => async dispatch => {
         };
          try {
             const res = await axios.get(`${process.env.REACT_APP_API_URL}/auth/users/me/`, config);
-            let id = res.data;
-            return id;
+            let userData = res.data;
+            return userData;
 
 
         } catch (err) {
