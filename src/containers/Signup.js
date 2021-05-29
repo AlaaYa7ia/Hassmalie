@@ -2,13 +2,12 @@ import React, { useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { signup } from '../actions/auth';
-//import PlacesAutocomplete from "react-places-autocomplete";
+import PlacesAutocomplete from "react-places-autocomplete";
 
 const Signup = ({ signup, isAuthenticated }) => {
     const [accountCreated, setAccountCreated] = useState(false);
     const [alert, setAlert] = useState({showAlert: false, alert:""});
 
-    //const [address1, setAddress1] = React.useState("");
     const [formData, setFormData] = useState({
         first_name: '',
         last_name: '',
@@ -23,6 +22,7 @@ const Signup = ({ signup, isAuthenticated }) => {
 
     const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
 
+    const onChangeAddress = e => setFormData({...formData,['address']: e});
     const onSubmit = async e => {
         e.preventDefault();
 
@@ -45,10 +45,6 @@ const Signup = ({ signup, isAuthenticated }) => {
     if (accountCreated) {
         return <Redirect to='/login' />
     }
-
-    // const handleSelect = async value => {
-    //     setAddress1(value);
-    // };
 
     return (
         <html  lang="he" dir="rtl" style={{ backgroundColor: 'rgba(184, 160, 191)' }}>
@@ -124,36 +120,36 @@ const Signup = ({ signup, isAuthenticated }) => {
                     />
                 </div>
 
-                {/*<div>*/}
-                {/*    <PlacesAutocomplete*/}
-                {/*        value={address}*/}
-                {/*        onChange={setAddress1}*/}
-                {/*        onSelect={handleSelect}*/}
-                {/*    >*/}
-                {/*        {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (*/}
-                {/*            <div>*/}
+                <div className='form-group'>
+                    <PlacesAutocomplete
+                        value={address}
+                        onChange={e => onChangeAddress(e)}
+                        onSelect={e => onChangeAddress(e)}
+                    >
+                        {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+                            <div>
 
-                {/*                <input {...getInputProps({ placeholder: "Type address" })} />*/}
+                                <input {...getInputProps({ placeholder: 'כתובת*' })} />
 
-                {/*                <div>*/}
-                {/*                    {loading ? <div>...loading</div> : null}*/}
+                                <div>
+                                    {loading ? <div>...loading</div> : null}
 
-                {/*                    {suggestions.map(suggestion => {*/}
-                {/*                        const style = {*/}
-                {/*                            backgroundColor: suggestion.active ? "#41b6e6" : "#fff"*/}
-                {/*                        };*/}
+                                    {suggestions.map(suggestion => {
+                                        const style = {
+                                            backgroundColor: suggestion.active ? "#41b6e6" : "#fff"
+                                        };
 
-                {/*                        return (*/}
-                {/*                            <div {...getSuggestionItemProps(suggestion, { style })}>*/}
-                {/*                                {suggestion.description}*/}
-                {/*                            </div>*/}
-                {/*                        );*/}
-                {/*                    })}*/}
-                {/*                </div>*/}
-                {/*            </div>*/}
-                {/*        )}*/}
-                {/*    </PlacesAutocomplete>*/}
-                {/*</div>*/}
+                                        return (
+                                            <div {...getSuggestionItemProps(suggestion, { style })}>
+                                                {suggestion.description}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        )}
+                    </PlacesAutocomplete>
+                </div>
 
                 <div className='form-group'>
                     <input
