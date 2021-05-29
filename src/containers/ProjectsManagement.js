@@ -3,6 +3,7 @@ import axios from "axios";
 import { connect } from 'react-redux';
 import {get_user_data } from '../actions/auth';
 import {Link} from 'react-router-dom';
+import PlacesAutocomplete from "react-places-autocomplete";
 
 const ProjectsManagement  = ({ get_user_data, isAuthenticated}) => {
     const [dataRes, setDataRes]= useState([]);
@@ -50,6 +51,7 @@ const ProjectsManagement  = ({ get_user_data, isAuthenticated}) => {
 
     const newProjectChange = e => setNewProject({ ...newProject, [e.target.name]: e.target.value });
 
+    const newProjectChangeAddress = e => setNewProject({...newProject,['address']: e});
     let fileSelectedHandler  = e =>{setNewProject({...newProject, [e.target.name]: e.target.files[0] })}
 
     const newProjectSubmit = e => {
@@ -109,14 +111,37 @@ const ProjectsManagement  = ({ get_user_data, isAuthenticated}) => {
                     value={newProject.type_of_building}
                     onChange={e => newProjectChange(e)}
                 />
-                <input
-                    className='form-control'
-                    type='text'
-                    placeholder= "מקום הבניין"
-                    name='address'
-                    value={newProject.address}
-                    onChange={e => newProjectChange(e)}
-                />
+                <div className='form-group'>
+                    <PlacesAutocomplete
+                        value={newProject.address}
+                        onChange={e => newProjectChangeAddress(e)}
+                        onSelect={e => newProjectChangeAddress(e)}
+                    >
+                        {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+                            <div>
+
+                                <input className='form-control'
+                                       {...getInputProps({ placeholder: "מקום הבניין" })} />
+
+                                <div>
+                                    {loading ? <div>...loading</div> : null}
+
+                                    {suggestions.map(suggestion => {
+                                        const style = {
+                                            backgroundColor: suggestion.active ? "#41b6e6" : "#fff"
+                                        };
+
+                                        return (
+                                            <div {...getSuggestionItemProps(suggestion, { style })}>
+                                                {suggestion.description}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        )}
+                    </PlacesAutocomplete>
+                </div>
                 <input
                     className='form-control'
                     type='number'

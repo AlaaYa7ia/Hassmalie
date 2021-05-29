@@ -2,6 +2,7 @@ import React, {useEffect, useState } from "react";
 import axios from "axios";
 import { connect } from 'react-redux';
 import {get_user_data } from '../actions/auth';
+import PlacesAutocomplete from "react-places-autocomplete";
 
 const WORKER_TYPE =
         {'R': 'חשמלאי רגיל',
@@ -47,6 +48,8 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
 
 
     const newWorkerChange = e => setNewWorker({ ...newWorker, [e.target.name]: e.target.value });
+
+    const onChangeAddress = e => setNewWorker({...newWorker,['address']: e});
 
     let fileSelectedHandler  = e =>{setNewWorker({...newWorker, [e.target.name]: e.target.files[0] })}
 
@@ -157,14 +160,37 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
              onChange={e => newWorkerChange(e)}
              minLength='8'
         />
-        <input
-             className='form-control'
-             type='text'
-             placeholder= "מקום מיגורים"
-             name='address'
-             value={newWorker.address}
-             onChange={e => newWorkerChange(e)}
-        />
+        <div className='form-group'>
+            <PlacesAutocomplete
+                value={newWorker.address}
+                onChange={e => onChangeAddress(e)}
+                onSelect={e => onChangeAddress(e)}
+            >
+                {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+                    <div>
+
+                        <input className='form-control'
+                               {...getInputProps({ placeholder: 'מקום מיגורים' })} />
+
+                        <div>
+                            {loading ? <div>...loading</div> : null}
+
+                            {suggestions.map(suggestion => {
+                                const style = {
+                                    backgroundColor: suggestion.active ? "#41b6e6" : "#fff"
+                                };
+
+                                return (
+                                    <div {...getSuggestionItemProps(suggestion, { style })}>
+                                        {suggestion.description}
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                )}
+            </PlacesAutocomplete>
+        </div>
         <input
              className='form-control'
              type='number'

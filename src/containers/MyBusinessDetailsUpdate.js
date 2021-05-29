@@ -6,6 +6,7 @@ import {get_user_data, logout } from '../actions/auth';
 import { Link, useHistory, Redirect } from 'react-router-dom';
 
 import MyBusinessDetails from '../containers/MyBusinessDetails';
+import PlacesAutocomplete from "react-places-autocomplete";
 
 
 const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
@@ -57,8 +58,11 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
     let managerImageHandler  = event =>{setManager({...manager, photo: event.target.files[0] })}
 
     //console.log(business)
+
     const managerChange = e => setManager({ ...manager, [e.target.name]: e.target.value });
+    const managerChangeAddress = e => setManager({...manager,['address']: e});
     const directorChange = e => setDirector({ ...director, [e.target.name]: e.target.value });
+    const directorChangeAddress = e => setDirector({...director,['address']: e});
     const businessChange = e => setBusiness({ ...business, [e.target.name]: e.target.value });
     const newCarChange = e => setNewCar({ ...newCar, [e.target.name]: e.target.value });
 
@@ -282,14 +286,35 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
                     />
                 </div>
                 <div className='form-group'>
-                    <input
-                        className='form-control'
-                        type='text'
-                        placeholder={manager.address}
-                        name='address'
+                    <PlacesAutocomplete
                         value={manager.address}
-                        onChange={e => managerChange(e)}
-                    />
+                        onChange={e => managerChangeAddress(e)}
+                        onSelect={e => managerChangeAddress(e)}
+                    >
+                        {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+                            <div>
+
+                                <input className='form-control'
+                                       {...getInputProps({ placeholder: manager.address })} />
+
+                                <div>
+                                    {loading ? <div>...loading</div> : null}
+
+                                    {suggestions.map(suggestion => {
+                                        const style = {
+                                            backgroundColor: suggestion.active ? "#41b6e6" : "#fff"
+                                        };
+
+                                        return (
+                                            <div {...getSuggestionItemProps(suggestion, { style })}>
+                                                {suggestion.description}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        )}
+                    </PlacesAutocomplete>
                 </div>
                 תמונה אשית
                 <div className='form-group'>
@@ -349,14 +374,35 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
                     />
                 </div>
                 <div className='form-group'>
-                    <input
-                        className='form-control'
-                        type='text'
-                        placeholder={director.address}
-                        name='address'
+                    <PlacesAutocomplete
                         value={director.address}
-                        onChange={e => directorChange(e)}
-                    />
+                        onChange={e => directorChangeAddress(e)}
+                        onSelect={e => directorChangeAddress(e)}
+                    >
+                        {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+                            <div>
+
+                                <input className='form-control'
+                                       {...getInputProps({ placeholder: director.address})} />
+
+                                <div>
+                                    {loading ? <div>...loading</div> : null}
+
+                                    {suggestions.map(suggestion => {
+                                        const style = {
+                                            backgroundColor: suggestion.active ? "#41b6e6" : "#fff"
+                                        };
+
+                                        return (
+                                            <div {...getSuggestionItemProps(suggestion, { style })}>
+                                                {suggestion.description}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        )}
+                    </PlacesAutocomplete>
                 </div>
                 תמונת סגן מנהל
                 <div className='form-group'>

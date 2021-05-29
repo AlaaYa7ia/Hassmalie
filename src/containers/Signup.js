@@ -129,7 +129,8 @@ const Signup = ({ signup, isAuthenticated }) => {
                         {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
                             <div>
 
-                                <input {...getInputProps({ placeholder: 'כתובת*' })} />
+                                <input className='form-control'
+                                       {...getInputProps({ placeholder: 'כתובת*' })} />
 
                                 <div>
                                     {loading ? <div>...loading</div> : null}
@@ -149,18 +150,6 @@ const Signup = ({ signup, isAuthenticated }) => {
                             </div>
                         )}
                     </PlacesAutocomplete>
-                </div>
-
-                <div className='form-group'>
-                    <input
-                        className='form-control'
-                        type='text'
-                        placeholder='כתובת*'
-                        name='address'
-                        value={address}
-                        onChange={e => onChange(e)}
-                        required
-                    />
                 </div>
                 <div className='form-group'>
                     <input
