@@ -178,9 +178,23 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') #staticfiles ??
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-MEDIA_URL = '/media/'
+# MEDIA_URL = '/media/'
+#
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+from google.oauth2 import service_account
+GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
+    os.path.join(BASE_DIR, 'credential.json')
+)
+
+ ###configuration for media file storing and reriving media file from gcloud
+DEFAULT_FILE_STORAGE='hashmalie.gcloud.GoogleCloudMediaFileStorage'
+GS_PROJECT_ID = 'Hassmalie'
+GS_BUCKET_NAME = 'hassmalie-bucket'
+MEDIA_ROOT = "media/"
+UPLOAD_ROOT = 'media/uploads/'
+MEDIA_URL = 'https://storage.googleapis.com/{}/'.format(GS_BUCKET_NAME)
+
 
 # rest API framework sittings
 REST_FRAMEWORK = {
