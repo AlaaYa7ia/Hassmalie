@@ -15,21 +15,21 @@ class UserView(viewsets.ModelViewSet):
     serializer_class = UserCreateSerializer
     queryset = UserAccount.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['email', 'first_name', 'last_name', 'address', 'title']
+    filterset_fields = ['id', 'email', 'first_name', 'last_name', 'address', 'title']
 
 
 class CarView(viewsets.ModelViewSet):
     queryset = Car.objects.all()
     serializer_class = CarCreateSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['my_business', 'license_number']
+    filterset_fields = ['id', 'my_business', 'license_number']
 
 
 class MyBusinessView(viewsets.ModelViewSet):
     serializer_class = MyBusinessCreateSerializer
     queryset = MyBusiness.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['manager', 'deputy_director', 'name']
+    filterset_fields = ['id', 'manager', 'deputy_director', 'name']
 
 
 class WorkerView(viewsets.ModelViewSet):
@@ -43,7 +43,7 @@ class ReportView(viewsets.ModelViewSet):
     queryset = Report.objects.all()
     serializer_class = ReportCreateSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['my_business', 'project_id', 'reporting_date', 'worker_id', 'reporting_date', 'start_time',
+    filterset_fields = ['id', 'my_business', 'project_id', 'reporting_date', 'worker_id', 'reporting_date', 'start_time',
                         'end_time']
 
 
@@ -51,14 +51,14 @@ class CostumerView(viewsets.ModelViewSet):
     serializer_class = CostumerCreateSerializer
     queryset = Customer.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['my_business','email', 'first_name', 'last_name', 'address']
+    filterset_fields = ['id', 'my_business','email', 'first_name', 'last_name', 'address']
 
 
 class ProjectView(viewsets.ModelViewSet):
     serializer_class = ProjectCreateSerializer
     queryset = Project.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['my_business', 'manager', 'name','type_of_building','address', 'contractor_id', 'architect_id',
+    filterset_fields = ['id', 'my_business', 'manager', 'name','type_of_building','address', 'contractor_id', 'architect_id',
                         'customer_id', 'is_closed']
 
 
@@ -66,32 +66,32 @@ class ProjectFileView(viewsets.ModelViewSet):
     serializer_class = ProjectFileCreateSerializer
     queryset = ProjectFile.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['my_business','project_id', 'category']
+    filterset_fields = ['id', 'my_business','project_id', 'category']
 
 
 class BidView(viewsets.ModelViewSet):
     serializer_class = BidCreateSerializer
     queryset = Bid.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['my_business','project_id']
+    filterset_fields = ['id', 'my_business','project_id']
 
 
 class SymbolView(viewsets.ModelViewSet):
     serializer_class = SymbolCreateSerializer
     queryset = Symbol.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['my_business', 'bid_id', 'price','type','count']
+    filterset_fields = ['id', 'my_business', 'bid_id', 'price','type','count']
 
 
 class LabelView(viewsets.ModelViewSet):
     serializer_class = LabelCreateSerializer
     queryset = Label.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['my_business', 'bid_id', 'annotation']
+    filterset_fields = ['id', 'my_business', 'bid_id', 'annotation']
 
 
 class TaskView(viewsets.ModelViewSet):
     serializer_class = TaskCreateSerializer
     queryset = Task.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['my_business', 'author_type', 'author_id', 'project_id', 'date', 'time', 'is_closed']
+    filterset_fields = ['id', 'my_business', 'author_type', 'author_id', 'project_id', 'date', 'time', 'is_closed']

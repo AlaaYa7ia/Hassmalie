@@ -254,7 +254,7 @@ const ProjectsManagement  = ({ get_user_data, isAuthenticated}) => {
 
         return(
             projects.map(project => (
-                <Link to={"/project/"+project.id} className="img-container m-3 ">
+                <Link to={"/project/"+myBusiness.my_business+"/"+project.id} className="img-container m-3 ">
                     <img src={getImgUrl(project.buildingImage, "project")} alt="Avatar" className="image"></img>
                         <div className="overlay">{project.name + " - " + project.address}</div>
                     <div className="progress">
