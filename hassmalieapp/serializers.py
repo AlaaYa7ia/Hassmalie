@@ -38,7 +38,7 @@ class WorkerCreateSerializer(serializers.ModelSerializer):
         model = Worker
         fields = ('id', 'my_business', 'manager', 'email', 'first_name', 'last_name', 'photo', 'phone_number',
                   'password', 'address', 'age', 'title', 'id_photo', 'rate_per_day', 'license', 'permit', 'permit_type',
-                  'permit_validity')
+                  'permit_validity', 'is_active')
 
 
 class MyBusinessCreateSerializer(serializers.ModelSerializer):
@@ -63,7 +63,8 @@ class ProjectCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = ('id', 'my_business','type_of_building', 'address', 'contractor_id', 'architect_id', 'customer_id', 'buildingImage')
+        fields = ('id', 'my_business', 'manager', 'name','type_of_building', 'address', 'contractor_id', 'architect_id',
+                  'customer_id', 'buildingImage', 'progress', 'is_closed', 'description')
 
 
 class ReportCreateSerializer(serializers.ModelSerializer):

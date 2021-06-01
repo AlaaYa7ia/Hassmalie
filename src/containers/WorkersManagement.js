@@ -85,6 +85,7 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
         formData.append('rate_per_day', newWorker.rate_per_day);
         formData.append('permit_type', newWorker.permit_type);
         formData.append('permit_validity', newWorker.permit_validity);
+        formData.append('is_active', newWorker.is_active);
         console.log("new worker:", newWorker);
         setNewWorker("");
 
@@ -247,6 +248,15 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
              value={newWorker.permit_validity}
              onChange={e => newWorkerChange(e)}
         />
+        העובד פעיל .
+        <input
+            type='checkbox'
+            placeholder="העובד פעיל"
+            name='is_active'
+            value={newWorker.is_active}
+            onChange={e => newWorkerChange(e)}
+        />
+        <br></br>
         <button className='btn btn-success' type='submit'>הוספה</button>
         <button className='btn btn-danger' onClick={dontAddWorkerClickHandler}>בטל הוספת עובד</button>
 
@@ -281,6 +291,7 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
                             <p><a href={worker.id_photo} >תעודת זהות</a></p>
                             <p> <a href={worker.license} >רשיון נהיגה</a></p>
                             <p><a href={worker.permit}>רשיון עבודה</a></p>
+                            <p>{worker.is_active ? "פעיל" : "לא פעיל"}</p>
 
                         </div>
                     </div>

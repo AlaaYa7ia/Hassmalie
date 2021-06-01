@@ -93,6 +93,7 @@ class Worker(models.Model):
     permit = models.ImageField(upload_to='workers/permits/', default=None)
     permit_type = models.CharField(null=True, max_length=255, default=None)  # we should change it to options
     permit_validity = models.DateField(null=True, default=None)
+    is_active = models.BooleanField(default=True)
     REQUIRED_FIELDS = ['my_business', 'manager', 'email', 'first_name', 'last_name', 'phone_number', 'password',
                   'address', 'title']
 
@@ -136,13 +137,18 @@ class Customer(models.Model):
 # constricting project model.
 class Project(models.Model):
     my_business = models.ForeignKey(MyBusiness, on_delete=models.CASCADE)
+    manager = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
     type_of_building = models.CharField(max_length=255)
     address = models.CharField(max_length=255)
     contractor_id = models.ForeignKey(Worker, related_name='contractor_id', on_delete=models.PROTECT)
     architect_id = models.ForeignKey(Worker, related_name='architect_id', on_delete=models.PROTECT)
     customer_id = models.ForeignKey(Customer, on_delete=models.PROTECT)
     buildingImage = models.ImageField(upload_to='projects/buildingimages/',  default=None)
-    REQUIRED_FIELDS = ['my_business', 'address', 'contractor_id', 'architect_id', 'customer_id']
+    progress = models.IntegerField(default=0)
+    is_closed = models.BooleanField(default=False)
+    description = models.TextField(default="")
+    REQUIRED_FIELDS = ['my_business', 'name', 'manager', 'address', 'contractor_id', 'architect_id', 'customer_id']
 
     def __str__(self):
         return str(self.type_of_building)
@@ -233,6 +239,7 @@ class Task(models.Model):
     date = models.DateField(default=None)
     time = models.TimeField()
     description = models.TextField()
+    is_closed = models.BooleanField(default=False)
     photo = models.FileField(upload_to='tasks/')
     REQUIRED_FIELDS = ['my_business', 'author_type', 'author_id', 'project_id', 'date', 'time', 'description']
 
