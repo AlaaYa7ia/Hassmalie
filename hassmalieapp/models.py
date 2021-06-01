@@ -151,7 +151,7 @@ class Project(models.Model):
     REQUIRED_FIELDS = ['my_business', 'name', 'manager', 'address', 'contractor_id', 'architect_id', 'customer_id']
 
     def __str__(self):
-        return str(self.type_of_building)
+        return str(self.name)
 
 
 # a worker report model
