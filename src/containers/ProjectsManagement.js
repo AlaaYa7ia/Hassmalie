@@ -255,7 +255,7 @@ const ProjectsManagement  = ({ get_user_data, isAuthenticated}) => {
         return(
             projects.map(project => (
                 <Link to={"/project/"+myBusiness.my_business+"/"+project.id} className="img-container m-3 ">
-                    <img src={getImgUrl(project.buildingImage, "project")} alt="Avatar" className="image"></img>
+                    <img src={getImgUrl(project.buildingImage, "project")} alt="Avatar" className="image"/>
                         <div className="overlay">{project.name + " - " + project.address}</div>
                     <div className="progress">
                         <div className="progress-bar progress-bar-striped active text-dark " role="progressbar" aria-valuenow={project.progress.toString()}

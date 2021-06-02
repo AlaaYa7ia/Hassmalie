@@ -47,8 +47,8 @@ class ReportView(viewsets.ModelViewSet):
                         'end_time']
 
 
-class CostumerView(viewsets.ModelViewSet):
-    serializer_class = CostumerCreateSerializer
+class CustomerView(viewsets.ModelViewSet):
+    serializer_class = CustomerCreateSerializer
     queryset = Customer.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['id', 'my_business','email', 'first_name', 'last_name', 'address']

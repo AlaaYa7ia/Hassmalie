@@ -7,7 +7,7 @@ import PlacesAutocomplete from "react-places-autocomplete";
 const WORKER_TYPE =
         {'R': 'חשמלאי רגיל',
         'C': 'קבלן',
-        'A': 'מהנדס'};
+        'A': 'אדרכל'};
 
 const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
     const [workers, setWorkers] = useState([]);

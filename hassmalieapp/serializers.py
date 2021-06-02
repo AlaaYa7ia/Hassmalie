@@ -49,7 +49,7 @@ class MyBusinessCreateSerializer(serializers.ModelSerializer):
         fields = ('manager', 'deputy_director', 'name', 'logo')
 
 
-class CostumerCreateSerializer(serializers.ModelSerializer):
+class CustomerCreateSerializer(serializers.ModelSerializer):
     photo = serializers.ImageField(max_length=None, use_url=True, required=False)
 
     class Meta:
