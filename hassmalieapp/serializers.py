@@ -82,7 +82,7 @@ class ProjectFileCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProjectFile
-        fields = ('id', 'my_business', 'project_id', 'category', 'file')
+        fields = ('id', 'my_business', 'project_id', 'category', 'file', 'description')
 
 
 class BidCreateSerializer(serializers.ModelSerializer):

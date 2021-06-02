@@ -388,7 +388,7 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
                  className="btn btn-primary mt-5"
                  onClick={() => generatePDF(dataf)}
              >
-                 Generate monthly report
+                 להפקת דוח חודשי
              </button>
              </div>
           {showTable()}

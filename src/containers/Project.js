@@ -127,11 +127,28 @@ const Project = ({match}) => {
         </head>
         <body className='right-text' dir="rtl">
         <div>
-
-
-        <div className='m-5 col-12'>
-        <h1>פרויקט: {project.name}</h1>
-        </div>
+            <div className=' container-fluid row' style={{justifyContent: 'right'}}>
+                <div className='mt-5 mb-5 col-7'>
+                    <h1>פרויקט: {project.name}</h1>
+                </div>
+                <div className="text-container col-2 mt-5">
+                    <Link to={"/file-repository/"+project.id}>
+                        <img className='img-link'
+                             src={process.env.REACT_APP_API_URL + '/media/defaultpictuers/icon5.png'} height={70}
+                             width={70}/>
+                        <p className="centered lead">מאגר הקבצים</p>
+                    </Link>
+                </div>
+                <div className="text-container col-2 mt-5">
+                    <Link to={"/bid/"+project.id} >
+                        <img className='img-link'
+                             src={process.env.REACT_APP_API_URL + '/media/defaultpictuers/icon6.png'} height={70}
+                             width={70}/>
+                        <p className="centered lead text-danger">להפקת הצעת מחיר</p>
+                    </Link>
+                </div>
+                <div className='col-1'></div>
+            </div>
         <div className=' container-fluid  mt-5' style={{justifyContent: 'right'}}>
         <div className='row'>
             <div className='col-3 m-5'>
@@ -156,24 +173,7 @@ const Project = ({match}) => {
             </div>
         </div>
         </div>
-            <div className=' container-fluid row  m-5' style={{justifyContent: 'right'}}>
-                <div className="text-container col-6">
-                    <Link to={"/file-repository/"+project.id}>
-                        <img className='img-link'
-                             src={process.env.REACT_APP_API_URL + '/media/defaultpictuers/icon5.png'} height={210}
-                             width={210}/>
-                        <p className="centered lead">מאגר הקבצים</p>
-                    </Link>
-                </div>
-                <div className="text-container col-6">
-                    <Link to={"/bid/"+project.id} >
-                        <img className='img-link'
-                             src={process.env.REACT_APP_API_URL + '/media/defaultpictuers/icon6.png'} height={210}
-                             width={210}/>
-                        <p className="centered lead text-danger">להפקת הצעת מחיר</p>
-                    </Link>
-                </div>
-            </div>
+
 
         </div>
         </body>

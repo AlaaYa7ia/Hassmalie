@@ -180,6 +180,7 @@ class ProjectFile(models.Model):
     )
     category = models.CharField(max_length=3, choices=FILE_CATEGORY, default='I')
     file = models.FileField(upload_to='projects/projectsfiles/')
+    description = models.TextField(default="")
     REQUIRED_FIELDS = ['my_business', 'project_id', 'file']
 
     def __str__(self):
