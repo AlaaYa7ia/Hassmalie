@@ -17,47 +17,98 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
     const [newUser, setNewUser] = useState("");
     const [newCar, setNewCar] = useState("");
 
+    const [managerFlag, setManagerFlag] = useState(false);
+    const [directorFlag, setDirectorFlag] = useState(false);
+
+    const get_user = async ()=>{
+        const user_Res = await get_user_data();
+        if(user_Res.title === 'M'){
+            axios.get("/api/users/"+user_Res.id +"/")
+                .then((dataRes) => {
+                    setManager(dataRes.data)
+                    setManagerFlag(true);
+                })
 
 
-    useEffect(() => {
-        (async () => {
-        await get_user_data().then((dataRes) => {
-            axios
-          .get("/api/users/"+ dataRes.id +"/")
-          .then((dataRes) => {
-            setManager(dataRes.data);
+        }else{
+            axios.get("/api/users/"+user_Res.id +"/")
+                .then((dataRes) => {
+                    setDirector(dataRes.data)
+                    setDirectorFlag(true)
+                })
 
-           })
+        }
+    }
 
-            axios
-          .get("/api/cars/?my_business="+dataRes.id)
-          .then((dataRes) => {
-            setCars(dataRes.data);})
+    const get_business = async (title)=> {
+        if(title === 'M'){
+            const Res = await axios.get(process.env.REACT_APP_API_URL+'/api/my-business/' + manager.id+"/");
+            setBusiness(Res.data)
+        }else{
+            const Res = await axios.get(process.env.REACT_APP_API_URL+'/api/my-business/?deputy_director=' + director.id);
+            setBusiness(Res.data[0])
+        }
+        console.log("here")
+    }
 
-           axios
-          .get("/api/my-business/"+ dataRes.id +"/")
-          .then((dataRes) => {
-            setBusiness(dataRes.data);
-             return dataRes.data.deputy_director
+    const get_other_user= async (title)=> {
+        console.log(title)
+        if(title === 'M'){
+            await axios
+                .get(process.env.REACT_APP_API_URL+"/api/users/"+ business.deputy_director +"/")
+                .then((dataRes) => {
+                    setDirector(dataRes.data)
+                })
+        }
+        else{
+            console.log(business)
+            await axios
+                .get(process.env.REACT_APP_API_URL+"/api/users/"+ business.manager +"/")
+                .then((dataRes) => {
+                    setManager(dataRes.data)
+                })
+        }
+    }
 
-           }).then((dataRes) => {
-            axios
-          .get("/api/users/"+ dataRes +"/")
-          .then((dataRes) => {
-            setDirector(dataRes.data);
+    const get_cars= async ()=> {
+        await axios
+            .get(process.env.REACT_APP_API_URL+"/api/cars/?my_business="+ business.manager )
+            .then((dataRes) => {
+                setCars(dataRes.data)
             })
-           })
-        })
-        })();
+    }
+    useEffect(()=>{
+        get_user()
+    },[])
 
-    }, []);
+    useEffect(()=>{
+        if(managerFlag) {
+            get_business('M')
+        }
+    },[managerFlag, manager])
 
+    useEffect(()=>{
+        if(directorFlag){
+            get_business('D')
+        }
+    },[directorFlag, director])
+
+    useEffect(()=>{
+        if(business !== ""){
+            if(director !== ""){
+                get_other_user('D')
+            }else{
+                get_other_user('M')
+            }
+
+        }
+        get_cars()
+    },[business])
+    
     let fileSelectedHandler = event =>{setBusiness({...business,logo: event.target.files[0] })}
     let carImageHandler  = event =>{setNewCar({...newCar,image: event.target.files[0] })}
     let directorImageHandler  = event =>{setDirector({...director, photo: event.target.files[0] })}
     let managerImageHandler  = event =>{setManager({...manager, photo: event.target.files[0] })}
-
-    //console.log(business)
 
     const managerChange = e => setManager({ ...manager, [e.target.name]: e.target.value });
     const managerChangeAddress = e => setManager({...manager,['address']: e});
@@ -134,7 +185,6 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
     };
      const businessSubmit = e => {
         e.preventDefault();
-        //console.log("bus befir submit: ", business)
 
         const formData = new FormData();
         try{
@@ -162,7 +212,6 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
         })
         .then((dataRes) => {
             setBusiness(dataRes.data)
-            console.log(dataRes.data)
         }).catch(err=>{ console.log("err", err.response)})
      };
 
@@ -172,7 +221,6 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
         axios.defaults.xsrfCookieName = "csrftoken";
         axios.defaults.withCredentials = true;
         const formData = new FormData();
-        //console.log("business.logo", business.logo)
         try{
         formData.append(
         "image",
@@ -189,8 +237,6 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
         formData.append('insurance_validity', newCar.insurance_validity)
         formData.append('insurance_up_to_age', newCar.insurance_up_to_age)
          formData.append('description', newCar.description)
-
-        console.log("new car", newCar)
         setNewCar({license_number: "",
         license_validity: "",
         insurance_validity: "",
@@ -205,7 +251,6 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
         })
         .then((dataRes) => {
             setCars(dataRes.data)
-            console.log("cars data", dataRes.data)
         }).catch(err=>{ console.log("err", err.response)})
 
      }
@@ -214,7 +259,7 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
 
 
     <div dir='rtl' className='container-fluid mt-5 right-text center' lang="he" >
-            <h1 dir='rtl'>עדכון הפרטים העסק שלי</h1>
+            <h1 dir='rtl'>עדכון פרטי העסק שלי</h1>
 
             <form dir='rtl' onSubmit={e => businessSubmit(e)}>
                 <p>תעדכן את פרטי העסק</p>
@@ -241,7 +286,7 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
             <div class = "container-fluid row">
 
             <form  onSubmit={e => mangerSubmit(e)}>
-                <p>תעדכן את המשתמש שלך</p>
+                <p>תעדכן את פרטי המנהל</p>
                 <div className='form-group'>
                     <input
                         className='form-control'

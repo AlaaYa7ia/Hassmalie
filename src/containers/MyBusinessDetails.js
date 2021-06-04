@@ -10,44 +10,93 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
     const [director, setDirector] = useState("");
     const [cars, setCars] = useState([]);
     const [business, setBusiness] = useState("");
-    const [newUser, setNewUser] = useState("");
+    const [managerFlag, setManagerFlag] = useState(false);
+    const [directorFlag, setDirectorFlag] = useState(false);
 
-     useEffect(() => { ///change the use effect so you can set the manager anf the director according to the user title
-        (async () => {
-        await get_user_data().then((dataRes) => {
-            let userData = dataRes;
-            axios
-          .get("/api/users/"+ dataRes.id +"/")
-          .then((dataRes) => {
-            setManager(dataRes.data);
-            axios
-          .get("/api/cars/?my_business="+userData.id)
-          .then((dataRes) => {
-            setCars(dataRes.data);})
+    const get_user = async ()=>{
+        const user_Res = await get_user_data();
+        if(user_Res.title === 'M'){
+            axios.get("/api/users/"+user_Res.id +"/")
+                .then((dataRes) => {
+                    setManager(dataRes.data)
+                    setManagerFlag(true);
+                })
 
-            axios
-          .get("/api/my-business/"+ userData.id +"/")
-          .then((dataRes) => {
-            setBusiness(dataRes.data);
-             return dataRes.data.deputy_director
 
-           }).then((dataRes) => {
-            axios
-          .get("/api/users/"+ dataRes +"/")
-          .then((dataRes) => {
-            setDirector(dataRes.data);
+        }else{
+            axios.get("/api/users/"+user_Res.id +"/")
+                .then((dataRes) => {
+                    setDirector(dataRes.data)
+                    setDirectorFlag(true)
+                })
 
+        }
+    }
+
+    const get_business = async (title)=> {
+        if(title === 'M'){
+            const Res = await axios.get(process.env.REACT_APP_API_URL+'/api/my-business/' + manager.id+"/");
+            setBusiness(Res.data)
+        }else{
+            const Res = await axios.get(process.env.REACT_APP_API_URL+'/api/my-business/?deputy_director=' + director.id);
+            setBusiness(Res.data[0])
+        }
+    }
+
+    const get_other_user= async (title)=> {
+        if(title === 'M'){
+            await axios
+                .get(process.env.REACT_APP_API_URL+"/api/users/"+ business.deputy_director +"/")
+                .then((dataRes) => {
+                    setDirector(dataRes.data)
+                })
+        }
+        else{
+            await axios
+                .get(process.env.REACT_APP_API_URL+"/api/users/"+ business.manager +"/")
+                .then((dataRes) => {
+                    setManager(dataRes.data)
+                })
+        }
+    }
+
+    const get_cars= async ()=> {
+        await axios
+            .get(process.env.REACT_APP_API_URL+"/api/cars/?my_business="+ business.manager )
+            .then((dataRes) => {
+                setCars(dataRes.data)
             })
-           })
-            })
+    }
+    useEffect(()=>{
+        get_user()
+    },[])
 
-        })
-        })();
+    useEffect(()=>{
+        if(managerFlag) {
+            get_business('M')
+        }
+    },[managerFlag, manager])
 
-    }, []);
+    useEffect(()=>{
+        if(directorFlag){
+            get_business('D')
+        }
+    },[directorFlag, director])
+
+    useEffect(()=>{
+        if(business !== ""){
+            if(director !== ""){
+                get_other_user('D')
+            }else{
+                get_other_user('M')
+            }
+
+        }
+        get_cars()
+    },[business])
 
     function getImgUrl(image, instance) {
-        console.log(image, instance);
+
         if (image === null) {
             return process.env.REACT_APP_API_URL+'/media/defaultpictuers/default_'+instance+'_pic.png';
         }
