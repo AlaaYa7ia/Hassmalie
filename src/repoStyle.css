@@ -2,10 +2,10 @@
     box-sizing: border-box;
 }
 
-body {
-    background-color: #f1f1f1;
-    padding: 20px;
-}
+/*body {*/
+/*    background-color: #f1f1f1;*/
+/*    padding: 20px;*/
+/*}*/
 
 /* Center website */
 .main {
@@ -14,10 +14,10 @@ body {
     background-color: #f1f1f1;
 }
 
-h1 {
-    font-size: 50px;
-    word-break: break-all;
-}
+/*h1 {*/
+/*    font-size: 50px;*/
+/*    word-break: break-all;*/
+/*}*/
 
 .row {
     margin: 8px -16px;
