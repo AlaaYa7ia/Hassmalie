@@ -105,13 +105,15 @@ class Worker(models.Model):
 class Car(models.Model):
     # many to one relation
     my_business = models.ForeignKey(MyBusiness, on_delete=models.CASCADE)
+    company_name = models.TextField(null=True, default="")
+    manufacture_year = models.IntegerField(null=True, default=None)
     license_number = models.IntegerField(default=None, unique=True)
     license_validity = models.DateField(default=None)
     insurance_validity = models.DateField(default=None)
     insurance_up_to_age = models.IntegerField(default=None)
     description = models.TextField()
     image = models.ImageField(upload_to='carimages/', default=None)
-    REQUIRED_FIELDS = ["my_business", "license_number", "license_validity", "insurance_validity", "insurance_up_to_age"]
+    REQUIRED_FIELDS = ["my_business", 'company_name', 'manufacture_year', "license_number", "license_validity", "insurance_validity", "insurance_up_to_age"]
 
     def __str__(self):
         return str(self.license_number)

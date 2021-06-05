@@ -112,7 +112,7 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
                     <h5 className="mb-0">
                         <button className="btn btn-link" data-toggle="collapse" data-target={"#collapse"+car.id}
                                 aria-expanded="true" aria-controls={"collapse"+car.id}>
-                            רכב מספר {car.id}
+                            {car.company_name} - {car.manufacture_year}
                         </button>
                     </h5>
                 </div>

@@ -16,10 +16,11 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
     const [business, setBusiness] = useState("");
     const [newUser, setNewUser] = useState("");
     const [newCar, setNewCar] = useState("");
+    const [errMsg, setErrMsg]= useState({show: false, msg: ""})
+    const [errMsg1, setErrMsg1]= useState({show: false, msg: ""})
 
     const [managerFlag, setManagerFlag] = useState(false);
     const [directorFlag, setDirectorFlag] = useState(false);
-    const [disable, setDisable] = useState(true)
 
     const get_user = async ()=>{
         const user_Res = await get_user_data();
@@ -84,13 +85,13 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
         if(managerFlag) {
             get_business('M')
         }
-    },[managerFlag, manager])
+    },[managerFlag])
 
     useEffect(()=>{
         if(directorFlag){
             get_business('D')
         }
-    },[directorFlag, director])
+    },[directorFlag])
 
     useEffect(()=>{
         if(business !== ""){
@@ -104,23 +105,43 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
         // get_cars()
     },[business])
 
+    const newMangerPhoneChange = e =>{
+        let len = e.target.value.toString().length;
+        if(len  !==0 && (len< 8 || len >10)){
+            setErrMsg({show: true, msg: "נא להזין מספר טילפון חוקי בי 8 ל- 10 טווים."})
+        }else{
+            setErrMsg({show: false, msg: ""})
+
+        }
+        setManager({ ...manager, [e.target.name]: e.target.value });
+    };
+
+    const newDirectorPhoneChange = e =>{
+        let len = e.target.value.toString().length;
+        if(len  !==0 && (len< 8 || len >10)){
+            setErrMsg1({show: true, msg: "נא להזין מספר טילפון חוקי בי 8 ל- 10 טווים."})
+        }else{
+            setErrMsg1({show: false, msg: ""})
+
+        }
+        setDirector({ ...director, [e.target.name]: e.target.value });
+    };
+
     let fileSelectedHandler = event =>{setBusiness({...business,logo: event.target.files[0] })}
     let carImageHandler  = event =>{setNewCar({...newCar,image: event.target.files[0] })}
     let directorImageHandler  = event =>{setDirector({...director, photo: event.target.files[0] })}
     let managerImageHandler  = event =>{setManager({...manager, photo: event.target.files[0] })}
 
-    const managerChange = e =>{setDisable(false)
-        setManager({ ...manager, [e.target.name]: e.target.value })};
+    const managerChange = e => setManager({ ...manager, [e.target.name]: e.target.value });
     const managerChangeAddress = e => setManager({...manager,['address']: e});
     const directorChange = e => setDirector({ ...director, [e.target.name]: e.target.value });
     const directorChangeAddress = e => setDirector({...director,['address']: e});
     const businessChange = e => setBusiness({ ...business, [e.target.name]: e.target.value });
-    const newCarChange = e => {console.log("changes")
+    const newCarChange = e => {
         setNewCar({ ...newCar, [e.target.name]: e.target.value })};
 
     const mangerSubmit = e => {
         e.preventDefault();
-        setDisable(true)
         axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
         axios.defaults.xsrfCookieName = "csrftoken";
         axios.defaults.withCredentials = true;
@@ -234,6 +255,8 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
         }
 
         formData.append('my_business', business.manager);
+         formData.append('company_name', newCar.company_name)
+         formData.append('manufacture_year', newCar.manufacture_year)
         formData.append('license_number', newCar.license_number)
         formData.append('license_validity', newCar.license_validity)
         formData.append('insurance_validity', newCar.insurance_validity)
@@ -273,6 +296,7 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
                         name='name'
                         value={business.name}
                         onChange={e => businessChange(e)}
+                        required
                     />
                 </div>
                 <div className='form-group'>
@@ -297,6 +321,8 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
                         name='first_name'
                         value={manager.first_name}
                         onChange={e => managerChange(e)}
+                        pattern="^[^0-9]*$"
+                        required
 
                     />
                 </div>
@@ -308,6 +334,8 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
                         name='last_name'
                         value={manager.last_name}
                         onChange={e => managerChange(e)}
+                        pattern="^[^0-9]*$"
+                        required
                     />
                 </div>
 
@@ -318,10 +346,14 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
                         placeholder={manager.phone_number}
                         name='phone_number'
                         value={manager.phone_number}
-                        onChange={e => managerChange(e)}
+                        onChange={e => newMangerPhoneChange(e)}
                         minLength='8'
+                        required
                     />
                 </div>
+                {errMsg.show && <div className="alert alert-danger" role="alert">
+                    {errMsg.msg}
+                </div>}
                 <div className='form-group'>
                     <input
                         className='form-control'
@@ -330,7 +362,8 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
                         name='age'
                         value={manager.age}
                         onChange={e => managerChange(e)}
-                        minLength='1'
+                        min ='18'
+                        max='100'
                     />
                 </div>
                 <div className='form-group'>
@@ -343,6 +376,7 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
                             <div>
 
                                 <input className='form-control'
+                                       required
                                        {...getInputProps({ placeholder: manager.address })} />
 
                                 <div>
@@ -372,7 +406,7 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
                 />
                 </div>
 
-                <button className='btn btn-primary' type='submit' disabled={disable}>עדכן פרטים שלי</button>
+                <button className='btn btn-primary' type='submit'>עדכן פרטים שלי</button>
             </form>
 
 
@@ -386,6 +420,8 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
                         name='first_name'
                         value={director.first_name}
                         onChange={e => directorChange(e)}
+                        pattern="^[^0-9]*$"
+                        required
                     />
                 </div>
                 <div className='form-group'>
@@ -396,6 +432,8 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
                         name='last_name'
                         value={director.last_name}
                         onChange={e => directorChange(e)}
+                        pattern="^[^0-9]*$"
+                        required
                     />
                 </div>
 
@@ -406,10 +444,13 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
                         placeholder={director.phone_number}
                         name='phone_number'
                         value={director.phone_number}
-                        onChange={e => directorChange(e)}
-                        minLength='8'
+                        onChange={e => newDirectorPhoneChange(e)}
+                        required
                     />
                 </div>
+                {errMsg1.show && <div className="alert alert-danger" role="alert">
+                    {errMsg1.msg}
+                </div>}
                 <div className='form-group'>
                     <input
                         className='form-control'
@@ -418,7 +459,8 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
                         name='age'
                         value={director.age}
                         onChange={e => directorChange(e)}
-                        minLength='1'
+                        min ='18'
+                        max='100'
                     />
                 </div>
                 <div className='form-group'>
@@ -431,6 +473,7 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
                             <div>
 
                                 <input className='form-control'
+                                       required
                                        {...getInputProps({ placeholder: director.address})} />
 
                                 <div>
@@ -468,12 +511,34 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
                 <div className='form-group'>
                     <input
                         className='form-control'
+                        type='text'
+                        placeholder="חברת ייצור:"
+                        name='company_name'
+                        value={newCar.company_name}
+                        onChange={e => newCarChange(e)}
+                        required
+                    />
+                </div>
+                <div className='form-group'>
+                    <input
+                        className='form-control'
+                        type='number'
+                        placeholder="שנת ייצור:"
+                        name='manufacture_year'
+                        value={newCar.manufacture_year}
+                        onChange={e => newCarChange(e)}
+                        required
+                    />
+                </div>
+                <div className='form-group'>
+                    <input
+                        className='form-control'
                         type='number'
                         placeholder="מספר רישוי"
                         name='license_number'
                         value={newCar.license_number}
                         onChange={e => newCarChange(e)}
-                        minLength='7'
+                        required
                     />
                 </div>
                 <div className='form-group'>
@@ -485,6 +550,7 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
                         name='license_validity'
                         value={newCar.license_validity}
                         onChange={e => newCarChange(e)}
+                        required
                     />
                 </div>
                 <div className='form-group'>
@@ -496,6 +562,7 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
                         name='insurance_validity'
                         value={newCar.insurance_validity}
                         onChange={e => newCarChange(e)}
+                        required
                     />
                 </div>
                 <div className='form-group'>
@@ -505,8 +572,9 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
                         placeholder="ביטוח עד גיל"
                         name='insurance_up_to_age'
                         value={newCar.insurance_up_to_age}
+                        min='18'
+                        max='100'
                         onChange={e => newCarChange(e)}
-                        minLength='2'
                     />
                 </div>
                 <div className='form-group'>

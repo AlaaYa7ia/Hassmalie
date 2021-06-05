@@ -17,6 +17,7 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
     // const [dataRes, setDataRes]= useState([]);
     const[changed, setChanged]= useState(false);
     const[showPermet, setShowPermet]= useState(false);
+    const [errMsg, setErrMsg]= useState({show: false, msg: ""})
 
 
     const get_workers = async () =>{
@@ -54,6 +55,17 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
 
 
     const newWorkerChange = e => setNewWorker({ ...newWorker, [e.target.name]: e.target.value });
+
+    const newWorkerPhoneChange = e =>{
+        let len = e.target.value.toString().length;
+        if(len  !==0 && (len< 8 || len >10)){
+            setErrMsg({show: true, msg: "נא להזין מספר טילפון חוקי בי 8 ל- 10 טווים."})
+        }else{
+            setErrMsg({show: false, msg: ""})
+
+        }
+        setNewWorker({ ...newWorker, [e.target.name]: e.target.value })
+    };
 
     const onChangeAddress = e => setNewWorker({...newWorker,['address']: e});
 
@@ -203,9 +215,12 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
              placeholder="מספר טילפון"
              name='phone_number'
              value={newWorker.phone_number}
-             onChange={e => newWorkerChange(e)}
+             onChange={e => newWorkerPhoneChange(e)}
              required
         />
+        {errMsg.show && <div className="alert alert-danger" role="alert">
+            {errMsg.msg}
+        </div>}
         <div className='form-group'>
             <PlacesAutocomplete
                 value={newWorker.address}

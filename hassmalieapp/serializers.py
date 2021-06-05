@@ -21,7 +21,7 @@ class CarCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Car
         fields = (
-            "id", "my_business", "license_number", "license_validity", "insurance_validity", "insurance_up_to_age",
+            "id", "my_business",'company_name', 'manufacture_year', "license_number", "license_validity", "insurance_validity", "insurance_up_to_age",
             "description", "image")
 
 
