@@ -12,8 +12,14 @@ router.register(r'workers', views.WorkerView, 'worker')
 router.register(r'cars', views.CarView, 'car')
 router.register(r'my-business', views.MyBusinessView, 'my-business')
 router.register(r'reports', views.ReportView, 'report')
-router.register(r'costumers', views.CostumerView, 'costumer')
+router.register(r'customers', views.CustomerView, 'costumer')
 router.register(r'projects', views.ProjectView, 'project')
+router.register(r'bids', views.BidView, 'bid')
+router.register(r'symbols', views.SymbolView, 'symbol')
+router.register(r'labels', views.LabelView, 'label')
+router.register(r'payments', views.PaymentView, 'payment')
+router.register(r'projects-files', views.ProjectFileView, 'project-file')
+router.register(r'tasks', views.TaskView, 'task')
 
 urlpatterns = [
     path('api/', include(router.urls)),
