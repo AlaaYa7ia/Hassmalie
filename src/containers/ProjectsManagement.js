@@ -24,8 +24,14 @@ const ProjectsManagement  = ({ get_user_data, isAuthenticated}) => {
     }
 
     const get_user = async ()=>{
-       const user_Res = await get_user_data()
-       setMyBusiness({my_business: user_Res.id})
+        const user_Res = await get_user_data()
+        if(user_Res.title === 'M') {
+            setMyBusiness({my_business: user_Res.id});
+        }
+        else {
+            const Res = await axios.get(process.env.REACT_APP_API_URL+'/api/my-business/?deputy_director=' + user_Res.id);
+            setMyBusiness({my_business: Res.data[0].manager})
+        }
     }
 
     useEffect(()=>{

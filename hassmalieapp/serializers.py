@@ -32,7 +32,6 @@ class WorkerCreateSerializer(serializers.ModelSerializer):
     permit = serializers.ImageField(max_length=None, use_url=True, required=False)
     permit_type = serializers.CharField(allow_blank=True, required=False)
     permit_validity = serializers.DateField(read_only=True, allow_null=True, required=False)
-    rate_per_day = serializers.FloatField(read_only=True, required=False)
 
     class Meta:
         model = Worker

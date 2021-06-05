@@ -5,7 +5,7 @@ import {get_user_data } from '../actions/auth';
 import PlacesAutocomplete from "react-places-autocomplete";
 
 const WORKER_TYPE =
-        {'R': 'חשמלאי רגיל',
+        {'R': 'חשמלאי',
         'C': 'קבלן',
         'A': 'אדרכל'};
 
@@ -16,6 +16,7 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
     const [myBusiness, setMyBusiness] = useState({my_business: null});
     // const [dataRes, setDataRes]= useState([]);
     const[changed, setChanged]= useState(false);
+    const[showPermet, setShowPermet]= useState(false);
 
 
     const get_workers = async () =>{
@@ -25,7 +26,13 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
 
     const get_user = async ()=>{
         const user_Res = await get_user_data()
-        setMyBusiness({my_business: user_Res.id});
+        if(user_Res.title === 'M') {
+            setMyBusiness({my_business: user_Res.id});
+        }
+        else {
+            const Res = await axios.get(process.env.REACT_APP_API_URL+'/api/my-business/?deputy_director=' + user_Res.id);
+            setMyBusiness({my_business: Res.data[0].manager})
+        }
     }
 
     useEffect(()=>{
@@ -39,7 +46,6 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
 
 
     function getImgUrl(image, instance) {
-        console.log(image, instance);
         if (image === null) {
             return process.env.REACT_APP_API_URL+'/media/defaultpictuers/default_'+instance+'_pic.png';
         }
@@ -85,7 +91,14 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
         formData.append('rate_per_day', newWorker.rate_per_day);
         formData.append('permit_type', newWorker.permit_type);
         formData.append('permit_validity', newWorker.permit_validity);
-        formData.append('is_active', newWorker.is_active);
+        let active;
+        if(newWorker.is_active === null ||newWorker.is_active === "" ||newWorker.is_active === undefined){
+             active = true;
+        }
+        else{
+            active = newWorker.is_active
+        }
+        formData.append('is_active', active);
         console.log("new worker:", newWorker);
         setNewWorker("");
 
@@ -112,6 +125,31 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
         setNewWorker("");
     };
 
+    function showPermitFields(){
+        return(
+            <div>
+        <input
+            className='form-control'
+            type='text'
+            placeholder= "סוג רישוי"
+            name='permit_type'
+            value={newWorker.permit_type}
+            onChange={e => newWorkerChange(e)}
+        />
+        תוקף רישוי:<br/>
+
+        <input
+            className='form-control'
+            type='date'
+            placeholder="תוקף רישוי"
+            name='permit_validity'
+            value={newWorker.permit_validity}
+            onChange={e => newWorkerChange(e)}
+        />
+            </div>
+    )
+    }
+
     function workerForm(){
     return(
     <form className="right-text col-6" dir='rtl' onSubmit={e => newWorkerSubmit(e)}>
@@ -122,6 +160,8 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
              name='first_name'
              value={newWorker.first_name}
              onChange={e => newWorkerChange(e)}
+             pattern="^[^0-9]*$"
+             required
         />
         <input
              className='form-control'
@@ -130,6 +170,8 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
              name='last_name'
              value={newWorker.last_name}
              onChange={e => newWorkerChange(e)}
+             pattern="^[^0-9]*$"
+             required
         />
         <input
              className='form-control'
@@ -138,6 +180,7 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
              name='email'
              value={newWorker.email}
              onChange={e => newWorkerChange(e)}
+             required
         />
         <input
              className='form-control'
@@ -146,7 +189,9 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
              name='password'
              value={newWorker.password}
              onChange={e => newWorkerChange(e)}
+             required
         />
+        תמונת פרופיל:<br/>
         <input className='form-group'
                 type = 'file'
                 name='photo'
@@ -159,7 +204,7 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
              name='phone_number'
              value={newWorker.phone_number}
              onChange={e => newWorkerChange(e)}
-             minLength='8'
+             required
         />
         <div className='form-group'>
             <PlacesAutocomplete
@@ -171,6 +216,7 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
                     <div>
 
                         <input className='form-control'
+                               required
                                {...getInputProps({ placeholder: 'מקום מיגורים' })} />
 
                         <div>
@@ -197,18 +243,28 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
              type='number'
              placeholder="גיל"
              name='age'
+             min ='18'
+             max='100'
              value={newWorker.age}
              onChange={e => newWorkerChange(e)}
-             minLength='2'
+
         />
-        <input
-             className='form-control'
-             type='text'
-             placeholder= "סוג עובד"
-             name='title'
-             value={newWorker.title}
-             onChange={e => newWorkerChange(e)}
-        />
+        <div className='form-group dropdown'>
+            <select
+                className='form-control right-text'
+                placeholder='סוג עובד*'
+                name='title'
+                value={newWorker.title}
+                onChange={e => newWorkerChange(e)}
+                required
+            >
+                <option>סוג עובד*</option>
+                <option value="C">קבלן</option>
+                <option value="A">אדרכל</option>
+                <option value="R">חשמלאי</option>
+            </select>
+        </div>
+        צילום של ת"ז:<br/>
         <input className='form-group'
                 type = 'file'
                 name='id_photo'
@@ -216,38 +272,29 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
         />
         <input
              className='form-control'
-             type='float'
+             type='number'
+             step="any"
+             min='0'
              placeholder="תעריף ליום"
              name='rate_per_day'
              value={newWorker.rate_per_day}
              onChange={e => newWorkerChange(e)}
         />
+        צילום רשיון נהיגה:<br/>
         <input className='form-group'
                 type = 'file'
                 name='license'
                 onChange={e => fileSelectedHandler(e)}
         />
+        <br/>
+        תמונת רשיון עבודה (אם העובד אזרח קבוע נא לא להעלות דבר):<br/>
         <input className='form-group'
                 type = 'file'
                 name='permit'
-                onChange={e => fileSelectedHandler(e)}
+                onChange={e => {setShowPermet(true); fileSelectedHandler(e)}}
         />
-        <input
-             className='form-control'
-             type='text'
-             placeholder= "סוג רישוי"
-             name='permit_type'
-             value={newWorker.permit_type}
-             onChange={e => newWorkerChange(e)}
-        />
-        <input
-             className='form-control'
-             type='date'
-             placeholder="תוקף רישוי"
-             name='permit_validity'
-             value={newWorker.permit_validity}
-             onChange={e => newWorkerChange(e)}
-        />
+        {showPermet ? showPermitFields(): ""}
+        <br/>
         העובד פעיל .
         <input
             type='checkbox'
@@ -256,7 +303,8 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
             value={newWorker.is_active}
             onChange={e => newWorkerChange(e)}
         />
-        <br></br>
+        <br/>
+        <br/>
         <button className='btn btn-success' type='submit'>הוספה</button>
         <button className='btn btn-danger' onClick={dontAddWorkerClickHandler}>בטל הוספת עובד</button>
 
@@ -269,7 +317,7 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
         try{
             return(
         workers.map(worker => (
-            <div id={"accordion"+ worker.id}  className='col-2'>
+            <div id={"accordion"+ worker.id}  className='col-2' >
                 <div className="card">
                     <div className="card-header" id={"heading"+worker.id.toString()} >
 
@@ -283,14 +331,14 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
 
                     <div id={"collapse"+worker.id} className="collapse " aria-labelledby={"heading"+worker.id} data-parent={"#accordion"+worker.id}>
                         <div className="card-body">
-                            <p>{worker.email}</p>
-                            <p>{worker.password}</p>
-                            <p>{worker.phone_number}</p>
-                            <p>{worker.address}</p>
-                            <p>{worker.rate_per_day}</p>
-                            <p><a href={worker.id_photo} >תעודת זהות</a></p>
-                            <p> <a href={worker.license} >רשיון נהיגה</a></p>
-                            <p><a href={worker.permit}>רשיון עבודה</a></p>
+                            <p>אימייל: {worker.email}</p>
+                            <p>סיסמת האפליקציה: {worker.password}</p>
+                            <p>מספר טילפון: {worker.phone_number}</p>
+                            <p>כתובת מיגורים: {worker.address}</p>
+                            <p>תעריף לשעה: {worker.rate_per_day? worker.rate_per_day : "לא נקבע"}</p>
+                            <p><a href={worker.id_photo} >{worker.id_photo? "לינק לתעודת זהות": ""}</a></p>
+                            <p><a href={worker.license} >{worker.license? "לינק לרשיון נהיגה": ""}</a></p>
+                            <p><a href={worker.permit} >{worker.permit? "לינק לרשיון עבודה": ""}</a></p>
                             <p>{worker.is_active ? "פעיל" : "לא פעיל"}</p>
 
                         </div>

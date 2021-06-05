@@ -41,14 +41,14 @@ const Homepage = () => {
                            <p className="centered lead">יומן עבודה</p>
                        </Link>
                    </div>
-                   <div className="text-container">
-                       <Link to='/financial'>
-                           <img className='img-link'
-                                src={process.env.REACT_APP_API_URL + '/media/defaultpictuers/icon3.png'} height={210}
-                                width={210}/>
-                           <p className="centered lead">פיננסי</p>
-                       </Link>
-                   </div>
+                   {/*<div className="text-container">*/}
+                   {/*    <Link to='/financial'>*/}
+                   {/*        <img className='img-link'*/}
+                   {/*             src={process.env.REACT_APP_API_URL + '/media/defaultpictuers/icon3.png'} height={210}*/}
+                   {/*             width={210}/>*/}
+                   {/*        <p className="centered lead">פיננסי</p>*/}
+                   {/*    </Link>*/}
+                   {/*</div>*/}
                </div>
            </div>
         </div>
