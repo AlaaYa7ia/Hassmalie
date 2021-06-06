@@ -22,7 +22,7 @@ class CarView(viewsets.ModelViewSet):
     queryset = Car.objects.all()
     serializer_class = CarCreateSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['id', 'my_business', 'license_number', 'manufacture_year', 'company_name']
+    filterset_fields = ['id', 'my_business', 'license_number', 'manufacture_year', 'company_name', 'is_working']
 
 
 class MyBusinessView(viewsets.ModelViewSet):

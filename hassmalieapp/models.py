@@ -88,9 +88,9 @@ class Worker(models.Model):
     age = models.IntegerField(default=0)
     title = models.CharField(max_length=1, choices=WORKER_TYPE, default='R')
     id_photo = models.ImageField(upload_to='workers/ids/')
-    rate_per_day = models.FloatField(null=True, default=None)
+    rate_per_day = models.FloatField(null=True, default=0)
     license = models.ImageField(upload_to='workers/licenses/',default=None)
-    permit = models.ImageField(upload_to='workers/permits/', default=None)
+    permit = models.ImageField( upload_to='workers/permits/', default=None)
     permit_type = models.CharField(null=True, max_length=255, default=None)  # we should change it to options
     permit_validity = models.DateField(null=True, default=None)
     is_active = models.BooleanField(default=True)
@@ -113,6 +113,7 @@ class Car(models.Model):
     insurance_up_to_age = models.IntegerField(default=None)
     description = models.TextField()
     image = models.ImageField(upload_to='carimages/', default=None)
+    is_working = models.BooleanField(default=True)
     REQUIRED_FIELDS = ["my_business", 'company_name', 'manufacture_year', "license_number", "license_validity", "insurance_validity", "insurance_up_to_age"]
 
     def __str__(self):

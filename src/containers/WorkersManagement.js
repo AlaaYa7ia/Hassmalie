@@ -11,17 +11,18 @@ const WORKER_TYPE =
 
 const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
     const [workers, setWorkers] = useState([]);
-    const [addWorker, setAddWorker] = useState({showForm: false, showButton: true})
+    const [addWorker, setAddWorker] = useState({showForm: false, showButton: true, edit: false})
     const [newWorker, setNewWorker] = useState("");
     const [myBusiness, setMyBusiness] = useState({my_business: null});
     // const [dataRes, setDataRes]= useState([]);
     const[changed, setChanged]= useState(false);
     const[showPermet, setShowPermet]= useState(false);
     const [errMsg, setErrMsg]= useState({show: false, msg: ""})
+    const [editWorkerid, setEditWorkerid] = useState("");
 
 
     const get_workers = async () =>{
-        const projects_Res = await axios.get('/api/workers/?my_business=' + myBusiness.my_business)
+        const projects_Res = await axios.get('/api/workers/?my_business=' + myBusiness.my_business+'&is_active=true')
         setWorkers(projects_Res.data);
     }
 
@@ -45,6 +46,16 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
         setChanged(false);
     },[myBusiness, changed])
 
+    useEffect(()=>{
+        console.log(editWorkerid)
+        if(editWorkerid !== "") {
+            let workerData = workers.find((worker) => worker.id === editWorkerid)
+            setNewWorker(workerData)
+            addWorkerClickHandler()
+            console.log(editWorkerid, workerData)
+        }
+    },[editWorkerid])
+
 
     function getImgUrl(image, instance) {
         if (image === null) {
@@ -54,7 +65,10 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
     }
 
 
-    const newWorkerChange = e => setNewWorker({ ...newWorker, [e.target.name]: e.target.value });
+    const newWorkerChange = e => { console.log(e.target.value)
+        setNewWorker({ ...newWorker, [e.target.name]: e.target.value })};
+
+    const newWorkerCheckChange = e => setNewWorker({ ...newWorker, [e.target.name]: !newWorker.is_active });
 
     const newWorkerPhoneChange = e =>{
         let len = e.target.value.toString().length;
@@ -85,7 +99,7 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
         } catch(err){console.log("didn't change id_photo.")}
 
         try{formData.append("license", newWorker.license,newWorker.license.name);
-        } catch(err){console.log("didn't change license.")}
+        } catch(err){console.log("didn't change license.", formData.license)}
 
         try{formData.append("permit", newWorker.permit,newWorker.permit.name);
         } catch(err){console.log("didn't change permit.")}
@@ -100,40 +114,56 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
         formData.append('address', newWorker.address);
         formData.append('age', newWorker.age);
         formData.append('title', newWorker.title);
-        formData.append('rate_per_day', newWorker.rate_per_day);
+        formData.append('rate_per_day', newWorker.rate_per_day || 0);
         formData.append('permit_type', newWorker.permit_type);
         formData.append('permit_validity', newWorker.permit_validity);
         let active;
-        if(newWorker.is_active === null ||newWorker.is_active === "" ||newWorker.is_active === undefined){
-             active = true;
-        }
-        else{
-            active = newWorker.is_active
-        }
-        formData.append('is_active', active);
+        // if(newWorker.is_active === null ||newWorker.is_active === "" ||newWorker.is_active === undefined){
+        //      active = true;
+        // }
+        // else{
+        //     active = newWorker.is_active
+        // }
+        formData.append('is_active', newWorker.is_active);
         console.log("new worker:", newWorker);
         setNewWorker("");
 
-        axios({
-            method: 'post',
-            url: "/api/workers/",
-            data: formData,
-        })
-        .then((dataRes) => {
-            setWorkers(dataRes.data)
-            console.log("workers data", dataRes.data)
-            setAddWorker({showForm: false, showButton: true});
-            setChanged(true);
-        }).catch(err=>{ console.log("err", err.response)})
-
+        if(addWorker.edit){
+            axios({
+                method: 'put',
+                url: "/api/workers/"+editWorkerid+"/",
+                data: formData,
+            })
+                .then((dataRes) => {
+                    setWorkers(dataRes.data)
+                    console.log("workers data edit", dataRes.data)
+                    setAddWorker({showForm: false, showButton: true, edit: false});
+                    setChanged(true);
+                }).catch(err=>{ console.log("err", err.response)})
+        } else{
+            axios({
+                method: 'post',
+                url: "/api/workers/",
+                data: formData,
+            })
+                .then((dataRes) => {
+                    setWorkers(dataRes.data)
+                    console.log("workers data", dataRes.data)
+                    setAddWorker({showForm: false, showButton: true, edit: false});
+                    setChanged(true);
+                }).catch(err=>{ console.log("err", err.response)})
+        }
     }
 
     let addWorkerClickHandler = () => {
-        setAddWorker({showForm: true, showButton:  false});
+        let flag;
+        flag = editWorkerid !== "";
+        setAddWorker({showForm: true, showButton:  false, edit: flag});
     };
 
     let dontAddWorkerClickHandler = () => {
-        setAddWorker({showForm: false, showButton: true});
+        setAddWorker({showForm: false, showButton: true, edit: false});
+        setEditWorkerid("");
         setNewWorker("");
     };
 
@@ -293,6 +323,7 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
              placeholder="תעריף ליום"
              name='rate_per_day'
              value={newWorker.rate_per_day}
+             defaultValue={0}
              onChange={e => newWorkerChange(e)}
         />
         צילום רשיון נהיגה:<br/>
@@ -310,18 +341,21 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
         />
         {showPermet ? showPermitFields(): ""}
         <br/>
-        העובד פעיל .
+        <div className='text-danger'>העובד פעיל? (שים לב: סימון של עובד כלא פעיל מוריד אותו מהמערכת)</div>
         <input
             type='checkbox'
             placeholder="העובד פעיל"
             name='is_active'
             value={newWorker.is_active}
-            onChange={e => newWorkerChange(e)}
+            checked={newWorker.is_active}
+            onChange={e => newWorkerCheckChange(e)}
         />
         <br/>
         <br/>
-        <button className='btn btn-success' type='submit'>הוספה</button>
-        <button className='btn btn-danger' onClick={dontAddWorkerClickHandler}>בטל הוספת עובד</button>
+        {! addWorker.edit && <button className='btn btn-success' type='submit'>הוספה</button>}
+        {addWorker.edit && <button className='btn btn-success' type='submit'>עריכה</button>}
+        {! addWorker.edit && <button className='btn btn-danger' onClick={dontAddWorkerClickHandler}>בטל הוספת עובד</button>}
+        {addWorker.edit && <button className='btn btn-danger' onClick={dontAddWorkerClickHandler}>בטל עריכת עובד</button>}
 
 
     </form>
@@ -354,8 +388,9 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
                             <p><a href={worker.id_photo} >{worker.id_photo? "לינק לתעודת זהות": ""}</a></p>
                             <p><a href={worker.license} >{worker.license? "לינק לרשיון נהיגה": ""}</a></p>
                             <p><a href={worker.permit} >{worker.permit? "לינק לרשיון עבודה": ""}</a></p>
-                            <p>{worker.is_active ? "פעיל" : "לא פעיל"}</p>
-
+                            <div className='row'>
+                            <p className='col-5'><a onClick={() => setEditWorkerid(worker.id)}><img src={process.env.REACT_APP_API_URL+"/media/defaultpictuers/edit.png"} height={20} width={20}/></a></p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -379,7 +414,8 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
 
             <div  class=' container-fluid  mt-5'  style={{  justifyContent:'right'}} >
                  {addWorker.showButton && <button  className='btn btn-primary mr-5' onClick={addWorkerClickHandler} style={{ display: 'flex', alignItems:'right'}} >תוסיף עובד חדש</button>}
-                 {addWorker.showForm && workerForm()}
+
+                {addWorker.showForm && workerForm()}
 
             </div>
         </body>

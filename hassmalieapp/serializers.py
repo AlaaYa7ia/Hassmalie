@@ -22,7 +22,7 @@ class CarCreateSerializer(serializers.ModelSerializer):
         model = Car
         fields = (
             "id", "my_business",'company_name', 'manufacture_year', "license_number", "license_validity", "insurance_validity", "insurance_up_to_age",
-            "description", "image")
+            "description", "image", 'is_working')
 
 
 class WorkerCreateSerializer(serializers.ModelSerializer):
