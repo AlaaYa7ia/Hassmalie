@@ -88,9 +88,9 @@ class Worker(models.Model):
     age = models.IntegerField(default=0)
     title = models.CharField(max_length=1, choices=WORKER_TYPE, default='R')
     id_photo = models.ImageField(upload_to='workers/ids/')
-    rate_per_day = models.FloatField(null=True, default=None)
+    rate_per_day = models.FloatField(null=True, default=0)
     license = models.ImageField(upload_to='workers/licenses/',default=None)
-    permit = models.ImageField(upload_to='workers/permits/', default=None)
+    permit = models.ImageField( upload_to='workers/permits/', default=None)
     permit_type = models.CharField(null=True, max_length=255, default=None)  # we should change it to options
     permit_validity = models.DateField(null=True, default=None)
     is_active = models.BooleanField(default=True)
@@ -105,13 +105,16 @@ class Worker(models.Model):
 class Car(models.Model):
     # many to one relation
     my_business = models.ForeignKey(MyBusiness, on_delete=models.CASCADE)
+    company_name = models.TextField(null=True, default="")
+    manufacture_year = models.IntegerField(null=True, default=None)
     license_number = models.IntegerField(default=None, unique=True)
     license_validity = models.DateField(default=None)
     insurance_validity = models.DateField(default=None)
     insurance_up_to_age = models.IntegerField(default=None)
     description = models.TextField()
     image = models.ImageField(upload_to='carimages/', default=None)
-    REQUIRED_FIELDS = ["my_business", "license_number", "license_validity", "insurance_validity", "insurance_up_to_age"]
+    is_working = models.BooleanField(default=True)
+    REQUIRED_FIELDS = ["my_business", 'company_name', 'manufacture_year', "license_number", "license_validity", "insurance_validity", "insurance_up_to_age"]
 
     def __str__(self):
         return str(self.license_number)
@@ -227,21 +230,6 @@ class Label(models.Model):
         return str(self.annotation)
 
 
-class Payment(models.Model):
-    my_business = models.ForeignKey(MyBusiness, on_delete=models.CASCADE)
-    bid_id = models.ForeignKey(Bid, on_delete=models.PROTECT)
-    total = models.IntegerField()
-    payment_date = models.DateField()
-    pay_type = models.CharField(max_length=255)
-    contact_mail = models.CharField(max_length=255)
-    payer_name = models.CharField(max_length=255)
-    pay_condition = models.CharField(max_length=255)
-    REQUIRED_FIELDS = ['my_business', 'bid_id', 'total', 'payment_date', 'pay_type', 'pay_condition', 'payer_name']
-
-    def __str__(self):
-        return str(self.bid_id)
-
-
 class Task(models.Model):
     AUTHOR_TYPE = (
         ('U', 'user'),
@@ -261,3 +249,20 @@ class Task(models.Model):
 
     def __str__(self):
         return str(self.author_id) + " " + str(self.project_id)
+
+
+
+class Payment(models.Model):
+    my_business = models.ForeignKey(MyBusiness, on_delete=models.CASCADE)
+    bid_id = models.ForeignKey(Bid, on_delete=models.PROTECT)
+    total = models.IntegerField()
+    payment_date = models.DateField()
+    pay_type = models.CharField(max_length=255)
+    contact_mail = models.CharField(max_length=255)
+    payer_name = models.CharField(max_length=255)
+    pay_condition = models.CharField(max_length=255)
+    REQUIRED_FIELDS = ['my_business', 'bid_id', 'total', 'payment_date', 'pay_type', 'pay_condition', 'payer_name']
+
+    def __str__(self):
+        return str(self.bid_id)
+

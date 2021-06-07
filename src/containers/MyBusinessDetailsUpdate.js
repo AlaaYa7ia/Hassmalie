@@ -6,61 +6,139 @@ import {get_user_data, logout } from '../actions/auth';
 import { Link, useHistory, Redirect } from 'react-router-dom';
 
 import MyBusinessDetails from '../containers/MyBusinessDetails';
+import PlacesAutocomplete from "react-places-autocomplete";
 
 
 const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
     const [manager, setManager] = useState("");
     const [director, setDirector] = useState("");
-    const [cars, setCars] = useState([]);
+    // const [cars, setCars] = useState([]);
     const [business, setBusiness] = useState("");
     const [newUser, setNewUser] = useState("");
     const [newCar, setNewCar] = useState("");
+    const [errMsg, setErrMsg]= useState({show: false, msg: ""})
+    const [errMsg1, setErrMsg1]= useState({show: false, msg: ""})
+
+    const [managerFlag, setManagerFlag] = useState(false);
+    const [directorFlag, setDirectorFlag] = useState(false);
+
+    const get_user = async ()=>{
+        const user_Res = await get_user_data();
+        if(user_Res.title === 'M'){
+            axios.get("/api/users/"+user_Res.id +"/")
+                .then((dataRes) => {
+                    setManager(dataRes.data)
+                    setManagerFlag(true);
+                })
 
 
+        }else{
+            axios.get("/api/users/"+user_Res.id +"/")
+                .then((dataRes) => {
+                    setDirector(dataRes.data)
+                    setDirectorFlag(true)
+                })
 
-    useEffect(() => {
-        (async () => {
-        await get_user_data().then((dataRes) => {
-            axios
-          .get("/api/users/"+ dataRes.id +"/")
-          .then((dataRes) => {
-            setManager(dataRes.data);
+        }
+    }
 
-           })
+    const get_business = async (title)=> {
+        if(title === 'M'){
+            const Res = await axios.get(process.env.REACT_APP_API_URL+'/api/my-business/' + manager.id+"/");
+            setBusiness(Res.data)
+        }else{
+            const Res = await axios.get(process.env.REACT_APP_API_URL+'/api/my-business/?deputy_director=' + director.id);
+            setBusiness(Res.data[0])
+        }
+    }
 
-            axios
-          .get("/api/cars/?my_business="+dataRes.id)
-          .then((dataRes) => {
-            setCars(dataRes.data);})
+    const get_other_user= async (title)=> {
 
-           axios
-          .get("/api/my-business/"+ dataRes.id +"/")
-          .then((dataRes) => {
-            setBusiness(dataRes.data);
-             return dataRes.data.deputy_director
+        if(title === 'M'){
+            await axios
+                .get(process.env.REACT_APP_API_URL+"/api/users/"+ business.deputy_director +"/")
+                .then((dataRes) => {
+                    setDirector(dataRes.data)
+                })
+        }
+        else{
+            await axios
+                .get(process.env.REACT_APP_API_URL+"/api/users/"+ business.manager +"/")
+                .then((dataRes) => {
+                    setManager(dataRes.data)
+                })
+        }
+    }
 
-           }).then((dataRes) => {
-            axios
-          .get("/api/users/"+ dataRes +"/")
-          .then((dataRes) => {
-            setDirector(dataRes.data);
-            })
-           })
-        })
-        })();
+    // const get_cars= async ()=> {
+    //     await axios
+    //         .get(process.env.REACT_APP_API_URL+"/api/cars/?my_business="+ business.manager )
+    //         .then((dataRes) => {
+    //             setCars(dataRes.data)
+    //         })
+    // }
+    useEffect(()=>{
+        get_user()
+    },[])
 
-    }, []);
+    useEffect(()=>{
+        if(managerFlag) {
+            get_business('M')
+        }
+    },[managerFlag])
+
+    useEffect(()=>{
+        if(directorFlag){
+            get_business('D')
+        }
+    },[directorFlag])
+
+    useEffect(()=>{
+        if(business !== ""){
+            if(director !== ""){
+                get_other_user('D')
+            }else{
+                get_other_user('M')
+            }
+
+        }
+        // get_cars()
+    },[business])
+
+    const newMangerPhoneChange = e =>{
+        let len = e.target.value.toString().length;
+        if(len  !==0 && (len< 8 || len >10)){
+            setErrMsg({show: true, msg: "נא להזין מספר טילפון חוקי בי 8 ל- 10 טווים."})
+        }else{
+            setErrMsg({show: false, msg: ""})
+
+        }
+        setManager({ ...manager, [e.target.name]: e.target.value });
+    };
+
+    const newDirectorPhoneChange = e =>{
+        let len = e.target.value.toString().length;
+        if(len  !==0 && (len< 8 || len >10)){
+            setErrMsg1({show: true, msg: "נא להזין מספר טילפון חוקי בי 8 ל- 10 טווים."})
+        }else{
+            setErrMsg1({show: false, msg: ""})
+
+        }
+        setDirector({ ...director, [e.target.name]: e.target.value });
+    };
 
     let fileSelectedHandler = event =>{setBusiness({...business,logo: event.target.files[0] })}
     let carImageHandler  = event =>{setNewCar({...newCar,image: event.target.files[0] })}
     let directorImageHandler  = event =>{setDirector({...director, photo: event.target.files[0] })}
     let managerImageHandler  = event =>{setManager({...manager, photo: event.target.files[0] })}
 
-    //console.log(business)
     const managerChange = e => setManager({ ...manager, [e.target.name]: e.target.value });
+    const managerChangeAddress = e => setManager({...manager,['address']: e});
     const directorChange = e => setDirector({ ...director, [e.target.name]: e.target.value });
+    const directorChangeAddress = e => setDirector({...director,['address']: e});
     const businessChange = e => setBusiness({ ...business, [e.target.name]: e.target.value });
-    const newCarChange = e => setNewCar({ ...newCar, [e.target.name]: e.target.value });
+    const newCarChange = e => {
+        setNewCar({ ...newCar, [e.target.name]: e.target.value })};
 
     const mangerSubmit = e => {
         e.preventDefault();
@@ -130,7 +208,6 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
     };
      const businessSubmit = e => {
         e.preventDefault();
-        //console.log("bus befir submit: ", business)
 
         const formData = new FormData();
         try{
@@ -158,7 +235,6 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
         })
         .then((dataRes) => {
             setBusiness(dataRes.data)
-            console.log(dataRes.data)
         }).catch(err=>{ console.log("err", err.response)})
      };
 
@@ -168,7 +244,6 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
         axios.defaults.xsrfCookieName = "csrftoken";
         axios.defaults.withCredentials = true;
         const formData = new FormData();
-        //console.log("business.logo", business.logo)
         try{
         formData.append(
         "image",
@@ -180,16 +255,18 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
         }
 
         formData.append('my_business', business.manager);
+         formData.append('company_name', newCar.company_name)
+         formData.append('manufacture_year', newCar.manufacture_year)
         formData.append('license_number', newCar.license_number)
         formData.append('license_validity', newCar.license_validity)
         formData.append('insurance_validity', newCar.insurance_validity)
         formData.append('insurance_up_to_age', newCar.insurance_up_to_age)
-
-        console.log("new car", newCar)
+         formData.append('description', newCar.description)
         setNewCar({license_number: "",
         license_validity: "",
         insurance_validity: "",
         insurance_up_to_age: "",
+        description: "",
         image: "",
         })
         axios({
@@ -198,8 +275,7 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
             data: formData,
         })
         .then((dataRes) => {
-            setCars(dataRes.data)
-            console.log("cars data", dataRes.data)
+            // setCars(dataRes.data)
         }).catch(err=>{ console.log("err", err.response)})
 
      }
@@ -207,12 +283,12 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
     return (
 
 
-    <div dir='rtl' class=' container-fluid jumbotron mt-5 right-text' lang="he"  style={{  justifyContent:'right'}}>
-            <h1 dir='rtl'>עדכון הפרטים העסק שלי</h1>
+    <div dir='rtl' className='container-fluid mt-5 right-text center' lang="he" >
+            <h1 dir='rtl'>עדכון פרטי העסק שלי</h1>
 
             <form dir='rtl' onSubmit={e => businessSubmit(e)}>
                 <p>תעדכן את פרטי העסק</p>
-                <div className='form-group'>
+                <div className='form-group col-6'>
                     <input
                         className='form-control'
                         type='text'
@@ -220,6 +296,7 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
                         name='name'
                         value={business.name}
                         onChange={e => businessChange(e)}
+                        required
                     />
                 </div>
                 <div className='form-group'>
@@ -235,7 +312,7 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
             <div class = "container-fluid row">
 
             <form  onSubmit={e => mangerSubmit(e)}>
-                <p>תעדכן את המשתמש שלך</p>
+                <p>תעדכן את פרטי המנהל</p>
                 <div className='form-group'>
                     <input
                         className='form-control'
@@ -244,6 +321,9 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
                         name='first_name'
                         value={manager.first_name}
                         onChange={e => managerChange(e)}
+                        pattern="^[^0-9]*$"
+                        required
+
                     />
                 </div>
                 <div className='form-group'>
@@ -254,6 +334,8 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
                         name='last_name'
                         value={manager.last_name}
                         onChange={e => managerChange(e)}
+                        pattern="^[^0-9]*$"
+                        required
                     />
                 </div>
 
@@ -264,10 +346,14 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
                         placeholder={manager.phone_number}
                         name='phone_number'
                         value={manager.phone_number}
-                        onChange={e => managerChange(e)}
+                        onChange={e => newMangerPhoneChange(e)}
                         minLength='8'
+                        required
                     />
                 </div>
+                {errMsg.show && <div className="alert alert-danger" role="alert">
+                    {errMsg.msg}
+                </div>}
                 <div className='form-group'>
                     <input
                         className='form-control'
@@ -276,18 +362,41 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
                         name='age'
                         value={manager.age}
                         onChange={e => managerChange(e)}
-                        minLength='1'
+                        min ='18'
+                        max='100'
                     />
                 </div>
                 <div className='form-group'>
-                    <input
-                        className='form-control'
-                        type='text'
-                        placeholder={manager.address}
-                        name='address'
+                    <PlacesAutocomplete
                         value={manager.address}
-                        onChange={e => managerChange(e)}
-                    />
+                        onChange={e => managerChangeAddress(e)}
+                        onSelect={e => managerChangeAddress(e)}
+                    >
+                        {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+                            <div>
+
+                                <input className='form-control'
+                                       required
+                                       {...getInputProps({ placeholder: manager.address })} />
+
+                                <div>
+                                    {loading ? <div>...loading</div> : null}
+
+                                    {suggestions.map(suggestion => {
+                                        const style = {
+                                            backgroundColor: suggestion.active ? "#41b6e6" : "#fff"
+                                        };
+
+                                        return (
+                                            <div {...getSuggestionItemProps(suggestion, { style })}>
+                                                {suggestion.description}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        )}
+                    </PlacesAutocomplete>
                 </div>
                 תמונה אשית
                 <div className='form-group'>
@@ -311,6 +420,8 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
                         name='first_name'
                         value={director.first_name}
                         onChange={e => directorChange(e)}
+                        pattern="^[^0-9]*$"
+                        required
                     />
                 </div>
                 <div className='form-group'>
@@ -321,6 +432,8 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
                         name='last_name'
                         value={director.last_name}
                         onChange={e => directorChange(e)}
+                        pattern="^[^0-9]*$"
+                        required
                     />
                 </div>
 
@@ -331,10 +444,13 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
                         placeholder={director.phone_number}
                         name='phone_number'
                         value={director.phone_number}
-                        onChange={e => directorChange(e)}
-                        minLength='8'
+                        onChange={e => newDirectorPhoneChange(e)}
+                        required
                     />
                 </div>
+                {errMsg1.show && <div className="alert alert-danger" role="alert">
+                    {errMsg1.msg}
+                </div>}
                 <div className='form-group'>
                     <input
                         className='form-control'
@@ -343,18 +459,41 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
                         name='age'
                         value={director.age}
                         onChange={e => directorChange(e)}
-                        minLength='1'
+                        min ='18'
+                        max='100'
                     />
                 </div>
                 <div className='form-group'>
-                    <input
-                        className='form-control'
-                        type='text'
-                        placeholder={director.address}
-                        name='address'
+                    <PlacesAutocomplete
                         value={director.address}
-                        onChange={e => directorChange(e)}
-                    />
+                        onChange={e => directorChangeAddress(e)}
+                        onSelect={e => directorChangeAddress(e)}
+                    >
+                        {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+                            <div>
+
+                                <input className='form-control'
+                                       required
+                                       {...getInputProps({ placeholder: director.address})} />
+
+                                <div>
+                                    {loading ? <div>...loading</div> : null}
+
+                                    {suggestions.map(suggestion => {
+                                        const style = {
+                                            backgroundColor: suggestion.active ? "#41b6e6" : "#fff"
+                                        };
+
+                                        return (
+                                            <div {...getSuggestionItemProps(suggestion, { style })}>
+                                                {suggestion.description}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        )}
+                    </PlacesAutocomplete>
                 </div>
                 תמונת סגן מנהל
                 <div className='form-group'>
@@ -364,11 +503,33 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
                 />
                 </div>
 
-                <button className='btn btn-primary' type='submit'>עדכן פרטי הסגן מנהל</button>
+                <button className='btn btn-primary' type='submit' >עדכן פרטי הסגן מנהל</button>
             </form>
 
             <form dir='rtl' onSubmit={e => newCarSubmit(e)}>
             <p>תוסיף רכב חדש</p>
+                <div className='form-group'>
+                    <input
+                        className='form-control'
+                        type='text'
+                        placeholder="חברת ייצור:"
+                        name='company_name'
+                        value={newCar.company_name}
+                        onChange={e => newCarChange(e)}
+                        required
+                    />
+                </div>
+                <div className='form-group'>
+                    <input
+                        className='form-control'
+                        type='number'
+                        placeholder="שנת ייצור:"
+                        name='manufacture_year'
+                        value={newCar.manufacture_year}
+                        onChange={e => newCarChange(e)}
+                        required
+                    />
+                </div>
                 <div className='form-group'>
                     <input
                         className='form-control'
@@ -377,7 +538,7 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
                         name='license_number'
                         value={newCar.license_number}
                         onChange={e => newCarChange(e)}
-                        minLength='7'
+                        required
                     />
                 </div>
                 <div className='form-group'>
@@ -389,6 +550,7 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
                         name='license_validity'
                         value={newCar.license_validity}
                         onChange={e => newCarChange(e)}
+                        required
                     />
                 </div>
                 <div className='form-group'>
@@ -400,6 +562,7 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
                         name='insurance_validity'
                         value={newCar.insurance_validity}
                         onChange={e => newCarChange(e)}
+                        required
                     />
                 </div>
                 <div className='form-group'>
@@ -409,8 +572,19 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
                         placeholder="ביטוח עד גיל"
                         name='insurance_up_to_age'
                         value={newCar.insurance_up_to_age}
+                        min='18'
+                        max='100'
                         onChange={e => newCarChange(e)}
-                        minLength='2'
+                    />
+                </div>
+                <div className='form-group'>
+                    <input
+                        className='form-control'
+                        type='text'
+                        placeholder="תיאור הרכב/ הערות"
+                        name='description'
+                        value={newCar.description}
+                        onChange={e => newCarChange(e)}
                     />
                 </div>
                 תמונת רכב
@@ -424,7 +598,7 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
                 <button className='btn btn-primary' type='submit'>תוסיף רכב חדש</button>
             </form>
             </div>
-            <p> <Link className='nav-link' to='/my-business-details'>סיימתי עדכון</Link></p>
+            <p> <Link className='nav-link btn btn-outline-warning mt-5' to='/my-business-details'>סיימתי עדכון</Link></p>
         </div>
     );
 };

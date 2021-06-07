@@ -72,6 +72,7 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
     }
 
     const editReportChange = e => setEditReport({ ...editReport, [e.target.name]: e.target.value });
+    let fileSelectedHandlerEdit  = e =>{setEditReport({...editReport, [e.target.name]: e.target.files[0] })}
 
     const editReportWorkerIdChange = e =>{
         let first_last_name = e.target.value.split(" ");
@@ -94,6 +95,8 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
         formData.append('start_time', editReport.start_time);
         formData.append('end_time', editReport.end_time);
         formData.append('description', editReport.description);
+        try{formData.append("photo", editReport.photo,editReport.photo.name);
+        } catch(err){console.log("didn't change photo.")}
         setEditReport("");
 
         axios({
@@ -114,6 +117,7 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
     }
 
     const newReportChange = e => setNewReport({ ...newReport, [e.target.name]: e.target.value });
+    let fileSelectedHandler  = e =>{setNewReport({...newReport, [e.target.name]: e.target.files[0] })}
 
     const newReportWorkerIdChange = e =>{
         let first_last_name = e.target.value.split(" ");
@@ -137,6 +141,8 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
         formData.append('start_time', newReport.start_time);
         formData.append('end_time', newReport.end_time);
         formData.append('description', newReport.description);
+        try{formData.append("photo", newReport.photo,newReport.photo.name);
+        } catch(err){console.log("didn't change photo.")}
         setNewReport("");
 
         axios({
@@ -147,12 +153,12 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
         .then((Res) => {
             setFixed(false);
             setReports({reports:[...reports.reports, Res.data]});
-        }).catch(err=>{ console.log("err", err)})
+        }).catch(err=>{ console.log("err", err.response)})
     }
 
     function scheduleForm(){
         return(
-         <form className="right-text" dir='rtl' onSubmit={e => newReportSubmit(e)}>
+         <form className="right-text col-8 mt-5 center1" dir='rtl' onSubmit={e => newReportSubmit(e)}>
          <div className="row">
          <input
              className='form-control col-2'
@@ -203,6 +209,11 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
              value={newReport.description}
              onChange={e => newReportChange(e)}
         />
+        <input className='form-group'
+               type = 'file'
+               name='photo'
+               onChange={e => fileSelectedHandler(e)}
+        />
         </div>
         <button className='btn btn-success' type='submit'>הוספת דוח</button>
          </form>
@@ -243,6 +254,12 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
             disableSortBy: true,
             filterable: true
           },
+        {
+            Header: "קובץ מצורף",
+            accessor: "photo",
+            disableSortBy: true,
+            filterable: false
+        },
           {
         Header: "",
         id: "delete",
@@ -250,11 +267,7 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
 
         Cell: (tableProps) => (
           <span
-            style={{
-              cursor: "pointer",
-              color: "red",
-              textDecoration: "bold"
-            }}
+            style={{cursor: "pointer"}}
             onClick={() => {
               // ES6 Syntax use the rvalue if your data is an array.
               const dataCopy = [...reports.reports];
@@ -263,7 +276,7 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
               setReports({reports: dataCopy});
             }}
           >
-           X
+           <img src={process.env.REACT_APP_API_URL+"/media/defaultpictuers/x.png"} height={20} width={20}/>
           </span>
         )
       },
@@ -274,37 +287,25 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
 
         Cell: (tableProps) => (
           <span
-            style={{
-              cursor: "pointer",
-              color: "blue",
-              textDecoration: "bold"
-            }}
+            style={{cursor: "pointer"}}
             onClick={() => {
-              // ES6 Syntax use the rvalue if your data is an array.
-              //const dataCopy = [...reports.reports];
-              // It should not matter what you name tableProps. It made the most sense to me.
-              //editReport(tableProps.row);
-              //setReports({reports: dataCopy});
               setRowToEdit(tableProps.row.index);
               setEditReport(tableProps.row.original)
               setShowEditReport(true);
             }}
           >
-           עריכה
+           <img src={process.env.REACT_APP_API_URL+"/media/defaultpictuers/edit.png"} height={20} width={20}/>
           </span>
         )
       }
     ],
     [reports]
   );
-//        <p>Reports: {JSON.stringify(reports)}</p>
-//        <p>Workerss: {JSON.stringify(workers)}</p>
-//        <p>newReports: {JSON.stringify(newReports)}</p>
 
     function editMyReport(){
         console.log(rowToEdit)
         return(
-         <form className="right-text" dir='rtl' onSubmit={e => editReportSubmit(e)}>
+         <form className="right-text col-8 mt-5 center1" dir='rtl' onSubmit={e => editReportSubmit(e)}>
          <div className="row">
          <input
              className='form-control col-2'
@@ -355,6 +356,11 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
              value={editReport.description}
              onChange={e => editReportChange(e)}
         />
+             <input className='form-group'
+                    type = 'file'
+                    name='photo'
+                    onChange={e => fileSelectedHandlerEdit(e)}
+             />
         </div>
         <button className='btn btn-success' type='submit'>עדכן דוח</button>
          </form>
@@ -373,19 +379,25 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
     }
     }
     return(
-    <html lang="he" className="right-text" >
+    <html lang="he" className="right-text" style={{backgroundColor: 'rgba(145, 255, 0, 0.1)'}}>
 
-         <div dir='rtl' class=' container-fluid jumbotron mt-5' lang="he"  style={{  justifyContent:'center'}}>
+         <div class=' container-fluid mb-5 center1' lang="he"  style={{  justifyContent:'center' }}>
+             <div className="right-text col-8 mt-5 center1" dir='rtl'>
+             <h1>דיווחים של העובדים</h1>
+             <button
+                 className="btn btn-primary mt-5"
+                 onClick={() => generatePDF(dataf)}
+             >
+                 להפקת דוח חודשי
+             </button>
+             </div>
           {showTable()}
+
           {showEditReport ? editMyReport(): ""}
           {scheduleForm()}
+             <div><br></br><br></br><br></br></div>
          </div>
-         <button
-              className="btn btn-primary"
-              onClick={() => generatePDF(dataf)}
-         >
-            Generate monthly report
-         </button>
+
     </html>
     )
 }

@@ -21,8 +21,8 @@ class CarCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Car
         fields = (
-            "id", "my_business", "license_number", "license_validity", "insurance_validity", "insurance_up_to_age",
-            "description", "image")
+            "id", "my_business",'company_name', 'manufacture_year', "license_number", "license_validity", "insurance_validity", "insurance_up_to_age",
+            "description", "image", 'is_working')
 
 
 class WorkerCreateSerializer(serializers.ModelSerializer):
@@ -32,6 +32,7 @@ class WorkerCreateSerializer(serializers.ModelSerializer):
     permit = serializers.ImageField(max_length=None, use_url=True, required=False)
     permit_type = serializers.CharField(allow_blank=True, required=False)
     permit_validity = serializers.DateField(read_only=True, allow_null=True, required=False)
+    rate_per_day = serializers.FloatField(read_only=True, required=False)
 
     class Meta:
         model = Worker
@@ -107,16 +108,17 @@ class LabelCreateSerializer(serializers.ModelSerializer):
         fields = ('id', 'my_business', 'bid_id', 'x', 'y', 'w', 'h', 'annotation')
 
 
-class PaymentCreateSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Payment
-        fields = ('my_business', 'bid_id', 'total', 'payment_date', 'pay_type', 'pay_condition','contact_mail', 'payer_name')
-
-
 class TaskCreateSerializer(serializers.ModelSerializer):
     photo = serializers.FileField(max_length=None, use_url=True, required=False)
 
     class Meta:
         model = Task
         fields = ('id', 'my_business', 'author_type', 'author_id', 'project_id', 'date', 'time','description', 'photo')
+
+
+class PaymentCreateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Payment
+        fields = ('my_business', 'bid_id', 'total', 'payment_date', 'pay_type', 'pay_condition','contact_mail', 'payer_name')
+

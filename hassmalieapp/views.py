@@ -22,7 +22,7 @@ class CarView(viewsets.ModelViewSet):
     queryset = Car.objects.all()
     serializer_class = CarCreateSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['id', 'my_business', 'license_number']
+    filterset_fields = ['id', 'my_business', 'license_number', 'manufacture_year', 'company_name', 'is_working']
 
 
 class MyBusinessView(viewsets.ModelViewSet):
@@ -90,15 +90,16 @@ class LabelView(viewsets.ModelViewSet):
     filterset_fields = ['id', 'my_business', 'bid_id', 'annotation']
 
 
+class TaskView(viewsets.ModelViewSet):
+    serializer_class = TaskCreateSerializer
+    queryset = Task.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['id', 'my_business', 'author_type', 'author_id', 'project_id', 'date', 'time', 'is_closed']
+
+
 class PaymentView(viewsets.ModelViewSet):
     serializer_class = PaymentCreateSerializer
     queryset = Payment.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_fields = [ 'my_business', 'bid_id','payment_date', 'payer_name']
 
-
-class TaskView(viewsets.ModelViewSet):
-    serializer_class = TaskCreateSerializer
-    queryset = Task.objects.all()
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['payment_date', 'my_business', 'author_type', 'author_id', 'project_id', 'date', 'time', 'is_closed']

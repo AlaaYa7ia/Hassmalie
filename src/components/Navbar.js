@@ -36,14 +36,14 @@ const Navbar = ({ get_user_data,logout, isAuthenticated}) => {
 
     <Fragment>
         <li className='nav-item'>
-            <a className='nav-link text-danger' href='#!' onClick={logout}>ליציאה</a>
-        </li>
-        <li className='nav-item'>
                 <Link className='nav-link text-warning' to='/homepage'>העסק שלי</Link>
         </li>
         {<li className='nav-item'>
-            <Link className='nav-link text-warning'>ברוך הבא {data.first_name+ " " + data.last_name}</Link>
+            <Link className='nav-link text-warning disabled'>ברוך הבא {data.first_name+ " " + data.last_name}</Link>
         </li>}
+        <li className='nav-item'>
+            <a className='nav-link text-danger' href='#!' onClick={logout}>ליציאה</a>
+        </li>
 
 
     </Fragment>

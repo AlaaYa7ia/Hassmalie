@@ -129,11 +129,12 @@ export const signup = (first_name, last_name, email, title, phone_number, addres
             payload: res.data
         });
     } catch (err) {
-        
         dispatch({
             type: SIGNUP_FAIL
         })
+        return false;
     }
+    return true;
 };
 
 export const verify = (uid, token) => async dispatch => {
@@ -223,8 +224,8 @@ export const get_user_data = () => async dispatch => {
         };
          try {
             const res = await axios.get(`${process.env.REACT_APP_API_URL}/auth/users/me/`, config);
-            let id = res.data;
-            return id;
+            let userData = res.data;
+            return userData;
 
 
         } catch (err) {

@@ -5,7 +5,7 @@ import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './TextStyle.css'
+import './appStyle.css'
 
 ReactDOM.render(
   <React.StrictMode>
