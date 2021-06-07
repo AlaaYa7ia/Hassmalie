@@ -95,11 +95,3 @@ class TaskView(viewsets.ModelViewSet):
     queryset = Task.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['id', 'my_business', 'author_type', 'author_id', 'project_id', 'date', 'time', 'is_closed']
-
-
-class PaymentView(viewsets.ModelViewSet):
-    serializer_class = PaymentCreateSerializer
-    queryset = Payment.objects.all()
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = [ 'my_business', 'bid_id','payment_date', 'payer_name']
-

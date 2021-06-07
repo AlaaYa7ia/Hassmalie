@@ -1,4 +1,4 @@
-import React, {useEffect,useState} from 'react';
+import React, {useState} from 'react';
 import "ka-table/style.css";
 import {Annotator} from "image-labeler-react";
 import 'jspdf-autotable';
@@ -63,7 +63,6 @@ const MapBid = () => {
         try{formData.append("photo", newMap,newMap.name);
         } catch(err){console.log("didn't change photo.")}
         console.log(formData.toString());
-        formData.append("my_business",1);
         formData.append("project_id",1);
 
         console.log(formData);
@@ -126,8 +125,8 @@ const MapBid = () => {
             <Annotator id="annotationField"
                        height={700}
                        width={1000}
-                       imageUrl={process.env.REACT_APP_API_URL+'/media/projects/projectsfiles/'+newMap.name
-                      /*"http://127.0.0.1:8000/media/projects/projectsfiles/electrical-wiring-example_QzGkf0q.jpg"*/}
+                       imageUrl={/*process.env.REACT_APP_API_URL+'/media/projects/projectsfiles/'+newMap.name*/
+                      "http://127.0.0.1:8000/media/projects/projectsfiles/electrical-wiring-example_QzGkf0q.jpg"}
                        asyncUpload={async (labeledData) => {
 
                            for (var i in labeledData.boxes)

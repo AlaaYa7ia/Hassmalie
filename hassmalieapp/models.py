@@ -251,7 +251,6 @@ class Task(models.Model):
         return str(self.author_id) + " " + str(self.project_id)
 
 
-
 class Payment(models.Model):
     my_business = models.ForeignKey(MyBusiness, on_delete=models.CASCADE)
     bid_id = models.ForeignKey(Bid, on_delete=models.PROTECT)
