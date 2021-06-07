@@ -62,7 +62,7 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
 
     const get_cars= async ()=> {
         await axios
-            .get(process.env.REACT_APP_API_URL+"/api/cars/?my_business="+ business.manager )
+            .get(process.env.REACT_APP_API_URL+"/api/cars/?my_business="+ business.manager+"&is_working=true" )
             .then((dataRes) => {
                 setCars(dataRes.data)
             })
@@ -109,6 +109,7 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
         cars.map(car => (
             <div className="card">
                 <div className="card-header" id={"heading"+car.id.toString()}>
+
                     <h5 className="mb-0">
                         <button className="btn btn-link" data-toggle="collapse" data-target={"#collapse"+car.id}
                                 aria-expanded="true" aria-controls={"collapse"+car.id}>
@@ -126,6 +127,9 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
                                 <p className='lead'>תוקף ביטוח: {car.insurance_validity}</p>
                                 <p className='lead'>ביטוח עד גיל: {car.insurance_up_to_age}</p>
                                 <p className='lead'>תיאור הרכב: {car.description}</p>
+                    {/*<img src={process.env.REACT_APP_API_URL+"/media/defaultpictuers/edit.png"} height={20} width={20} style={{cursor: "pointer"}}*/}
+                    {/*     onClick={console.log("e")}/>*/}
+
                             </div>
                             <div className='col-5'>
                                 <img src={getImgUrl(car.image, "car")} height={150} width={150}></img>
