@@ -49,9 +49,9 @@ const App = () => (
                     <Route exact path='/projects-management' component={ProjectsManagement} />
                     <Route path='/project/:my_business/:id' component={Project} />
                     <Route path='/file-repository/:id' component={FileRepository} />
-                    <Route  path='/bid/:id' component={Bid} />
-                    <Route exact path='/TableBid' component={TableBid} />
-                    <Route exact path='/MapBid' component={MapBid} />
+                    <Route  path='/bid/:id/:my_business' component={Bid} />
+                    <Route exact path='/TableBid/:id/:my_business' component={TableBid} />
+                    <Route exact path='/MapBid/:id/:my_business' component={MapBid} />
                     {/*<Redirect to='/login'/>*/}
                 </Switch>
             </Layout>

@@ -113,7 +113,6 @@ class TaskCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
         fields = ('id', 'my_business', 'author_type', 'author_id', 'project_id', 'date', 'time','description', 'photo')
-<<<<<<< HEAD
 
 
 class PaymentCreateSerializer(serializers.ModelSerializer):
@@ -122,5 +121,3 @@ class PaymentCreateSerializer(serializers.ModelSerializer):
         model = Payment
         fields = ('my_business', 'bid_id', 'total', 'payment_date', 'pay_type', 'pay_condition','contact_mail', 'payer_name')
 
-=======
->>>>>>> abc89528db2c25e8deb84b42e4acb1eca60cc0de

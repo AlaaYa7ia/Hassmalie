@@ -140,7 +140,7 @@ const Project = ({match}) => {
                     </Link>
                 </div>
                 <div className="text-container col-2 mt-5">
-                    <Link to={"/bid/"+project.id} >
+                    <Link to={"/bid/"+project.id+"/"+myBusiness.my_business} >
                         <img className='img-link'
                              src={process.env.REACT_APP_API_URL + '/media/defaultpictuers/icon6.png'} height={70}
                              width={70}/>

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, {useEffect,useState} from 'react';
 
 import "react-list-editable/lib/react-list-editable.css";
 import {Link} from "react-router-dom";
@@ -38,9 +38,15 @@ symbolList['שקע כפול מוגן מים רגיל']=symbolData('שקע כפו
 symbolList['שקע יחיד מוגן מים רגיל']=symbolData('שקע יחיד מוגן מים רגיל',6,0)
 
 
-const Bid = () => {
+const Bid = ({match})  => {
 
+    const [projectId, setProjectId] = useState("")
+    const [myBusiness, setMyBusiness] = useState({my_business: null});
 
+    useEffect(()=>{
+        setMyBusiness({my_business: match.params.my_business})
+        setProjectId(match.params.id)
+    },[])
 // Click on a close button to hide the current list item
     var close = document.getElementsByClassName("close");
     var i;
@@ -151,12 +157,13 @@ const Bid = () => {
                 </div>
                 <div className='col-12 col-md-4'>
                     <button className='lead'>
-                        <Link to='/MapBid'>עידכון פריטים בהמפה</Link>
+                        <Link to={"/MapBid/"+projectId+"/"+myBusiness.my_business} >
+                            עידכון פריטים בהמפה</Link>
                     </button>
                 </div>
                 <div className=' col-12 col-md-4'>
                     <button className='lead'>
-                        <Link to='/TableBid'>עידכון פריטים בטבלה</Link>
+                        <Link to={'/TableBid/'+projectId+"/"+myBusiness.my_business}>עידכון פריטים בטבלה</Link>
                     </button>
 
                 </div>

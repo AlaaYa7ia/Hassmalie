@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect,useState} from 'react';
 import "ka-table/style.css";
 import {Annotator} from "image-labeler-react";
 import 'jspdf-autotable';
@@ -44,7 +44,15 @@ symbolList['שקע יחיד רגיל']=symbolData('שקע יחיד רגיל',5,0
 symbolList['שקע כפול מוגן מים רגיל']=symbolData('שקע כפול מוגן מים רגיל',8,0)
 symbolList['שקע יחיד מוגן מים רגיל']=symbolData('שקע יחיד מוגן מים רגיל',6,0)
 
-const MapBid = () => {
+const MapBid = ({match}) => {
+
+    const [projectId, setProjectId] = useState("")
+    const [myBusiness, setMyBusiness] = useState({my_business: null});
+
+    useEffect(()=>{
+        setMyBusiness({my_business: match.params.my_business})
+        setProjectId(match.params.id)
+    },[])
 
 
     const [newMap, setNewMap] = useState(null);
@@ -53,6 +61,8 @@ const MapBid = () => {
         setNewMap(e.target.files[0])
 
     }
+
+
     const mapSubmit = e => {
         e.preventDefault();
         //console.log("bus befir submit: ",map)
@@ -63,9 +73,12 @@ const MapBid = () => {
         try{formData.append("photo", newMap,newMap.name);
         } catch(err){console.log("didn't change photo.")}
         console.log(formData.toString());
-        formData.append("project_id",1);
+        formData.append("project_id",projectId);
+        formData.append("my_business",myBusiness.my_business);
 
         console.log(formData);
+
+        console.log(newMap)
         axios({
             method: 'post',
             url: process.env.REACT_APP_API_URL+'/api/bids/',
@@ -73,7 +86,7 @@ const MapBid = () => {
         })
             .then((dataRes) => {
                 console.log("bid data", dataRes.data)
-                setNewMap(dataRes.data.photo)
+                setNewMap(dataRes.data)
                 demo().then(() => setImgUploaded(true));
                 document.getElementById("buttonToHide").style.display="none"
             }).catch(err=>{ console.log("err", err.response)})
@@ -84,16 +97,19 @@ const MapBid = () => {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    async function demo() {
+    async function demo() {/*
         await sleep(2000);
+        */
+
         console.log(process.env.REACT_APP_API_URL+'/media/projects/projectsfiles/'+newMap.name)
+        console.log(newMap)
     }
 
 
     const buildArr= () => {
         var arr=[]
         for(let key in symbolList){
-            arr.push(symbolList[key].getName());
+           /* arr.push(symbolList[key].getName());*/
 
         }
         return arr
@@ -125,8 +141,8 @@ const MapBid = () => {
             <Annotator id="annotationField"
                        height={700}
                        width={1000}
-                       imageUrl={/*process.env.REACT_APP_API_URL+'/media/projects/projectsfiles/'+newMap.name*/
-                      "http://127.0.0.1:8000/media/projects/projectsfiles/electrical-wiring-example_QzGkf0q.jpg"}
+                       imageUrl={newMap.photo
+                     /* "http://127.0.0.1:8000/media/projects/projectsfiles/electrical-wiring-example_QzGkf0q.jpg"*/}
                        asyncUpload={async (labeledData) => {
 
                            for (var i in labeledData.boxes)

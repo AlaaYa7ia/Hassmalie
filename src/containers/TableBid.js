@@ -209,6 +209,8 @@ var fetched=false;
 
 
 const TableBid = () => {
+
+    const [BidData, SetBidData] = useState("");
     const [tableProps, changeTableProps] = useState(tablePropsInit);
     const dispatch: DispatchFunc = async action => {
         changeTableProps((prevState: ITableProps) => kaReducer(prevState, action));

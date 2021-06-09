@@ -95,7 +95,6 @@ class TaskView(viewsets.ModelViewSet):
     queryset = Task.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['id', 'my_business', 'author_type', 'author_id', 'project_id', 'date', 'time', 'is_closed']
-<<<<<<< HEAD
 
 
 class PaymentView(viewsets.ModelViewSet):
@@ -103,6 +102,3 @@ class PaymentView(viewsets.ModelViewSet):
     queryset = Payment.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_fields = [ 'my_business', 'bid_id','payment_date', 'payer_name']
-
-=======
->>>>>>> abc89528db2c25e8deb84b42e4acb1eca60cc0de
