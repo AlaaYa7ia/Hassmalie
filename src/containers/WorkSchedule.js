@@ -17,6 +17,9 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
     const [showEditReport, setShowEditReport] = useState(false)
     const [rowToEdit, setRowToEdit]=useState("");
     const [editReport, setEditReport] = useState("");
+    const [projectsIds, setProjectIds] = useState([]);
+    const [alert, setAlert] = useState({showAlert: false, alert:""});
+
     let data = [];
     let dataf = new Set();
 
@@ -55,13 +58,16 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
 
     function fix_data(){
         try{
+            let projects = new Set();
         if(reports.reports.length !== 0 && workers.length !== 0){
             let workerData;
             //console.log("reports",reports.reports, reports.reports.length)
             reports.reports.forEach(report => (
+                projects.add(report.project_id),
                     workerData = workers.find((worker)=>worker.id === report.worker_id),
                     report.worker_name=workerData.first_name +" "+ workerData.last_name
                 ))
+            setProjectIds(projects)
             setFixed(true);
         }
         //console.log("reports after",reports.reports, reports.reports.length)
@@ -81,8 +87,39 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
 
     }
 
+    function checkDate(d,s,e){
+        let report_date = new Date(d);
+        let now = new Date();
+        if(report_date > now){
+            setAlert({showAlert: true, alert:"לא ניתן לבחור תאריך עתידי."})
+            return false;
+        }
+        let start = new Date('December 17, 1995 '+ s);
+        let end = new Date('December 17, 1995 '+ e);
+        if(report_date.getFullYear() === now.getFullYear() && report_date.getMonth() === now.getMonth()
+            && report_date.getDate() === now.getDate()){
+            if(start.getHours() > now.getHours() || end.getHours() > now.getHours()){
+                setAlert({showAlert: true, alert:"לא ניתן לבחור זמן עתידי או שווה לזמן הנוכחי."})
+                return false;
+            }
+            if( start.getHours() === now.getHours() || end.getHours() === now.getHours()){
+                if(start.getMinutes() >= now.getMinutes() || end.getMinutes() >= now.getMinutes()){
+                    setAlert({showAlert: true, alert:"לא ניתן לבחור זמן עתידי או שווה לזמן הנוכחי."})
+                    return false;
+                }
+            }
+        }
+
+        if(start.getTime() >= end.getTime()){
+            setAlert({showAlert: true, alert:"שעת סיום צריכה להיות אחרי שעת התחלה."})
+            return false;
+        }
+        return true;
+    }
+
     const editReportSubmit = e =>{
         e.preventDefault();
+        setAlert({showAlert: false, alert:""})
         axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
         axios.defaults.xsrfCookieName = "csrftoken";
         axios.defaults.withCredentials = true;
@@ -94,33 +131,47 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
         formData.append('reporting_date', editReport.reporting_date);
         formData.append('start_time', editReport.start_time);
         formData.append('end_time', editReport.end_time);
-        formData.append('description', editReport.description);
+        let des = "אין תיאור";
+        formData.append('description', editReport.description?editReport.description: des);
         try{formData.append("photo", editReport.photo,editReport.photo.name);
         } catch(err){console.log("didn't change photo.")}
-        setEditReport("");
 
-        axios({
-            method: 'put',
-            url: "/api/reports/"+editReport.id+"/",
-            data: formData,
-        })
-        .then((Res) => {
-            setFixed(false);
-            setShowEditReport(false);
-            const dataCopy = [...reports.reports];
-            dataCopy[rowToEdit] = Res.data
-            //console.log("dataCopy", dataCopy);
-            setReports({reports: dataCopy});
-            setRowToEdit("");
-            //setReports({reports:[...reports.reports, Res.data]});
-        }).catch(err=>{ console.log("err",err, err.response)})
+        if(checkDate(editReport.reporting_date, editReport.start_time, editReport.end_time)) {
+            setEditReport({
+                worker_name: "",
+                project_id: "",
+                reporting_date: "",
+                start_time: "",
+                end_time: "",
+                description: "",
+                photo: "",
+            });
+
+            axios({
+                method: 'put',
+                url: "/api/reports/" + editReport.id + "/",
+                data: formData,
+            })
+                .then((Res) => {
+                    setFixed(false);
+                    setShowEditReport(false);
+                    const dataCopy = [...reports.reports];
+                    dataCopy[rowToEdit] = Res.data
+                    //console.log("dataCopy", dataCopy);
+                    setReports({reports: dataCopy});
+                    setRowToEdit("");
+                    //setReports({reports:[...reports.reports, Res.data]});
+                }).catch(err => {
+                console.log("err", err, err.response)
+            })
+        }
     }
 
     const newReportChange = e => setNewReport({ ...newReport, [e.target.name]: e.target.value });
     let fileSelectedHandler  = e =>{setNewReport({...newReport, [e.target.name]: e.target.files[0] })}
 
     const newReportWorkerIdChange = e =>{
-        let first_last_name = e.target.value.split(" ");
+        let first_last_name = e.target.value.split("*");
         let w = workers.find((worker)=>worker.first_name === first_last_name[0] &&
          worker.last_name === first_last_name[1]);
          if(w !== undefined){
@@ -128,8 +179,32 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
         }
     }
 
+    function getWorkersNames(){
+        try {
+            return(
+                workers.map(worker => (
+                    <option value={worker.first_name+"*"+ worker.last_name}>{worker.first_name+" "+ worker.last_name}</option>
+                ))
+            )
+        } catch(err){}
+    }
+
+    function getProjectsIds(){
+        try {
+            const myArr = Array.from(projectsIds)
+            return (
+                myArr.map(value =>(
+
+                    <option value={value}>{value}</option>
+                ))
+        )
+
+
+        } catch(err){}
+    }
     const newReportSubmit = e => {
         e.preventDefault();
+        setAlert({showAlert: false, alert:""})
         axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
         axios.defaults.xsrfCookieName = "csrftoken";
         axios.defaults.withCredentials = true;
@@ -140,43 +215,67 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
         formData.append('reporting_date', newReport.reporting_date);
         formData.append('start_time', newReport.start_time);
         formData.append('end_time', newReport.end_time);
-        formData.append('description', newReport.description);
+        let des = "אין תיאור";
+        formData.append('description', newReport.description?newReport.description: des);
         try{formData.append("photo", newReport.photo,newReport.photo.name);
         } catch(err){console.log("didn't change photo.")}
-        setNewReport("");
 
-        axios({
-            method: 'post',
-            url: "/api/reports/",
-            data: formData,
-        })
-        .then((Res) => {
-            setFixed(false);
-            setReports({reports:[...reports.reports, Res.data]});
-        }).catch(err=>{ console.log("err", err.response)})
+        if(checkDate(newReport.reporting_date, newReport.start_time, newReport.end_time)) {
+            setNewReport({worker_name:"",
+                project_id:"",
+                reporting_date:"",
+                start_time:"",
+                end_time:"",
+                description:"",
+                photo:"",
+            });
+            axios({
+                method: 'post',
+                url: "/api/reports/",
+                data: formData,
+            })
+                .then((Res) => {
+                    setFixed(false);
+                    setReports({reports: [...reports.reports, Res.data]});
+                }).catch(err => {
+                console.log("err", err.response)
+            })
+        }
+
     }
 
     function scheduleForm(){
         return(
+
          <form className="right-text col-8 mt-5 center1" dir='rtl' onSubmit={e => newReportSubmit(e)}>
          <div className="row">
-         <input
-             className='form-control col-2'
-             type='text'
-             placeholder= "שם עובד"
-             name='worker_name'
-             value={newReport.worker_name}
-             onChange={e => newReportWorkerIdChange(e)}
-        />
-        <input
-             className='form-control col-2'
-             type='number'
-             placeholder="מספר פרויקט"
-             name='project_id'
-             value={newReport.project_id}
-             onChange={e => newReportChange(e)}
-             minLength='1'
-        />
+             <div className='form-group dropdown'>
+                 <select
+                     className='form-control right-text'
+                     placeholder='שם עובד*'
+                     name='worker_name'
+                     value={newReport.worker_name}
+                     onChange={e => newReportWorkerIdChange(e)}
+                     required
+                 >
+                     <option value="">שם עובד*</option>
+                     {getWorkersNames()}
+                 </select>
+             </div>
+
+             <div className='form-group dropdown'>
+                 <select
+                     className='form-control right-text'
+                     placeholder='מספר פרויקט*'
+                     name='project_id'
+                     value={newReport.project_id}
+                     onChange={e => newReportChange(e)}
+                     required
+                 >
+                     <option value="">מספר פרויקט*</option>
+                     {getProjectsIds()}
+                 </select>
+             </div>
         <input
              className='form-control col-2'
              type='date'
@@ -184,6 +283,7 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
              name='reporting_date'
              value={newReport.reporting_date}
              onChange={e => newReportChange(e)}
+             required
         />
         <input
              className='form-control col-2'
@@ -192,6 +292,7 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
              name='start_time'
              value={newReport.start_time}
              onChange={e => newReportChange(e)}
+             required
         />
         <input
              className='form-control col-2'
@@ -200,6 +301,7 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
              name='end_time'
              value={newReport.end_time}
              onChange={e => newReportChange(e)}
+             required
         />
         <input
              className='form-control col-10'
@@ -223,8 +325,8 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
     const columns = useMemo(
     () => [
            {
-            Header: "שם עובד",
-            accessor: "worker_name",
+               Header: "שם עובד",
+               accessor: "worker_name",
             filterable: true
           },
           {
@@ -303,9 +405,8 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
   );
 
     function editMyReport(){
-        console.log(rowToEdit)
         return(
-         <form className="right-text col-8 mt-5 center1" dir='rtl' onSubmit={e => editReportSubmit(e)}>
+         <form className="right-text col-8 center1" dir='rtl' onSubmit={e => editReportSubmit(e)}>
          <div className="row">
          <input
              className='form-control col-2'
@@ -314,16 +415,21 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
              name='worker_name'
              value={editReport.worker_name}
              onChange={e => editReportWorkerIdChange(e)}
+             required
         />
-        <input
-             className='form-control col-2'
-             type='number'
-             placeholder={editReport.project_id}
-             name='project_id'
-             value={editReport.project_id}
-             onChange={e => editReportChange(e)}
-             minLength='1'
-        />
+             <div className='form-group dropdown'>
+                 <select
+                     className='form-control right-text'
+                     placeholder={editReport.project_id}
+                     name='project_id'
+                     value={editReport.project_id}
+                     onChange={e =>editReportChange(e)}
+                     required
+                 >
+                     <option value={editReport.project_id}>{editReport.project_id}</option>
+                     {getProjectsIds()}
+                 </select>
+             </div>
         <input
              className='form-control col-2'
              type='date'
@@ -331,6 +437,7 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
              name='reporting_date'
              value={editReport.reporting_date}
              onChange={e => editReportChange(e)}
+             required
         />
         <input
              className='form-control col-2'
@@ -339,6 +446,7 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
              name='start_time'
              value={editReport.start_time}
              onChange={e => editReportChange(e)}
+             required
         />
         <input
              className='form-control col-2'
@@ -347,6 +455,7 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
              name='end_time'
              value={editReport.end_time}
              onChange={e => editReportChange(e)}
+             required
         />
         <input
              className='form-control col-10'
@@ -391,8 +500,13 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
                  להפקת דוח חודשי
              </button>
              </div>
-          {showTable()}
 
+          {showTable()}
+                 <div className="right-text col-8 center1" dir='rtl'>
+             {alert.showAlert && <div className="alert alert-danger" role="alert">
+                 {alert.alert}
+             </div>}
+                 </div>
           {showEditReport ? editMyReport(): ""}
           {scheduleForm()}
              <div><br></br><br></br><br></br></div>
