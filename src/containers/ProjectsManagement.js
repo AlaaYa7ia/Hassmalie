@@ -7,19 +7,33 @@ import PlacesAutocomplete from "react-places-autocomplete";
 
 const ProjectsManagement  = ({ get_user_data, isAuthenticated}) => {
     const [projects, setProjects] = useState([]);
+    const [contractors, setContactors] = useState([]);
+    const [architects, setArchitects] = useState([]);
+    const [customers, setCustomers] = useState([]);
+
     const [myBusiness, setMyBusiness] = useState({my_business: null});
-    const [showProjects, setShowProjects] = useState(false);
-    const [showOneProject, setShowOneProject] = useState(false);
-    const [projectToShow, setProjectToShow] = useState("");
     const [newProject, setNewProject] = useState("");
     const [addProject, setAddProject] = useState({showForm: false, showButton: true})
     const[changed, setChanged]= useState(false);
 
 
+    const get_customers = async (dataRes) =>{
+        const projects_Res = await axios.get('/api/customers/?my_business='+myBusiness.my_business)
+        setCustomers(projects_Res.data);
+    }
 
+    const get_contractors = async (dataRes) =>{
+        const projects_Res = await axios.get('/api/workers/?my_business='+myBusiness.my_business+'&title=C')
+        setContactors(projects_Res.data);
+    }
+
+    const get_archetictors = async (dataRes) =>{
+        const projects_Res = await axios.get('/api/workers/?my_business='+myBusiness.my_business+'&title=A')
+        setArchitects(projects_Res.data);
+    }
 
     const get_projects = async (dataRes) =>{
-        const projects_Res = await axios.get('/api/projects/?my_business='+myBusiness.my_business)
+        const projects_Res = await axios.get('/api/projects/?my_business='+myBusiness.my_business+"&is_closed=false")
         setProjects(projects_Res.data);
     }
 
@@ -39,7 +53,11 @@ const ProjectsManagement  = ({ get_user_data, isAuthenticated}) => {
     },[])
 
     useEffect(()=>{
-      get_projects().then(setChanged(false))
+      get_projects()
+          .then(get_archetictors())
+          .then(get_contractors())
+          .then(get_customers())
+          .then(setChanged(false))
     },[myBusiness, changed])
 
     function getImgUrl(image, instance) {
@@ -71,7 +89,7 @@ const ProjectsManagement  = ({ get_user_data, isAuthenticated}) => {
         formData.append('contractor_id', newProject.contractor_id);
         formData.append('architect_id', newProject.architect_id);
         formData.append('customer_id', newProject.customer_id);
-        formData.append('progress', newProject.progress);
+        formData.append('progress', newProject.progress? newProject.progress: 0);
         let bool = false;
         if(newProject.is_closed === true){bool = true}
         formData.append('is_closed', bool);
@@ -107,24 +125,36 @@ const ProjectsManagement  = ({ get_user_data, isAuthenticated}) => {
         setNewProject("");
     };
 
+    function getWorkersNames(arr){
+        try {
+            return(
+                arr.map(worker => (
+                    <option value={worker.id}>{worker.first_name+" "+ worker.last_name}</option>
+                ))
+            )
+        } catch(err){}
+    }
+
     function projectForm(){
         return(
             <form className="right-text col-6" dir='rtl' onSubmit={e => newProjectSubmit(e)}>
                 <input
                     className='form-control'
                     type='text'
-                    placeholder= "שם פרויקט"
+                    placeholder= "שם פרויקט*"
                     name='name'
                     value={newProject.name}
                     onChange={e => newProjectChange(e)}
+                    required
                 />
                 <input
                     className='form-control'
                     type='text'
-                    placeholder= "סוג הבניין"
+                    placeholder= "סוג הבניין*"
                     name='type_of_building'
                     value={newProject.type_of_building}
                     onChange={e => newProjectChange(e)}
+                    required
                 />
                 <div className='form-group'>
                     <PlacesAutocomplete
@@ -136,7 +166,8 @@ const ProjectsManagement  = ({ get_user_data, isAuthenticated}) => {
                             <div>
 
                                 <input className='form-control'
-                                       {...getInputProps({ placeholder: "מקום הבניין" })} />
+                                       required
+                                       {...getInputProps({ placeholder: "מקום הבניין*" })} />
 
                                 <div>
                                     {loading ? <div>...loading</div> : null}
@@ -157,33 +188,45 @@ const ProjectsManagement  = ({ get_user_data, isAuthenticated}) => {
                         )}
                     </PlacesAutocomplete>
                 </div>
-                <input
-                    className='form-control'
-                    type='number'
-                    placeholder="קבלן"
-                    name='contractor_id'
-                    value={newProject.contractor_id}
-                    onChange={e => newProjectChange(e)}
-                    minLength='1'
-                />
-                <input
-                    className='form-control'
-                    type='number'
-                    placeholder="אדרכל"
-                    name='architect_id'
-                    value={newProject.architect_id}
-                    onChange={e => newProjectChange(e)}
-                    minLength='1'
-                />
-                <input
-                    className='form-control'
-                    type='number'
-                    placeholder="בעל הבית\ לקוח"
-                    name="customer_id"
-                    value={newProject.customer_id}
-                    onChange={e => newProjectChange(e)}
-                    minLength='1'
-                />
+                <div className='form-group dropdown'>
+                    <select
+                        className='form-control right-text'
+                        placeholder='קבלן*'
+                        name='contractor_id'
+                        value={newProject.contractor_id}
+                        onChange={e => newProjectChange(e)}
+                        required
+                    >
+                        <option value="">שם קבלן*</option>
+                        {getWorkersNames(contractors)}
+                    </select>
+                </div>
+                <div className='form-group dropdown'>
+                    <select
+                        className='form-control right-text'
+                        placeholder='אדרכל*'
+                        name='architect_id'
+                        value={newProject.architect_id}
+                        onChange={e => newProjectChange(e)}
+                        required
+                    >
+                        <option value="">שם אדרכל*</option>
+                        {getWorkersNames(architects)}
+                    </select>
+                </div>
+                <div className='form-group dropdown'>
+                    <select
+                        className='form-control right-text'
+                        placeholder='בעל הבית\ לקוח*'
+                        name='customer_id'
+                        value={newProject.customer_id}
+                        onChange={e => newProjectChange(e)}
+                        required
+                    >
+                        <option value="">בעל הבית\ לקוח*</option>
+                        {getWorkersNames(customers)}
+                    </select>
+                </div>
                 <input
                     className='form-control'
                     type='text'
@@ -221,39 +264,6 @@ const ProjectsManagement  = ({ get_user_data, isAuthenticated}) => {
             </form>
         )
     }
-
-    // function loadProjects(){
-    //     try{
-    //         return(
-    //             projects.map(project => (
-    //                 <div id={"accordion"+ project.id}  className='col-2'>
-    //                     <div className="card">
-    //                         <div className="card-header" id={"heading"+project.id.toString()} >
-    //
-    //                             <button className="btn btn-link " data-toggle="collapse" data-target={"#collapse"+project.id}
-    //                                     aria-expanded="true" aria-controls={"collapse"+project.id}>
-    //                                 <img src={getImgUrl(project.buildingImage, "project")} height={150} width={150}></img>
-    //                             </button>
-    //
-    //                         </div>
-    //
-    //                         <div id={"collapse"+project.id} className="collapse " aria-labelledby={"heading"+project.id} data-parent={"#accordion"+project.id}>
-    //                             <div className="card-body">
-    //                                 <p>{project.type_of_building}</p>
-    //                                 <p>{project.address}</p>
-    //                                 <p>{project.contractor_id}</p>
-    //                                 <p>{project.architect_id}</p>
-    //                                 <p>{project.customer_id}</p>
-    //                                 <p><Link to={"/bid/"+project.id} >הצעת מחיר</Link></p>
-    //                                 <p><Link to={"/file-repository/"+project.id}>מאגר הקבצים</Link></p>
-    //                             </div>
-    //                         </div>
-    //                     </div>
-    //                 </div>
-    //             )))
-    //     } catch(err){
-    //     }
-    // }
 
     function loadProjects(){
         try {
