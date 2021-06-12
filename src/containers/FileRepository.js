@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import axios from "axios";
 import '../repoStyle.css';
 
+
 const FileRepository = ({match}) => {
     const [plans, setPlans] = useState([]);
     const [bids, setBids] = useState([]);
@@ -11,23 +12,62 @@ const FileRepository = ({match}) => {
     const [projectId, setProjectId] = useState()
     const [image, setImage] = useState([]);
     const [flags, setFlags]= useState({images: false, plans: false, payments:false, bids: false})
+    const [myBusiness, setMyBusiness] = useState("")
+    const[changed, setChanged]= useState("");
+    const [newFile, setNewFile] = useState("");
+    const [project, setProject] = useState({});
 
 
+    const newFileChange = e => setNewFile({ ...newFile, [e.target.name]: e.target.value });
+
+    const newFileSubmit = e => {
+        e.preventDefault();
+        axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+        axios.defaults.xsrfCookieName = "csrftoken";
+        axios.defaults.withCredentials = true;
+        const formData = new FormData();
+        try {
+            formData.append("file", newFile.file, newFile.file.name);
+        } catch (err) {
+            console.log("didn't change photo.")
+        }
+        formData.append("my_business", myBusiness);
+        formData.append("project_id", projectId);
+        formData.append("category", newFile.category);
+        formData.append("deleted", false);
+        formData.append("description", newFile.description);
+
+        axios({
+            method: 'post',
+            url: "/api/projects-files/",
+            data: formData,
+        })
+            .then((dataRes) => {
+                console.log("projects data", dataRes.data)
+                setChanged(true);
+            }).catch(err=>{ console.log("err", err.response)})
+    }
+
+
+    const getProjectData = async () => {
+        const projects_Res = await axios.get('/api/projects/?id='+projectId+'&my_business='+myBusiness)
+        setProject(projects_Res.data[0]);
+    }
 
     const get_plans = async () =>{
-        const files_Res = await axios.get(process.env.REACT_APP_API_URL+'/api/projects-files/?project_id='+projectId+'&category=P');
+        const files_Res = await axios.get(process.env.REACT_APP_API_URL+'/api/projects-files/?project_id='+projectId+'&category=P&deleted=false');
         setPlans(files_Res.data);
     }
     const get_bids = async () =>{
-        const files_Res = await axios.get(process.env.REACT_APP_API_URL+'/api/bids/?project_id='+projectId);
+        const files_Res = await axios.get(process.env.REACT_APP_API_URL+'/api/bids/?project_id='+projectId+'&deleted=false');
         setBids(files_Res.data);
     }
     const get_images = async () =>{
-        const files_Res = await axios.get(process.env.REACT_APP_API_URL+'/api/projects-files/?project_id='+projectId+'&category=I');
+        const files_Res = await axios.get(process.env.REACT_APP_API_URL+'/api/projects-files/?project_id='+projectId+'&category=I&deleted=false');
         setImages(files_Res.data);
     }
     const get_payments = async () =>{
-        const files_Res = await axios.get(process.env.REACT_APP_API_URL+'/api/projects-files/?project_id='+projectId+'&category=Pay');
+        const files_Res = await axios.get(process.env.REACT_APP_API_URL+'/api/projects-files/?project_id='+projectId+'&category=Pay&deleted=false');
         setPayments(files_Res.data);
     }
     const getbuildingimage = async () =>{
@@ -36,27 +76,70 @@ const FileRepository = ({match}) => {
     }
     useEffect(()=>{
         setProjectId(match.params.id)
+        setMyBusiness(match.params.my_business)
     },[])
 
     useEffect(()=>{
-        getbuildingimage()
-    },[projectId])
+        console.log("here", changed)
+        getProjectData()
+            .then(getbuildingimage())
+            .then(get_plans())
+            .then(get_bids())
+            .then(get_images())
+            .then(get_payments())
+            .then(setFlags({images: true, plans: true, payments: true, bids: true}))
 
-    useEffect(()=>{
-        get_plans()
-    },[image])
-    useEffect(()=>{
-        get_bids()
-    },[plans])
-    useEffect(()=>{
-        get_images()
-    },[bids])
-    useEffect(()=>{
-        get_payments()
-    },[images])
-    useEffect(()=>{
-        setFlags({images: true, plans: true, payments: true, bids: true})
-    },[payments])
+
+    },[projectId, myBusiness, changed])
+
+    // useEffect(()=>{
+    //     get_plans()
+    // },[image])
+    // useEffect(()=>{
+    //     get_bids()
+    // },[plans])
+    // useEffect(()=>{
+    //     get_images()
+    // },[bids])
+    // useEffect(()=>{
+    //     get_payments()
+    // },[images])
+    // useEffect(()=>{
+    //     setFlags({images: true, plans: true, payments: true, bids: true})
+    // },[payments])
+
+    const deleteFileReq = async(e, file) => {
+        e.preventDefault();
+        axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+        axios.defaults.xsrfCookieName = "csrftoken";
+        axios.defaults.withCredentials = true;
+        const formData = new FormData();
+        formData.append('my_business', myBusiness);
+        formData.append('project_id', projectId);
+
+        formData.append('deleted', true);
+
+        await axios({
+            method: 'put',
+            url: "/api/projects-files/"+file.id+"/",
+            data: formData,
+            header: {
+                'Accept': 'application/json',
+                'Content-Type': 'multipart/form-data',
+            },
+        })
+            .then((dataRes) => {
+                console.log( "data", dataRes.data)
+                // setPayments([]);
+                // setPlans([]);
+                // setImages([]);
+                // setBids([]);
+                setFlags({images: false, plans: false, payments:false, bids: false});
+                setChanged(dataRes.data.id);
+            }).catch(err=>{ console.log("err", err.response)})
+
+    }
+
 
     function checkURLIfImage(url) {
         return(url.match(/\.(jpeg|jpg|gif|png)$/) != null);
@@ -74,8 +157,13 @@ const FileRepository = ({match}) => {
                             <img src={process.env.REACT_APP_API_URL + '/media/defaultpictuers/icon5.png'}
                                  style={{width:'100%'}}/>}
                             <h4>{file.description}</h4>
+
                     </div>
                     </a>
+                    <form  onSubmit={e => deleteFileReq(e, file)}>
+                    <button className='btn btn-danger'  type='submit'
+                            style={{display: 'flex', alignItems: 'right'}}>מחיקת קובץ</button>
+                    </form>
                 </div>
             ))
             )
@@ -83,6 +171,7 @@ const FileRepository = ({match}) => {
             console.log(err)
         }
     }
+
 
     function showbuildingimage(){
         if (image !== null) {
@@ -99,19 +188,50 @@ const FileRepository = ({match}) => {
         }
     }
 
-    function filterSelection(obj){
-        try {
-            if (obj === 'all') {
-                setFlags({images: true, plans: true, payments: true, bids: true})
-            } else {
-                setFlags({images: false, plans: false, payments: false, bids: false}).then(
-                    setFlags(...flags, {[obj]: true})
-                )
-            }
-        }
-        catch (err){
-            console.log(err)
-        }
+    let fileSelectedHandler  = e =>{setNewFile({...newFile, [e.target.name]: e.target.files[0] })}
+
+
+    function fileForm(){
+        return(
+            <div className>
+                <br/>
+            <h3> להוספת קובץ לפרויקט: {project.name}</h3>
+            <form className="right-text row" dir='rtl' onSubmit={e => newFileSubmit(e)}>
+                <div className='form-group dropdown col-2'>
+                    <select
+                        className='form-control right-text'
+                        placeholder='קטיגוריה*'
+                        name='category'
+                        value={newFile.category}
+                        onChange={e => newFileChange(e)}
+                        required
+                    >
+                        <option value="">קטיגוריה*</option>
+                        <option value="I">תמונות</option>
+                        <option value="P">תוכניות</option>
+                        <option value="Pay">תשלומים</option>
+                    </select>
+                </div>
+                <input className='form-group col-3'
+                       type = 'file'
+                       name='file'
+                       onChange={e => fileSelectedHandler(e)}
+                />
+                <input
+                    className='form-control col-5'
+                    type='text'
+                    placeholder= "תיאור"
+                    name='description'
+                    value={newFile.description}
+                    onChange={e => newFileChange(e)}
+                />
+                <button className='btn btn-success col-1 mr-3' type='submit' >הוספה</button>
+
+            </form>
+                <p>* להוספת קובץ הצעת מחיר נא לעבור <Link to={"/bid/"+myBusiness+"/"+projectId} >לדף</Link>.</p>
+            </div>
+        )
+
     }
 
     return(
@@ -120,6 +240,9 @@ const FileRepository = ({match}) => {
     <body>
     <div className="main">
         <div id="myBtnContainer" className='right-text' >
+            {fileForm()}
+            <hr/>
+            <h3>קבצי הפרויקט</h3>
             <button className="btn active"
                     onClick={()=>setFlags({images: true, plans: true, payments: true, bids: true})}>
                 הכל</button>

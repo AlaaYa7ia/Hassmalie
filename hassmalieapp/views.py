@@ -66,14 +66,14 @@ class ProjectFileView(viewsets.ModelViewSet):
     serializer_class = ProjectFileCreateSerializer
     queryset = ProjectFile.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['id', 'my_business','project_id', 'category']
+    filterset_fields = ['id', 'my_business','project_id', 'category', 'deleted']
 
 
 class BidView(viewsets.ModelViewSet):
     serializer_class = BidCreateSerializer
     queryset = Bid.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['id', 'my_business','project_id']
+    filterset_fields = ['id', 'my_business','project_id', 'deleted']
 
 
 class SymbolView(viewsets.ModelViewSet):
