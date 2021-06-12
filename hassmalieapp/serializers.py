@@ -97,13 +97,13 @@ class SymbolCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Symbol
-        fields = ('id','my_business','type','price')
+        fields = ('id','my_business','type','price','photo')
 
 
 class BidTableCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Symbol
+        model = BidTable
         fields = ('id','my_business', 'bid_id','type','count','price','total_item_price')
 
 

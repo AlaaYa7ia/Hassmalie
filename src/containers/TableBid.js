@@ -217,7 +217,7 @@ const TableBid = () => {
 
         if (action.type === ActionType.LoadData) {
             const response = await fetch(
-                "http://127.0.0.1:8000/api/symbols/"
+                "http://127.0.0.1:8000/api/bid-table/"
             );
             fetchedData = await response.json();
             console.log(fetchedData)
