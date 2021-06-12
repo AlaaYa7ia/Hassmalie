@@ -20,6 +20,7 @@ router.register(r'labels', views.LabelView, 'label')
 router.register(r'projects-files', views.ProjectFileView, 'project-file')
 router.register(r'tasks', views.TaskView, 'task')
 router.register(r'payments', views.PaymentView, 'payment')
+router.register(r'bid-table', views.BidTableView, 'bid-table')
 
 urlpatterns = [
     path('api/', include(router.urls)),

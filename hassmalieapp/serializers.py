@@ -97,14 +97,21 @@ class SymbolCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Symbol
-        fields = ('id','my_business', 'bid_id','type','count','price','total_item_price', 'photo')
+        fields = ('id','my_business','type','price')
+
+
+class BidTableCreateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Symbol
+        fields = ('id','my_business', 'bid_id','type','count','price','total_item_price')
 
 
 class LabelCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Label
-        fields = ('id', 'my_business', 'bid_id', 'x', 'y', 'w', 'h', 'annotation')
+        fields = ('id', 'my_business', 'bid_id','version', 'x', 'y', 'w', 'h', 'annotation')
 
 
 class TaskCreateSerializer(serializers.ModelSerializer):

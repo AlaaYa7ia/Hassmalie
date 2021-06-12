@@ -80,6 +80,13 @@ class SymbolView(viewsets.ModelViewSet):
     serializer_class = SymbolCreateSerializer
     queryset = Symbol.objects.all()
     filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['id', 'my_business', 'price','type']
+
+
+class BidTableView(viewsets.ModelViewSet):
+    serializer_class = BidTableCreateSerializer
+    queryset = BidTable.objects.all()
+    filter_backends = [DjangoFilterBackend]
     filterset_fields = ['id', 'my_business', 'bid_id', 'price','type','count']
 
 
@@ -87,7 +94,7 @@ class LabelView(viewsets.ModelViewSet):
     serializer_class = LabelCreateSerializer
     queryset = Label.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['id', 'my_business', 'bid_id', 'annotation']
+    filterset_fields = ['id', 'my_business', 'bid_id', 'annotation','version']
 
 
 class TaskView(viewsets.ModelViewSet):

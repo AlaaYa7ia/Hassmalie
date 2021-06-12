@@ -203,12 +203,23 @@ class Bid(models.Model):
 
 class Symbol(models.Model):
     my_business = models.ForeignKey(MyBusiness, on_delete=models.CASCADE)
+    type = models.CharField(max_length=255)
+    price = models.FloatField()
+    photo = models.ImageField(upload_to='bids/symbols/')
+
+    REQUIRED_FIELDS = ['my_business', 'type', 'price']
+
+    def __str__(self):
+        return str(self.type)
+
+
+class BidTable(models.Model):
+    my_business = models.ForeignKey(MyBusiness, on_delete=models.CASCADE)
     bid_id = models.ForeignKey(Bid, on_delete=models.PROTECT)
     type = models.CharField(max_length=255)
     count = models.IntegerField()
     price = models.FloatField()
     total_item_price = models.FloatField()
-    photo = models.ImageField(upload_to='bids/symbols/')
 
     REQUIRED_FIELDS = ['my_business', 'bid_id', 'type', 'count', 'price', 'total_item_price']
 
@@ -219,6 +230,7 @@ class Symbol(models.Model):
 class Label(models.Model):
     my_business = models.ForeignKey(MyBusiness, on_delete=models.CASCADE)
     bid_id = models.ForeignKey(Bid, on_delete=models.PROTECT)
+    version = models.CharField(max_length=255)
     x = models.IntegerField()
     y = models.IntegerField()
     w = models.IntegerField()
@@ -254,6 +266,7 @@ class Task(models.Model):
 class Payment(models.Model):
     my_business = models.ForeignKey(MyBusiness, on_delete=models.CASCADE)
     bid_id = models.ForeignKey(Bid, on_delete=models.PROTECT)
+    version = models.CharField(max_length=255)
     total = models.IntegerField()
     payment_date = models.DateField()
     pay_type = models.CharField(max_length=255)
