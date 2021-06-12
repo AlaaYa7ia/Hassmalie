@@ -2,11 +2,13 @@ import React, {useEffect,useState} from 'react';
 
 import "react-list-editable/lib/react-list-editable.css";
 import {Link} from "react-router-dom";
+import axios from "axios";
 
+let symbolData;
 
-function symbolData(symbolName,price,symbolNum){
+/*
+function symbolData(symbolName,price,symbolPic){
     let symbol={};
-    symbolNum=0
     symbol.setName=function (name) {
         symbolName=name;}
 
@@ -16,11 +18,11 @@ function symbolData(symbolName,price,symbolNum){
     symbol.getName=function () {
         return symbolName;}
 
-    symbol.setSymbolNum=function () {
-        symbolNum++;}
+    symbol.setSymbolNum=function (pic) {
+        symbolPic=pic;}
 
     symbol.getSymbolNum=function () {
-        return symbolNum;}
+        return symbolPic;}
 
     symbol.getPrice=function () {
         return price;}
@@ -36,12 +38,52 @@ symbolList['שקע כח יחיד' ]=symbolData('שקע כח יחיד',7,0)
 symbolList['שקע יחיד רגיל']=symbolData('שקע יחיד רגיל',5,0)
 symbolList['שקע כפול מוגן מים רגיל']=symbolData('שקע כפול מוגן מים רגיל',8,0)
 symbolList['שקע יחיד מוגן מים רגיל']=symbolData('שקע יחיד מוגן מים רגיל',6,0)
+*/
 
 
 const Bid = ({match})  => {
 
     const [projectId, setProjectId] = useState("")
     const [myBusiness, setMyBusiness] = useState({my_business: null});
+//   const [imgUploaded,setImgUploaded] = useState(false);
+    const [newMap, setNewMap] = useState(null);
+    let fileSelectedHandler  = e =>{
+        setNewMap(e.target.files[0])
+
+    }
+
+
+    const mapSubmit = e => {
+        e.preventDefault();
+
+        const formData = new FormData();
+        try{formData.append("photo", newMap,newMap.name);
+        } catch(err){console.log("didn't change photo.")}
+        console.log(formData.toString());
+/*
+        formData.append("id",projectId);
+*/
+        formData.append("my_business",1/*myBusiness.my_business*/);
+        formData.append("type",document.getElementById("myInput").value);
+        formData.append("price",2/*document.getElementById("priceInput").value*/);
+
+        console.log(formData);
+
+        console.log(newMap)
+        axios({
+            method: 'post',
+            url: process.env.REACT_APP_API_URL+'/api/symbols/',
+            data: formData,
+        })
+            .then((dataRes) => {
+                console.log("symbol data", dataRes.data)
+                setNewMap(dataRes.data)
+               // .then(() => setImgUploaded(true));
+              //  document.getElementById("buttonToHide").style.display="none"
+            }).catch(err=>{ console.log("err", err.response)})
+
+
+    };
 
     useEffect(()=>{
         setMyBusiness({my_business: match.params.my_business})
@@ -53,7 +95,9 @@ const Bid = ({match})  => {
     for (i = 0; i < close.length; i++) {
         close[i].onclick = function() {
             var div = this.parentElement;
-            div.style.display = "none";
+            div.remove();
+            console.log(div.innerText)
+         //   const res = await axios.delete('/api/symbols/', { data: { type: div } });
         }
     }
     let fetchedData=false
@@ -61,18 +105,22 @@ const Bid = ({match})  => {
 // Create a new list item when clicking on the "Add" button
     function addElement(inputValue) {
         var li = document.createElement("li");
-        var div = document.createElement("div");
-        li.setAttribute("class","list-group-item")
-        div.setAttribute("class","row")
-        var t = document.createTextNode(inputValue);
-
+        li.setAttribute("class","row list-group-item")
+        var t = document.createElement("p");
+        t.appendChild( document.createTextNode(inputValue));
+/*
+        t.setAttribute("class","col-7")
+*/
+        var img= document.createElement("img")
+        img.src="https://png.pngtree.com/png-vector/20190330/ourmid/pngtree-img-file-document-icon-png-image_897560.jpg"
+        img.setAttribute("class","col-3")
         var span = document.createElement("SPAN");
         var txt = document.createTextNode("\u00D7");
         span.className = "close";
-        div.appendChild(span);
+        li.appendChild(span);
         span.appendChild(txt);
-        li.appendChild(div);
-        div.appendChild(t);
+        li.appendChild(t);
+        li.appendChild(img);
 
 
         document.getElementById("myUL").appendChild(li);
@@ -101,17 +149,18 @@ const Bid = ({match})  => {
             }
         }
         else{
-            for (var i in symbolList){
-                addElement(symbolList[i].getName()+"    [₪ "+symbolList[i].getPrice()+"]    ")
+            for (var i in symbolData.data){
+                addElement(symbolData.data[i].type+"    [₪ "+(symbolData.data[i].price)+"]    ")
             }
             fetchedData=false
 
         }
 
     }
-    const showList = () => {
-
-        fetchedData=true
+    const showList = async () => {
+        symbolData = await axios.get('/api/symbols/');
+        console.log(symbolData);
+        fetchedData = true
 
         newElement()
 
@@ -142,17 +191,25 @@ const Bid = ({match})  => {
                     <div id="addThing" style={{display: "none"}}>
                         <ul id="myUL" dir="rtl" >
                         </ul>
+                        <form dir="rtl" onSubmit={e => mapSubmit(e)}>
                         <div id="myDIV">
                             <div className="row">
-                                <button onClick={newElement} className="addBtn btn btn-dark">הוסף</button>
+                                <button onClick={newElement} className="addBtn btn btn-dark"
+                                        id="imgUpload" type="submit">הוסף</button>
                             </div>
+
                             <div className="row">
-                                <input type="text" id="myInput" placeholder="שם פריט" className="col-6"></input>
+                                <input type="text" id="myInput" placeholder="שם פריט" className="col-5"></input>
                                 <input type="number" id="priceInput" placeholder="מחיר הפריט"
-                                       className="col-6"></input>
+                                       className="col-3"></input>
+                                <input className="col-4 form-group"
+                                       type = 'file'
+                                       name='photo'
+                                       onChange={e => fileSelectedHandler(e)}></input>
                             </div>
 
                         </div>
+                        </form>
                     </div>
                 </div>
                 <div className='col-12 col-md-4'>

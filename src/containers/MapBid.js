@@ -109,7 +109,7 @@ const MapBid = ({match}) => {
     const buildArr= () => {
         var arr=[]
         for(let key in symbolList){
-           /* arr.push(symbolList[key].getName());*/
+            arr.push(symbolList[key].getName());
 
         }
         return arr
@@ -136,6 +136,11 @@ const MapBid = ({match}) => {
 
     function uploadAnnotation() {
         // setImgUploaded(false)
+        document.addEventListener("DOMContentLoaded",()=>
+        {
+            document.querySelector(".ant-btn").nextElementSibling.innerText = "extract as table"
+        });
+
         return (
         <div className="App "   id="addThing" >
             <Annotator id="annotationField"
@@ -216,9 +221,11 @@ const MapBid = ({match}) => {
                            borderRadius: 8,
                            padding: 10
                        }}
+
                 // sceneTypes={['1', '2', '3']}
             />
         </div>
+
         );
     }
 
