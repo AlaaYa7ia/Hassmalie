@@ -137,8 +137,7 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
     const directorChange = e => setDirector({ ...director, [e.target.name]: e.target.value });
     const directorChangeAddress = e => setDirector({...director,['address']: e});
     const businessChange = e => setBusiness({ ...business, [e.target.name]: e.target.value });
-    const newCarChange = e => {
-        setNewCar({ ...newCar, [e.target.name]: e.target.value })};
+    const newCarChange = e => {setNewCar({ ...newCar, [e.target.name]: e.target.value })};
 
     const mangerSubmit = e => {
         e.preventDefault();

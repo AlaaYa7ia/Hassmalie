@@ -216,6 +216,7 @@ const FileRepository = ({match}) => {
                        type = 'file'
                        name='file'
                        onChange={e => fileSelectedHandler(e)}
+                       required
                 />
                 <input
                     className='form-control col-5'
