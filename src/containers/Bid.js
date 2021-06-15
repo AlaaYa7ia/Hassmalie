@@ -44,12 +44,17 @@ symbolList['שקע יחיד מוגן מים רגיל']=symbolData('שקע יחי
 const Bid = ({match})  => {
 
     const [projectId, setProjectId] = useState("")
+    const [newSymbol, setNewSymbol] = useState("")
     const [myBusiness, setMyBusiness] = useState({my_business: null});
 //   const [imgUploaded,setImgUploaded] = useState(false);
     const [newMap, setNewMap] = useState(null);
-    let fileSelectedHandler  = e =>{
-        setNewMap(e.target.files[0])
 
+    let fileSelectedHandler = e => {
+        setNewSymbol({...newSymbol, [e.target.name]: e.target.files[0] })
+
+    }
+    let newSymbolHandler  = e =>{
+        setNewSymbol({...newSymbol, [e.target.name]: e.target.value })
     }
 
 
@@ -57,19 +62,18 @@ const Bid = ({match})  => {
         e.preventDefault();
 
         const formData = new FormData();
-        try{formData.append("photo", newMap,newMap.name);
+        try{formData.append("photo", newSymbol.photo,newSymbol.photo.name);
         } catch(err){console.log("didn't change photo.")}
         console.log(formData.toString());
 /*
         formData.append("id",projectId);
 */
         formData.append("my_business",1/*myBusiness.my_business*/);
-        formData.append("type",document.getElementById("myInput").value);
-        formData.append("price",2/*document.getElementById("priceInput").value*/);
+        formData.append("type",newSymbol.type);
+        formData.append("price",newSymbol.price);
 
-        console.log(formData);
+        console.log(formData.data);
 
-        console.log(newMap)
         axios({
             method: 'post',
             url: process.env.REACT_APP_API_URL+'/api/symbols/',
@@ -77,7 +81,7 @@ const Bid = ({match})  => {
         })
             .then((dataRes) => {
                 console.log("symbol data", dataRes.data)
-                setNewMap(dataRes.data)
+                setNewSymbol(dataRes.data)
                // .then(() => setImgUploaded(true));
               //  document.getElementById("buttonToHide").style.display="none"
             }).catch(err=>{ console.log("err", err.response)})
@@ -103,7 +107,7 @@ const Bid = ({match})  => {
     let fetchedData=false
 
 // Create a new list item when clicking on the "Add" button
-    function addElement(inputValue) {
+    function addElement(inputValue,imgSRC) {
         var li = document.createElement("li");
         li.setAttribute("class","row list-group-item")
         var t = document.createElement("p");
@@ -112,7 +116,8 @@ const Bid = ({match})  => {
         t.setAttribute("class","col-7")
 */
         var img= document.createElement("img")
-        img.src="https://png.pngtree.com/png-vector/20190330/ourmid/pngtree-img-file-document-icon-png-image_897560.jpg"
+        img.src=imgSRC
+       console.log(newSymbol.photo)
         img.setAttribute("class","col-3")
         var span = document.createElement("SPAN");
         var txt = document.createTextNode("\u00D7");
@@ -144,13 +149,12 @@ const Bid = ({match})  => {
                 alert("You must write something!");
             else {
                 var inputValue =document.getElementById("myInput").value + "    [₪ " + document.getElementById("priceInput").value + "]    "
-
-                addElement(inputValue);
+                addElement(inputValue,newSymbol.photo.src);
             }
         }
         else{
             for (var i in symbolData.data){
-                addElement(symbolData.data[i].type+"    [₪ "+(symbolData.data[i].price)+"]    ")
+                addElement(symbolData.data[i].type+"    [₪ "+(symbolData.data[i].price)+"]    ",symbolData.data[i].photo/*"https://png.pngtree.com/png-vector/20190330/ourmid/pngtree-img-file-document-icon-png-image_897560.jpg"*/)
             }
             fetchedData=false
 
@@ -199,9 +203,13 @@ const Bid = ({match})  => {
                             </div>
 
                             <div className="row">
-                                <input type="text" id="myInput" placeholder="שם פריט" className="col-5"></input>
+                                <input type="text" id="myInput" placeholder="שם פריט" className="col-5"
+                                       name="type"
+                                       onChange={e => newSymbolHandler(e)}></input>
                                 <input type="number" id="priceInput" placeholder="מחיר הפריט"
-                                       className="col-3"></input>
+                                       className="col-3"
+                                       name="price"
+                                       onChange={e => newSymbolHandler(e)}></input>
                                 <input className="col-4 form-group"
                                        type = 'file'
                                        name='photo'
