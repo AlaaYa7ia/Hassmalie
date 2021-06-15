@@ -137,8 +137,7 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
     const directorChange = e => setDirector({ ...director, [e.target.name]: e.target.value });
     const directorChangeAddress = e => setDirector({...director,['address']: e});
     const businessChange = e => setBusiness({ ...business, [e.target.name]: e.target.value });
-    const newCarChange = e => {
-        setNewCar({ ...newCar, [e.target.name]: e.target.value })};
+    const newCarChange = e => {setNewCar({ ...newCar, [e.target.name]: e.target.value })};
 
     const mangerSubmit = e => {
         e.preventDefault();
@@ -262,7 +261,9 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
         formData.append('insurance_validity', newCar.insurance_validity)
         formData.append('insurance_up_to_age', newCar.insurance_up_to_age)
          formData.append('description', newCar.description)
-        setNewCar({license_number: "",
+        setNewCar({company_name:"",
+            manufacture_year:"",
+            license_number: "",
         license_validity: "",
         insurance_validity: "",
         insurance_up_to_age: "",

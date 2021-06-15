@@ -48,7 +48,7 @@ const App = () => (
                     <Route exact path='/financial' component={Financial} />
                     <Route exact path='/projects-management' component={ProjectsManagement} />
                     <Route path='/project/:my_business/:id' component={Project} />
-                    <Route path='/file-repository/:id' component={FileRepository} />
+                    <Route path='/file-repository/:my_business/:id' component={FileRepository} />
                     <Route  path='/bid/:id/:my_business' component={Bid} />
                     <Route exact path='/TableBid/:id/:my_business' component={TableBid} />
                     <Route exact path='/MapBid/:id/:my_business' component={MapBid} />

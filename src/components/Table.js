@@ -32,8 +32,8 @@ export default function Table({ columns, data, dataf }) {
 
      const handleNameFilterChange = e => {
       const value = e.target.value || undefined;
-      setFilter("worker_name", value); // Update the report.project_id filter. Now our table will filter and show only the rows which have a matching value
-      setFilterInput({ ...filterInput, worker_name: value});
+         setFilter("worker_name", value); // Update the report.project_id filter. Now our table will filter and show only the rows which have a matching value
+         setFilterInput({ ...filterInput, worker_name: value});
     };
 
     const handleFirstDateFilterChange = e => {
@@ -75,9 +75,9 @@ export default function Table({ columns, data, dataf }) {
     <div dir='rtl' class=' container-fluid col-8 mt-2' lang="he"  style={{  justifyContent:'right'}}>
     <p>מסננים:</p>
     <input
-      value={filterInput.worker_name}
-      onChange={handleNameFilterChange}
-      placeholder={"סנן לפי שם עובד"}
+        value={filterInput.worker_name}
+        onChange={handleNameFilterChange}
+        placeholder={"סנן לפי שם עובד"}
     />
     <input
         type='number'
@@ -130,7 +130,6 @@ export default function Table({ columns, data, dataf }) {
               row.cells.map(cell => {
                 if (in_date_range(cell.row.values.reporting_date)){
                     dataf.add(cell.row.values)
-                    console.log("cell: ", cell);
                     if(cell.column.Header === 'קובץ מצורף'){
                         return <td {...cell.getCellProps()}><a href={cell.value}>{cell.render("Cell")}</a></td>;
                     }else{

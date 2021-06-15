@@ -183,8 +183,9 @@ class ProjectFile(models.Model):
     )
     category = models.CharField(max_length=3, choices=FILE_CATEGORY, default='I')
     file = models.FileField(upload_to='projects/projectsfiles/')
+    deleted = models.BooleanField(default=False)
     description = models.TextField(default="")
-    REQUIRED_FIELDS = ['my_business', 'project_id', 'file']
+    REQUIRED_FIELDS = ['my_business', 'project_id']
 
     def __str__(self):
         return str(self.file.name)
@@ -195,6 +196,7 @@ class Bid(models.Model):
     my_business = models.ForeignKey(MyBusiness, on_delete=models.CASCADE)
     project_id = models.ForeignKey(Project, on_delete=models.PROTECT)
     photo = models.FileField(upload_to='bids/')
+    deleted = models.BooleanField(default=False)
     REQUIRED_FIELDS = ['my_business', 'photo', 'project_id']
 
     def __str__(self):

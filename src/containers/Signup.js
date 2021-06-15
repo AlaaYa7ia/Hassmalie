@@ -101,7 +101,7 @@ const Signup = ({ signup, isAuthenticated }) => {
                         onChange={e => onChange(e)}
                         required
                     >
-                        <option>סוג עובד*</option>
+                        <option value="">סוג עובד*</option>
                         <option value="M">מנהל</option>
                         <option value="D">סגן מנהל</option>
                     </select>

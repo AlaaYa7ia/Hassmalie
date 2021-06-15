@@ -12,6 +12,8 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
     const [business, setBusiness] = useState("");
     const [managerFlag, setManagerFlag] = useState(false);
     const [directorFlag, setDirectorFlag] = useState(false);
+    const [editCar, setEditCar] = useState("");
+    const [showForm, setShowForm] = useState(false);
 
     const get_user = async ()=>{
         const user_Res = await get_user_data();
@@ -95,12 +97,195 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
         get_cars()
     },[business])
 
+    const editCarChange = e => {setEditCar({ ...editCar, [e.target.name]: e.target.value })};
+
+    let carImageHandler  = event =>{setEditCar({...editCar,image: event.target.files[0] })}
+
+    const editCarCheckChange = e => {
+        console.log(e.target.checked)
+        setEditCar({ ...editCar, [e.target.name]: e.target.checked})};
+
+
+
+    const editCarSubmit = e => {
+        e.preventDefault();
+        setShowForm(false)
+        axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+        axios.defaults.xsrfCookieName = "csrftoken";
+        axios.defaults.withCredentials = true;
+        const formData = new FormData();
+        try{
+            formData.append(
+                "image",
+                editCar.image,
+                editCar.image.name
+            );
+        } catch(err){
+            console.log("didn't change image.")
+        }
+
+        formData.append('my_business', business.manager);
+        formData.append('company_name', editCar.company_name)
+        formData.append('manufacture_year', editCar.manufacture_year)
+        formData.append('license_number', editCar.license_number)
+        formData.append('license_validity', editCar.license_validity)
+        formData.append('insurance_validity', editCar.insurance_validity)
+        formData.append('insurance_up_to_age', editCar.insurance_up_to_age)
+        formData.append('description', editCar.description)
+        formData.append('is_working', editCar.is_working)
+        setEditCar({company_name:"",
+            manufacture_year:"",
+            license_number: "",
+            license_validity: "",
+            insurance_validity: "",
+            insurance_up_to_age: "",
+            description: "",
+            image: "",
+            is_working:""
+        })
+        axios({
+            method: 'put',
+            url: "/api/cars/"+editCar.id+"/",
+            data: formData,
+        })
+            .then((dataRes) => {
+                console.log(dataRes.data)
+                setCars(...cars,dataRes.data)
+            }).catch(err=>{ console.log("err", err.response)})
+
+    }
+
+    function carForm(){
+        return(
+        <form dir='rtl' onSubmit={e => editCarSubmit(e)}>
+            <div className='form-group'>
+                <input
+                    className='form-control'
+                    type='text'
+                    placeholder="חברת ייצור:"
+                    name='company_name'
+                    value={editCar.company_name}
+                    onChange={e => editCarChange(e)}
+                    required
+                />
+            </div>
+            <div className='form-group'>
+                <input
+                    className='form-control'
+                    type='number'
+                    placeholder="שנת ייצור:"
+                    name='manufacture_year'
+                    value={editCar.manufacture_year}
+                    onChange={e => editCarChange(e)}
+                    required
+                />
+            </div>
+            <div className='form-group'>
+                <input
+                    className='form-control'
+                    type='number'
+                    placeholder="מספר רישוי"
+                    name='license_number'
+                    value={editCar.license_number}
+                    onChange={e => editCarChange(e)}
+                    required
+                />
+            </div>
+            <div className='form-group'>
+                תוקף רישוי
+                <input
+                    className='form-control'
+                    type='date'
+                    placeholder="תוקף רישוי"
+                    name='license_validity'
+                    value={editCar.license_validity}
+                    onChange={e => editCarChange(e)}
+                    required
+                />
+            </div>
+            <div className='form-group'>
+                תוקף ביטוח
+                <input
+                    className='form-control'
+                    type='date'
+                    placeholder="תוקף ביטוח"
+                    name='insurance_validity'
+                    value={editCar.insurance_validity}
+                    onChange={e => editCarChange(e)}
+                    required
+                />
+            </div>
+            <div className='form-group'>
+                <input
+                    className='form-control'
+                    type='number'
+                    placeholder="ביטוח עד גיל"
+                    name='insurance_up_to_age'
+                    value={editCar.insurance_up_to_age}
+                    min='18'
+                    max='100'
+                    onChange={e => editCarChange(e)}
+                />
+            </div>
+            <div className='form-group'>
+                <input
+                    className='form-control'
+                    type='text'
+                    placeholder="תיאור הרכב/ הערות"
+                    name='description'
+                    value={editCar.description}
+                    onChange={e => editCarChange(e)}
+                />
+            </div>
+            תמונת רכב
+            <div className='form-group'>
+
+                <input className='form-group'
+                       type = 'file'
+                       onChange={e => carImageHandler(e)}
+                />
+            </div>
+            <div className='text-danger'>הרכב פעיל? (שים לב: סימון של רכב כלא פעיל מוריד אותו מהמערכת)</div>
+            <input
+                type='checkbox'
+                placeholder="הרכב פעיל"
+                name='is_working'
+                value={editCar.is_working}
+                defaultChecked
+                onChange={e => editCarCheckChange(e)}
+            />
+            <br/>
+            <button className='btn btn-primary' type='submit'>עדכן את פרטי הרכב</button>
+        </form>
+        )
+    }
+
     function getImgUrl(image, instance) {
 
         if (image === null) {
             return process.env.REACT_APP_API_URL+'/media/defaultpictuers/default_'+instance+'_pic.png';
         }
         return image;
+    }
+
+    function showCar(car){
+        return(
+            <div className="row ">
+                <div className='col-5'>
+                    <p className='lead'>מספר רישוי: {car.license_number}</p>
+                    <p className='lead'>תוקף רישוי: {car.license_validity} </p>
+                    <p className='lead'>תוקף ביטוח: {car.insurance_validity}</p>
+                    <p className='lead'>ביטוח עד גיל: {car.insurance_up_to_age}</p>
+                    <p className='lead'>תיאור הרכב: {car.description}</p>
+                    <img src={process.env.REACT_APP_API_URL+"/media/defaultpictuers/edit.png"} height={20} width={20} style={{cursor: "pointer"}}
+                         onClick={() => {setEditCar(car); setShowForm(true)}}/>
+
+                </div>
+                <div className='col-5'>
+                    <img src={getImgUrl(car.image, "car")} height={150} width={150}></img>
+                </div>
+            </div>
+        )
     }
 
     function loadCars(){
@@ -120,21 +305,7 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
 
                 <div id={"collapse"+car.id} className="collapse" aria-labelledby={"heading"+car.id} data-parent="#accordion">
                     <div className="card-body">
-                        <div className="row ">
-                            <div className='col-5'>
-                                <p className='lead'>מספר רישוי: {car.license_number}</p>
-                                <p className='lead'>תוקף רישוי: {car.license_validity} </p>
-                                <p className='lead'>תוקף ביטוח: {car.insurance_validity}</p>
-                                <p className='lead'>ביטוח עד גיל: {car.insurance_up_to_age}</p>
-                                <p className='lead'>תיאור הרכב: {car.description}</p>
-                    {/*<img src={process.env.REACT_APP_API_URL+"/media/defaultpictuers/edit.png"} height={20} width={20} style={{cursor: "pointer"}}*/}
-                    {/*     onClick={console.log("e")}/>*/}
-
-                            </div>
-                            <div className='col-5'>
-                                <img src={getImgUrl(car.image, "car")} height={150} width={150}></img>
-                            </div>
-                        </div>
+                        {showForm && car.id === editCar.id? carForm() : showCar(car)}
                     </div>
                 </div>
             </div>

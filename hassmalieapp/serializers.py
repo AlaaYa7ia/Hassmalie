@@ -77,11 +77,11 @@ class ReportCreateSerializer(serializers.ModelSerializer):
 
 
 class ProjectFileCreateSerializer(serializers.ModelSerializer):
-    file = serializers.FileField(max_length=None, use_url=True, required=True)
+    file = serializers.FileField(max_length=None, use_url=True, required=False)
 
     class Meta:
         model = ProjectFile
-        fields = ('id', 'my_business', 'project_id', 'category', 'file', 'description')
+        fields = ('id', 'my_business', 'project_id', 'category', 'file','deleted', 'description')
 
 
 class BidCreateSerializer(serializers.ModelSerializer):
@@ -89,7 +89,7 @@ class BidCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Bid
-        fields = ('id', 'my_business', 'project_id', 'photo')
+        fields = ('id', 'my_business', 'project_id','deleted', 'photo')
 
 
 class SymbolCreateSerializer(serializers.ModelSerializer):
