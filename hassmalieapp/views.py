@@ -87,7 +87,7 @@ class BidTableView(viewsets.ModelViewSet):
     serializer_class = BidTableCreateSerializer
     queryset = BidTable.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['id', 'my_business', 'bid_id', 'price','type','count']
+    filterset_fields = ['id', 'my_business', 'bid_id', 'price','type','count','version']
 
 
 class LabelView(viewsets.ModelViewSet):

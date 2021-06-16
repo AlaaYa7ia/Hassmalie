@@ -104,7 +104,7 @@ class BidTableCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BidTable
-        fields = ('id','my_business', 'bid_id','type','count','price','total_item_price')
+        fields = ('id','my_business', 'bid_id','type','count','price','total_item_price','version')
 
 
 class LabelCreateSerializer(serializers.ModelSerializer):
@@ -126,5 +126,5 @@ class PaymentCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Payment
-        fields = ('my_business', 'bid_id', 'total', 'payment_date', 'pay_type', 'pay_condition','contact_mail', 'payer_name')
+        fields = ('my_business', 'bid_id', 'total', 'payment_date', 'pay_type', 'pay_condition','contact_mail', 'payer_name', 'version')
 

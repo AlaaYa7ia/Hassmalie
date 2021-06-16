@@ -218,12 +218,13 @@ class Symbol(models.Model):
 class BidTable(models.Model):
     my_business = models.ForeignKey(MyBusiness, on_delete=models.CASCADE)
     bid_id = models.ForeignKey(Bid, on_delete=models.PROTECT)
+    version = models.CharField(max_length=255)
     type = models.CharField(max_length=255)
     count = models.IntegerField()
     price = models.FloatField()
     total_item_price = models.FloatField()
 
-    REQUIRED_FIELDS = ['my_business', 'bid_id', 'type', 'count', 'price', 'total_item_price']
+    REQUIRED_FIELDS = ['my_business', 'bid_id', 'type', 'count', 'price', 'total_item_price','version']
 
     def __str__(self):
         return str(self.type)
@@ -233,10 +234,10 @@ class Label(models.Model):
     my_business = models.ForeignKey(MyBusiness, on_delete=models.CASCADE)
     bid_id = models.ForeignKey(Bid, on_delete=models.PROTECT)
     version = models.CharField(max_length=255)
-    x = models.IntegerField()
-    y = models.IntegerField()
-    w = models.IntegerField()
-    h = models.IntegerField()
+    x = models.FloatField()
+    y = models.FloatField()
+    w = models.FloatField()
+    h = models.FloatField()
     annotation = models.CharField(max_length=255)
     REQUIRED_FIELDS = ['my_business', 'bid_id', 'x', 'y', 'w', 'h', 'annotation']
 
@@ -269,13 +270,13 @@ class Payment(models.Model):
     my_business = models.ForeignKey(MyBusiness, on_delete=models.CASCADE)
     bid_id = models.ForeignKey(Bid, on_delete=models.PROTECT)
     version = models.CharField(max_length=255)
-    total = models.IntegerField()
+    total = models.FloatField()
     payment_date = models.DateField()
     pay_type = models.CharField(max_length=255)
     contact_mail = models.CharField(max_length=255)
     payer_name = models.CharField(max_length=255)
     pay_condition = models.CharField(max_length=255)
-    REQUIRED_FIELDS = ['my_business', 'bid_id', 'total', 'payment_date', 'pay_type', 'pay_condition', 'payer_name']
+    REQUIRED_FIELDS = ['my_business', 'bid_id', 'total', 'payment_date', 'pay_type', 'pay_condition', 'payer_name','version']
 
     def __str__(self):
         return str(self.bid_id)
