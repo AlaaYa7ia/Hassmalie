@@ -105,6 +105,7 @@ class Worker(models.Model):
 class Car(models.Model):
     # many to one relation
     my_business = models.ForeignKey(MyBusiness, on_delete=models.CASCADE)
+    driver_email = models.TextField(null=True, default="")
     company_name = models.TextField(null=True, default="")
     manufacture_year = models.IntegerField(null=True, default=None)
     license_number = models.IntegerField(default=None, unique=True)
@@ -182,6 +183,7 @@ class ProjectFile(models.Model):
             ('Pay', 'Payments'),
     )
     category = models.CharField(max_length=3, choices=FILE_CATEGORY, default='I')
+    name = models.TextField(default="")
     file = models.FileField(upload_to='projects/projectsfiles/')
     deleted = models.BooleanField(default=False)
     description = models.TextField(default="")

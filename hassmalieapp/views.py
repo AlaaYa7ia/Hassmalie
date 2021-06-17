@@ -22,7 +22,7 @@ class CarView(viewsets.ModelViewSet):
     queryset = Car.objects.all()
     serializer_class = CarCreateSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['id', 'my_business', 'license_number', 'manufacture_year', 'company_name', 'is_working']
+    filterset_fields = ['id', 'my_business','driver_email', 'license_number', 'manufacture_year', 'company_name', 'is_working']
 
 
 class MyBusinessView(viewsets.ModelViewSet):
@@ -66,7 +66,7 @@ class ProjectFileView(viewsets.ModelViewSet):
     serializer_class = ProjectFileCreateSerializer
     queryset = ProjectFile.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['id', 'my_business','project_id', 'category', 'deleted']
+    filterset_fields = ['id', 'my_business','name','project_id', 'category', 'deleted']
 
 
 class BidView(viewsets.ModelViewSet):
@@ -108,4 +108,5 @@ class PaymentView(viewsets.ModelViewSet):
     serializer_class = PaymentCreateSerializer
     queryset = Payment.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = [ 'my_business', 'bid_id','payment_date', 'payer_name']
+    filterset_fields = ['my_business', 'bid_id', 'total', 'payment_date', 'pay_type', 'pay_condition','contact_mail',
+                        'payer_name', 'version']
