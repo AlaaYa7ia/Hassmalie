@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import "ka-table/style.css";
 import {Annotator} from "image-labeler-react";
 import { ITableProps, kaReducer, Table } from 'ka-table';
-import {ActionType, DataType, EditingMode, FilteringMode, SortingMode} from 'ka-table/enums';
+import {ActionType, DataType, EditingMode, FilteringMode, SortDirection, SortingMode} from 'ka-table/enums';
 import { DispatchFunc } from 'ka-table/types';
 import 'jspdf-autotable';
 import { getValueByColumn } from 'ka-table/Utils/DataUtils';
@@ -37,7 +37,7 @@ const AddButton = ({
     return (
         <div className='plus-cell-button'>
             <img
-                src='https://komarovalexander.github.io/ka-table/static/icons/plus.svg'
+                src="https://komarovalexander.github.io/ka-table/static/icons/plus.svg"
                 alt='Add New Row'
                 title='Add New Row'
                 onClick={() => {
@@ -79,13 +79,36 @@ const EditButton = ({
 
 
 
-const SaveButton = ({dispatch, rowKeyValue}) => {
+
+const SaveButton: React.FC<ICellEditorProps> = ({ dispatch }) => {
     const saveNewData = () => {
         const rowKeyValue = generateNewId();
-        dispatch(saveNewRow(rowKeyValue, {
-            validate: true
-        }));
+        dispatch(
+            saveNewRow(rowKeyValue, {
+                validate: true
+            })
+        );
     };
+    return (
+        <div className="buttons">
+            <img
+                src="https://komarovalexander.github.io/ka-table/static/icons/save.svg"
+                className="save-cell-button"
+                alt="Save"
+                title="Save"
+                onClick={saveNewData}
+            />
+            <img
+                src="https://komarovalexander.github.io/ka-table/static/icons/close.svg"
+                className="close-cell-button"
+                alt="Cancel"
+                title="Cancel"
+                onClick={() => dispatch(hideNewRow())}
+            />
+        </div>
+    );
+};
+/*
     return (
         <div className='buttons'
              style={{display: 'flex', justifyContent: 'space-between'}} >
@@ -124,22 +147,21 @@ const SaveButton = ({dispatch, rowKeyValue}) => {
         </div >
     );
 };
+*/
 
 const tablePropsInit: ITableProps = {
     columns: [
         { key: ':delete', style: { width: 60, textAlign: 'center' } },
-        { key: 'total_item_price', title: 'מחיר כולל', dataType: DataType.Number , style: { width: 160, textAlign: 'center' } },
-        { key: 'count', title: 'כמות', dataType: DataType.Number , style: { width: 160, textAlign: 'center' } },
-        { key: 'price', title: 'מחיר  ליחידה', dataType: DataType.Number , style: { width: 160, textAlign: 'center' } },
-        { key: 'type', title: 'סוג', dataType: DataType.String , style: { width: 160, textAlign: 'center' } },
-        { key: 'editColumn', style: { width: 100, textAlign: 'center' } },
-        { key: 'addColumn',style: {width: 100} },
+        { key: 'total_item_price', title: 'מחיר כולל', dataType: DataType.Number , style: { width: 160, textAlign: 'center' },  sortDirection: SortDirection.Ascend},
+        { key: 'count', title: 'כמות', dataType: DataType.Number , style: { width: 160, textAlign: 'center' }, sortDirection: SortDirection.Ascend},
+        { key: 'price', title: 'מחיר  ליחידה', dataType: DataType.Number , style: { width: 160, textAlign: 'center' },  sortDirection: SortDirection.Ascend},
+        { key: 'type', title: 'סוג', dataType: DataType.String , style: { width: 160, textAlign: 'center' }, sortDirection: SortDirection.Ascend},
+        { key: 'addColumn',style: {width: 60} },
     ],
     virtualScrolling: {
         enabled: true
     },
     singleAction: loadData(),
-    editingMode: EditingMode.Cell,
     rowKeyField: 'id',
     sortingMode: SortingMode.Single,
 };
@@ -153,19 +175,18 @@ const dataArray2 = [
 const tablePropsInit2: ITableProps = {
     columns: [
         { key: ':delete', style: { width: 60, textAlign: 'center' } },
-        { key: 'column1', title: 'שולם על ידי', dataType: DataType.String , style: { width: 100, textAlign: 'center' } },
-        { key: 'column2', title: 'סכום', dataType: DataType.String , style: { width: 100, textAlign: 'center' } },
-        { key: 'column3', title: 'תאריך', dataType: DataType.Date, style: { width: 100, textAlign: 'center' } },
-        { key: 'column4', title: 'סוג תשלום', dataType: DataType.String , style: { width: 100, textAlign: 'center' } },
-        { key: 'column6', title: 'שליח הודעה', dataType: DataType.String , style: { width: 100, textAlign: 'center' } },
-        { key: 'column5', title: 'תנאי תשלום', dataType: DataType.String , style: { width: 100, textAlign: 'center' } },
-        { key: 'editColumn', style: { width: 100, textAlign: 'center' } },
+        { key: 'payer_name', title: 'שולם על ידי', dataType: DataType.String , style: { width: 100, textAlign: 'center' } ,  sortDirection: SortDirection.Ascend},
+        { key: 'total', title: 'סכום', dataType: DataType.String , style: { width: 100, textAlign: 'center' },  sortDirection: SortDirection.Ascend},
+        { key: 'payment_date', title: 'תאריך', dataType: DataType.Date, style: { width: 100, textAlign: 'center' } ,  sortDirection: SortDirection.Ascend},
+        { key: 'pay_type', title: 'סוג תשלום', dataType: DataType.String , style: { width: 100, textAlign: 'center' },  sortDirection: SortDirection.Ascend},
+        { key: 'contact_mail', title: 'שליח הודעה', dataType: DataType.String , style: { width: 100, textAlign: 'center' },  sortDirection: SortDirection.Ascend},
+        { key: 'pay_condition', title: 'תנאי תשלום', dataType: DataType.String , style: { width: 100, textAlign: 'center' } ,  sortDirection: SortDirection.Ascend},
         { key: 'addColumn',style: {width: 100} },
     ],
-    data: dataArray2,
     virtualScrolling: {
         enabled: true
     },
+    singleAction: loadData(),
     rowKeyField: 'id',
     sortingMode: SortingMode.Single,
 };
@@ -205,6 +226,7 @@ symbolList['שקע כפול מוגן מים רגיל']=symbolData('שקע כפו
 symbolList['שקע יחיד מוגן מים רגיל']=symbolData('שקע יחיד מוגן מים רגיל',6,0)
 
 var fetchedData;
+var fetchedData2;
 var fetched=false;
 
 
@@ -212,6 +234,7 @@ const TableBid = () => {
 
     const [BidData, SetBidData] = useState("");
     const [tableProps, changeTableProps] = useState(tablePropsInit);
+
     const dispatch: DispatchFunc = async action => {
         changeTableProps((prevState: ITableProps) => kaReducer(prevState, action));
 
@@ -229,10 +252,22 @@ const TableBid = () => {
     };
 
     const [tableProps2, changeTableProps2] = useState(tablePropsInit2);
-    const dispatch2= (action) => {
-        changeTableProps2((prevState) => kaReducer(prevState, action));
+    const dispatch2: DispatchFunc = async action => {
+        changeTableProps2((prevState: ITableProps) => kaReducer(prevState, action));
+
+        if (action.type === ActionType.LoadData) {
+            const response = await fetch(
+                "http://localhost:8000/api/payments/"
+            );
+            fetchedData2 = await response.json();
+            console.log(fetchedData2)
+            dispatch2(updateData(fetchedData2));
+            // fetched=true
+
+        }
 
     };
+
 
     function fetchPrice() {
 
@@ -281,14 +316,14 @@ const TableBid = () => {
              };*/
 
 
-    const buildArr= () => {
+/*    const buildArr= () => {
         var arr=[]
         for(let key in symbolList){
             arr.push(symbolList[key].getName());
 
         }
         return arr
-    }
+    }*/
 
     const exportClick = orientation => {
         const doc = new jsPDF(orientation);
@@ -355,69 +390,71 @@ const TableBid = () => {
                 </div>
 
             </div>
-            <div className="remote-data-demo">
-                <Table
-                    {...tableProps}
-                    childComponents={{
-                        cellText: {
-                            content: (props) => {
-                                if (props.column.key === 'editColumn')
-                                    return <EditButton {...props}/>
-
-                                switch (props.column.key){
-                                    case ':delete': return <DeleteRow {...props}/>;
-                                }
+            <div>
+            <Table
+                {...tableProps}
+                childComponents={{
+                    cellEditor: {
+                        content: props => {
+                            if (props.column.key === "addColumn") {
+                                return <SaveButton {...props} />;
                             }
-                        },
-                        cellEditor: {
-                            content: (props) => {
-                                if (props.column.key === 'editColumn'){
-                                    return <SaveButton {...props}/>
-                                }
-                            }
-                        },
-                        headCell: {
-                            content: (props) => {
-                                if (props.column.key === 'addColumn') {
-                                    return <AddButton {...props}/>;
-                                }
+                            switch (props.column.key){
+                                case ':delete': return <DeleteRow {...props}/>;break;
                             }
                         }
-                    }}
-                    dispatch={dispatch}
-                />
-                <h6 class="p-3 mb-2 bg-light ">{fetchPrice()}</h6>
-            </div>
+                    },
+                    cellText: {
+                        content: (props) => {
 
+                            switch (props.column.key){
+                                case ':delete': return <DeleteRow {...props}/>;break;
+                            }
+                        }
+                    },
+                    headCell: {
+                        content: props => {
+                            if (props.column.key === "addColumn") {
+                                return <AddButton {...props} />;
+                            }
+
+                        }
+                    }
+                }}
+                dispatch={dispatch}
+            />
+            <h6 class="p-3 mb-2 bg-light ">{fetchPrice()}</h6>
+        </div>
             <h2 className="text-center text-warning">תשלומים </h2>
 
             <div className="remote-data">
                 <Table
                     {...tableProps2}
                     childComponents={{
-                        cellText: {
-                            content: (props) => {
-                                if (props.column.key === 'editColumn')
-                                    return <EditButton {...props}/>
-
-                                switch (props.column.key) {
-                                    case ':delete':
-                                        return <DeleteRow {...props}/>;
+                        cellEditor: {
+                            content: props => {
+                                if (props.column.key === "addColumn") {
+                                    return <SaveButton {...props} />;
+                                }
+                                switch (props.column.key){
+                                    case ':delete': return <DeleteRow {...props}/>;break;
                                 }
                             }
                         },
-                        cellEditor: {
+                        cellText: {
                             content: (props) => {
-                                if (props.column.key === 'editColumn') {
-                                    return <SaveButton {...props}/>
+
+                                switch (props.column.key){
+                                    case ':delete': return <DeleteRow {...props}/>;break;
                                 }
                             }
                         },
                         headCell: {
-                            content: (props) => {
-                                if (props.column.key === 'addColumn') {
-                                    return <AddButton {...props}/>;
+                            content: props => {
+                                if (props.column.key === "addColumn") {
+                                    return <AddButton {...props} />;
                                 }
+
                             }
                         }
                     }}
