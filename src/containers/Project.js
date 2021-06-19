@@ -354,7 +354,7 @@ const Project = ({match}) => {
                 </div>
                 <div className='col-4'></div>
                 <div className="text-container col-1 mt-5">
-                    <Link to={"/file-repository/"+myBusiness.my_business+"/"+project.id}>
+                    <Link to={"/file-repository/"+project.id+"/"+myBusiness.my_business}>
                         <img className='img-link'
                              src={process.env.REACT_APP_API_URL + '/media/defaultpictuers/icon5.png'} height={70}
                              width={70}/>
@@ -362,7 +362,7 @@ const Project = ({match}) => {
                     </Link>
                 </div>
                 <div className="text-container col-1 mt-5">
-                    <Link to={"/bid/"+myBusiness.my_business+"/"+project.id} >
+                    <Link to={"/bid/"+project.id+"/"+myBusiness.my_business} >
                         <img className='img-link'
                              src={process.env.REACT_APP_API_URL + '/media/defaultpictuers/icon6.png'} height={70}
                              width={70}/>

@@ -1,10 +1,10 @@
 import React, {useEffect,useState} from 'react';
 
-import "react-list-editable/lib/react-list-editable.css";
+// import "react-list-editable/lib/react-list-editable.css";
 import {Link} from "react-router-dom";
 import axios from "axios";
 
-let symbolData;
+//let symbolData;
 
 /*
 function symbolData(symbolName,price,symbolPic){
@@ -43,11 +43,13 @@ symbolList['שקע יחיד מוגן מים רגיל']=symbolData('שקע יחי
 
 const Bid = ({match})  => {
 
+    const [symbols, setSymbols] = useState([])
     const [projectId, setProjectId] = useState("")
     const [newSymbol, setNewSymbol] = useState("")
     const [myBusiness, setMyBusiness] = useState({my_business: null});
 //   const [imgUploaded,setImgUploaded] = useState(false);
     const [newMap, setNewMap] = useState(null);
+    const [show,setShow] = useState(false);
 
     let fileSelectedHandler = e => {
         setNewSymbol({...newSymbol, [e.target.name]: e.target.files[0] })
@@ -57,6 +59,12 @@ const Bid = ({match})  => {
         setNewSymbol({...newSymbol, [e.target.name]: e.target.value })
     }
 
+    const get_sympols = async () =>{
+        const files_Res = await axios.get(process.env.REACT_APP_API_URL+'/api/symbols/?project_id='+projectId+
+            '&my_business='+myBusiness.my_business);
+        setSymbols(files_Res.data);
+    }
+
 
     const mapSubmit = e => {
         e.preventDefault();
@@ -64,25 +72,21 @@ const Bid = ({match})  => {
         const formData = new FormData();
         try{formData.append("photo", newSymbol.photo,newSymbol.photo.name);
         } catch(err){console.log("didn't change photo.")}
-        console.log(formData.toString());
 /*
         formData.append("id",projectId);
 */
-        formData.append("my_business",1/*myBusiness.my_business*/);
+        formData.append("my_business",myBusiness.my_business);
         formData.append("type",newSymbol.type);
         formData.append("price",newSymbol.price);
 
-        console.log(formData.data);
-
+        setNewSymbol("");
         axios({
             method: 'post',
             url: process.env.REACT_APP_API_URL+'/api/symbols/',
             data: formData,
         })
             .then((dataRes) => {
-                console.log("symbol data", dataRes.data)
-                setNewSymbol(dataRes.data)
-               // .then(() => setImgUploaded(true));
+                get_sympols().then(setShow(true))
               //  document.getElementById("buttonToHide").style.display="none"
             }).catch(err=>{ console.log("err", err.response)})
 
@@ -93,6 +97,11 @@ const Bid = ({match})  => {
         setMyBusiness({my_business: match.params.my_business})
         setProjectId(match.params.id)
     },[])
+
+    useEffect(()=>{
+        get_sympols()
+    },[myBusiness, projectId])
+
 // Click on a close button to hide the current list item
     var close = document.getElementsByClassName("close");
     var i;
@@ -104,7 +113,44 @@ const Bid = ({match})  => {
          //   const res = await axios.delete('/api/symbols/', { data: { type: div } });
         }
     }
-    let fetchedData=false
+    //let fetchedData=false
+
+    // function newElement() {
+    //
+    //
+    //     if (!fetchedData) {
+    //         if ( document.getElementById("myInput").value === ''|| document.getElementById("priceInput").value==='')
+    //             alert("You must write something!");
+    //         else {
+    //             var inputValue =document.getElementById("myInput").value + "    [₪ " + document.getElementById("priceInput").value + "]    "
+    //             console.log(">>>>>>>>>>>>>>>>>>")
+    //             console.log(newSymbol.photo)
+    //             console.log(symbolData.data)
+    //             addElement(inputValue,newSymbol.photo);
+    //         }
+    //     }
+    //     else{
+    //         console.log(symbolData.data)
+    //         for (var i in symbolData.data){
+    //             addElement(symbolData.data[i].type+"    [₪ "+(symbolData.data[i].price)+"]    ",symbolData.data[i].photo/*"https://png.pngtree.com/png-vector/20190330/ourmid/pngtree-img-file-document-icon-png-image_897560.jpg"*/)
+    //         }
+    //         fetchedData=false
+    //
+    //     }
+    //
+    // }
+    // const showList = async () => {
+    //     symbolData = await axios.get('/api/symbols/');
+    //     console.log(symbolData);
+    //     fetchedData = true
+    //
+    //     newElement()
+    //
+    //     const electricObject = document.getElementById("addThing")
+    //     electricObject.style.display = "block"
+    //
+    // }
+
 
 // Create a new list item when clicking on the "Add" button
     function addElement(inputValue,imgSRC) {
@@ -112,12 +158,12 @@ const Bid = ({match})  => {
         li.setAttribute("class","row list-group-item")
         var t = document.createElement("p");
         t.appendChild( document.createTextNode(inputValue));
-/*
-        t.setAttribute("class","col-7")
-*/
+        /*
+                t.setAttribute("class","col-7")
+        */
         var img= document.createElement("img")
         img.src=imgSRC
-       console.log(newSymbol.photo)
+        console.log(newSymbol.photo)
         img.setAttribute("class","col-3")
         var span = document.createElement("SPAN");
         var txt = document.createTextNode("\u00D7");
@@ -141,38 +187,21 @@ const Bid = ({match})  => {
             }
         }
     }
-    function newElement() {
+
+    function showList(){
+        try {
+        return(
+            symbols.map(sympol => (
+            <div>
+                <li className='row list-group-item'> <p>{sympol.type}    [₪ {sympol.price}] </p>
+                <img className='col-3' src={sympol.photo}/></li>
 
 
-        if (!fetchedData) {
-            if ( document.getElementById("myInput").value === ''|| document.getElementById("priceInput").value==='')
-                alert("You must write something!");
-            else {
-                var inputValue =document.getElementById("myInput").value + "    [₪ " + document.getElementById("priceInput").value + "]    "
-                addElement(inputValue,newSymbol.photo.src);
-            }
-        }
-        else{
-            for (var i in symbolData.data){
-                addElement(symbolData.data[i].type+"    [₪ "+(symbolData.data[i].price)+"]    ",symbolData.data[i].photo/*"https://png.pngtree.com/png-vector/20190330/ourmid/pngtree-img-file-document-icon-png-image_897560.jpg"*/)
-            }
-            fetchedData=false
-
-        }
-
+            </div>
+            )
+        ))}
+        catch (e){}
     }
-    const showList = async () => {
-        symbolData = await axios.get('/api/symbols/');
-        console.log(symbolData);
-        fetchedData = true
-
-        newElement()
-
-        const electricObject = document.getElementById("addThing")
-        electricObject.style.display = "block"
-
-    }
-
 
 
     return (
@@ -183,42 +212,45 @@ const Bid = ({match})  => {
         </head>
 
         <body class="container container-fluid " role="alert" dir="rtl">
-
         <h1 class="text-center p-3 mb-2 bg-warning text-dark">הצעת מחיר</h1>
         <div className="jumbotron mt-5 ">
 
             <div className="row" >
                 <div className="col-12 col-md-4" >
-                    <button onClick={showList} id="addThing-btn"
+                    <button onClick={event => setShow(!show)} id="addThing-btn"
                             className="btn btn-dark d-flex justify-content-center">עדכן רשימת פריטים
                     </button>
-                    <div id="addThing" style={{display: "none"}}>
+                    {show &&
+                    <div id="addThing" >
                         <ul id="myUL" dir="rtl" >
+                            { showList()}
                         </ul>
                         <form dir="rtl" onSubmit={e => mapSubmit(e)}>
                         <div id="myDIV">
                             <div className="row">
-                                <button onClick={newElement} className="addBtn btn btn-dark"
+                                <button className="addBtn btn btn-dark"//onClick={newElement}
                                         id="imgUpload" type="submit">הוסף</button>
                             </div>
 
                             <div className="row">
                                 <input type="text" id="myInput" placeholder="שם פריט" className="col-5"
-                                       name="type"
-                                       onChange={e => newSymbolHandler(e)}></input>
+                                        name="type"
+                                        value={newSymbol.type}
+                                        onChange={e => newSymbolHandler(e)}/>
                                 <input type="number" id="priceInput" placeholder="מחיר הפריט"
-                                       className="col-3"
-                                       name="price"
-                                       onChange={e => newSymbolHandler(e)}></input>
+                                        className="col-3"
+                                        name="price"
+                                       value={newSymbol.price}
+                                        onChange={e => newSymbolHandler(e)}/>
                                 <input className="col-4 form-group"
-                                       type = 'file'
-                                       name='photo'
-                                       onChange={e => fileSelectedHandler(e)}></input>
+                                        type = 'file'
+                                        name='photo'
+                                        onChange={e => fileSelectedHandler(e)}/>
                             </div>
 
                         </div>
                         </form>
-                    </div>
+                    </div>}
                 </div>
                 <div className='col-12 col-md-4'>
                     <button className='lead'>
