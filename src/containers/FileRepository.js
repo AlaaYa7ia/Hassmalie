@@ -33,6 +33,7 @@ const FileRepository = ({match}) => {
         }
         formData.append("my_business", myBusiness);
         formData.append("project_id", projectId);
+        formData.append("name", newFile.name);
         formData.append("category", newFile.category);
         formData.append("deleted", false);
         formData.append("description", newFile.description);
@@ -156,6 +157,7 @@ const FileRepository = ({match}) => {
                             <img src={file.file} style={{width:'100%'}}/> :
                             <img src={process.env.REACT_APP_API_URL + '/media/defaultpictuers/icon5.png'}
                                  style={{width:'100%'}}/>}
+                            <h3>{file.name}</h3>
                             <h4>{file.description}</h4>
 
                     </div>
@@ -212,6 +214,14 @@ const FileRepository = ({match}) => {
                         <option value="Pay">תשלומים</option>
                     </select>
                 </div>
+                <input
+                    className='form-control col-2'
+                    type='text'
+                    placeholder= "שם קובץ"
+                    name='name'
+                    value={newFile.name}
+                    onChange={e => newFileChange(e)}
+                />
                 <input className='form-group col-3'
                        type = 'file'
                        name='file'
@@ -219,7 +229,7 @@ const FileRepository = ({match}) => {
                        required
                 />
                 <input
-                    className='form-control col-5'
+                    className='form-control col-4'
                     type='text'
                     placeholder= "תיאור"
                     name='description'

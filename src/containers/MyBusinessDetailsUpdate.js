@@ -21,6 +21,12 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
 
     const [managerFlag, setManagerFlag] = useState(false);
     const [directorFlag, setDirectorFlag] = useState(false);
+    const [workers, setWorkers] = useState([]);
+
+    const get_workers = async () =>{
+        const projects_Res = await axios.get('/api/workers/?my_business=' + business.manager +'&is_active=true')
+        setWorkers(projects_Res.data);
+    }
 
     const get_user = async ()=>{
         const user_Res = await get_user_data();
@@ -100,9 +106,9 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
             }else{
                 get_other_user('M')
             }
+            get_workers();
 
         }
-        // get_cars()
     },[business])
 
     const newMangerPhoneChange = e =>{
@@ -172,6 +178,9 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
         }).catch(err=>{ console.log("err", err.response)})
         //if changed title or email?
     };
+
+    const newCarCheckChange = e => {
+        setNewCar({ ...newCar, [e.target.name]: e.target.checked})};
 
 
     const directorSubmit = e => {
@@ -256,7 +265,8 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
         formData.append('my_business', business.manager);
          formData.append('company_name', newCar.company_name)
          formData.append('manufacture_year', newCar.manufacture_year)
-        formData.append('license_number', newCar.license_number)
+         formData.append('driver_email', newCar.driver_email)
+         formData.append('license_number', newCar.license_number)
         formData.append('license_validity', newCar.license_validity)
         formData.append('insurance_validity', newCar.insurance_validity)
         formData.append('insurance_up_to_age', newCar.insurance_up_to_age)
@@ -280,6 +290,16 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
         }).catch(err=>{ console.log("err", err.response)})
 
      }
+
+    function getWorkersNames(arr){
+        try {
+            return(
+                arr.map(worker => (
+                    <option value={worker.email}>{worker.first_name+" "+ worker.last_name}</option>
+                ))
+            )
+        } catch(err){}
+    }
 
     return (
 
@@ -531,6 +551,21 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
                         required
                     />
                 </div>
+                <div className='form-group dropdown'>
+                    <select
+                        className='form-control right-text'
+                        placeholder='שם נהג*'
+                        name='driver_email'
+                        value={newCar.driver_email}
+                        onChange={e => newCarChange(e)}
+                        required
+                    >
+                        <option>שם נהג*</option>
+                        <option value={manager.email}>{manager.first_name+" "+ manager.last_name+"-המנהל"}</option>
+                        <option value={director.email}>{director.first_name+" "+ director.last_name+"-הסגן מנהל"}</option>
+                        {getWorkersNames(workers)}
+                    </select>
+                </div>
                 <div className='form-group'>
                     <input
                         className='form-control'
@@ -588,6 +623,16 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
                         onChange={e => newCarChange(e)}
                     />
                 </div>
+                <div className='text-danger'>הרכב פעיל? (שים לב: סימון של רכב כלא פעיל מוריד אותו מהמערכת)</div>
+                <input
+                    type='checkbox'
+                    placeholder="הרכב פעיל"
+                    name='is_working'
+                    value={newCar.is_working}
+                    defaultChecked
+                    onChange={e => newCarCheckChange(e)}
+                />
+                <br/>
                 תמונת רכב
                 <div className='form-group'>
 

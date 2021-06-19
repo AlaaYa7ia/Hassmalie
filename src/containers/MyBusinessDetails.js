@@ -14,6 +14,14 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
     const [directorFlag, setDirectorFlag] = useState(false);
     const [editCar, setEditCar] = useState("");
     const [showForm, setShowForm] = useState(false);
+    const [workers, setWorkers] = useState([]);
+
+
+    const get_workers = async () =>{
+        const projects_Res = await axios.get('/api/workers/?my_business=' + business.manager +'&is_active=true')
+        setWorkers(projects_Res.data);
+    }
+
 
     const get_user = async ()=>{
         const user_Res = await get_user_data();
@@ -69,6 +77,7 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
                 setCars(dataRes.data)
             })
     }
+
     useEffect(()=>{
         get_user()
     },[])
@@ -92,9 +101,9 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
             }else{
                 get_other_user('M')
             }
-
+            get_cars()
+            get_workers()
         }
-        get_cars()
     },[business])
 
     const editCarChange = e => {setEditCar({ ...editCar, [e.target.name]: e.target.value })};
@@ -127,6 +136,7 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
         formData.append('my_business', business.manager);
         formData.append('company_name', editCar.company_name)
         formData.append('manufacture_year', editCar.manufacture_year)
+        formData.append('driver_email', editCar.driver_email)
         formData.append('license_number', editCar.license_number)
         formData.append('license_validity', editCar.license_validity)
         formData.append('insurance_validity', editCar.insurance_validity)
@@ -155,6 +165,16 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
 
     }
 
+    function getWorkersNames(arr){
+        try {
+            return(
+                arr.map(worker => (
+                    <option value={worker.email}>{worker.first_name+" "+ worker.last_name}</option>
+                ))
+            )
+        } catch(err){}
+    }
+
     function carForm(){
         return(
         <form dir='rtl' onSubmit={e => editCarSubmit(e)}>
@@ -179,6 +199,21 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
                     onChange={e => editCarChange(e)}
                     required
                 />
+            </div>
+            <div className='form-group dropdown'>
+                <select
+                    className='form-control right-text'
+                    placeholder='שם נהג*'
+                    name='driver_email'
+                    value={editCar.driver_email}
+                    onChange={e => editCarChange(e)}
+                    required
+                >
+                    <option>שם נהג*</option>
+                    <option value={manager.email}>{manager.first_name+" "+ manager.last_name+"-המנהל"}</option>
+                    <option value={director.email}>{director.first_name+" "+ director.last_name+"-הסגן מנהל"}</option>
+                    {getWorkersNames(workers)}
+                </select>
             </div>
             <div className='form-group'>
                 <input
@@ -269,9 +304,23 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
     }
 
     function showCar(car){
+        let driver="";
+        workers.forEach(w =>
+        {if(w.email === car.driver_email){
+            driver =w;
+        }});
+        if (driver ===""){
+            if(manager.email === car.driver_email){
+                driver = manager;
+            }
+            else if(director.email === car.driver_email){
+                driver = director;
+            }
+        }
         return(
             <div className="row ">
                 <div className='col-5'>
+                    <p className='lead'>נהג הרכב: {driver.first_name + " "+ driver.last_name}</p>
                     <p className='lead'>מספר רישוי: {car.license_number}</p>
                     <p className='lead'>תוקף רישוי: {car.license_validity} </p>
                     <p className='lead'>תוקף ביטוח: {car.insurance_validity}</p>

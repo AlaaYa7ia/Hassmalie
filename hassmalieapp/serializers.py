@@ -21,7 +21,7 @@ class CarCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Car
         fields = (
-            "id", "my_business",'company_name', 'manufacture_year', "license_number", "license_validity", "insurance_validity", "insurance_up_to_age",
+            "id", "my_business", 'driver_email','company_name', 'manufacture_year', "license_number", "license_validity", "insurance_validity", "insurance_up_to_age",
             "description", "image", 'is_working')
 
 
@@ -81,7 +81,7 @@ class ProjectFileCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProjectFile
-        fields = ('id', 'my_business', 'project_id', 'category', 'file','deleted', 'description')
+        fields = ('id', 'my_business', 'project_id', 'category','name', 'file','deleted', 'description')
 
 
 class BidCreateSerializer(serializers.ModelSerializer):
