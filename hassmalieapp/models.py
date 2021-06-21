@@ -105,7 +105,7 @@ class Worker(models.Model):
 # car model
 class Car(models.Model):
     # many to one relation
-
+    my_business = models.ForeignKey(MyBusiness, on_delete=models.CASCADE)
     driver_email = models.TextField()
     company_name = models.TextField(null=True, default="")
     manufacture_year = models.IntegerField(null=True, default=None)
