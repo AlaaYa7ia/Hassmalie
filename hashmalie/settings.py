@@ -109,20 +109,32 @@ WSGI_APPLICATION = 'hashmalie.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
+#
+# DATABASES = {
+#     'default': { #sqlite3
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+#     # 'default': {  # Mongo database
+#     #     'ENGINE': 'djongo',
+#     #     'NAME': 'hassmalieDB',
+#     #     # 'CLIENT': {
+#     #     #     'host': 'https://hassmalie.herokuapp.com/',
+#     #     # }
+#     # }
+# }
 
 DATABASES = {
-    'default': { #sqlite3
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': 'hash7777',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
-    # 'default': {  # Mongo database
-    #     'ENGINE': 'djongo',
-    #     'NAME': 'hassmalieDB',
-    #     # 'CLIENT': {
-    #     #     'host': 'https://hassmalie.herokuapp.com/',
-    #     # }
-    # }
 }
+
 
 # Email: hassmalie.project@gmail.com
 # App Password: egjfbrwuhyjndfef
@@ -246,4 +258,6 @@ AUTH_USER_MODEL = "hassmalieapp.UserAccount"
 
 
 CORS_ORIGIN_ALLOW_ALL = True
+
+
 
