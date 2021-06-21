@@ -110,11 +110,12 @@ WSGI_APPLICATION = 'hashmalie.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 #
-# DATABASES = {
-#     'default': { #sqlite3
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
+DATABASES = {
+    'default': { #sqlite3
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
 #     # 'default': {  # Mongo database
 #     #     'ENGINE': 'djongo',
 #     #     'NAME': 'hassmalieDB',
@@ -125,19 +126,6 @@ WSGI_APPLICATION = 'hashmalie.wsgi.application'
 # }
 
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 'hash7777',
-        # 'HOST': 'localhost',
-        # 'PORT': '5432',
-        'CLIENT': {
-            'host': 'https://hassmalie.herokuapp.com/',
-        }
-    }
-}
 import dj_database_url
 
 db_from_env = dj_database_url.config()
