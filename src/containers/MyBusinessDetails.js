@@ -23,6 +23,7 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
     }
 
 
+
     const get_user = async ()=>{
         const user_Res = await get_user_data();
         if(user_Res.title === 'M'){
@@ -77,7 +78,7 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
                 setCars(dataRes.data)
             })
     }
-
+    
     useEffect(()=>{
         get_user()
     },[])
