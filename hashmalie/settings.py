@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 import os
 from datetime import timedelta
 import django_heroku
-import dj_database_url
+
 
 #django_heroku.settings(locals())
 
@@ -124,16 +124,24 @@ WSGI_APPLICATION = 'hashmalie.wsgi.application'
 #     # }
 # }
 
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'postgres',
         'USER': 'postgres',
         'PASSWORD': 'hash7777',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        # 'HOST': 'localhost',
+        # 'PORT': '5432',
+        'CLIENT': {
+            'host': 'https://hassmalie.herokuapp.com/',
+        }
     }
 }
+import dj_database_url
+
+db_from_env = dj_database_url.config()
+DATABASES['default'].update(db_from_env)
 
 
 # Email: hassmalie.project@gmail.com
