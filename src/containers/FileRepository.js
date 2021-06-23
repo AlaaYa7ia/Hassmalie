@@ -257,10 +257,10 @@ const FileRepository = ({match}) => {
             <button className="btn active"
                     onClick={()=>setFlags({images: true, plans: true, payments: true, bids: true})}>
                 הכל</button>
-            <button className="btn" onClick={()=>setFlags({images: true, plans: false, payments: false, bids: false})}> תמונות</button>
-            <button className="btn" onClick={()=>setFlags({images: false, plans: true, payments: false, bids: false})}> תוכניות</button>
-            <button className="btn" onClick={()=>setFlags({images: false, plans: false, payments: true, bids: false})}> תשלומים</button>
-            <button className="btn" onClick={()=>setFlags({images: false, plans: false, payments: false, bids: true})}> הצעות מחיר</button>
+            <button className="btn btnx" onClick={()=>setFlags({images: true, plans: false, payments: false, bids: false})}> תמונות</button>
+            <button className="btn btnx" onClick={()=>setFlags({images: false, plans: true, payments: false, bids: false})}> תוכניות</button>
+            <button className="btn btnx" onClick={()=>setFlags({images: false, plans: false, payments: true, bids: false})}> תשלומים</button>
+            <button className="btn btnx" onClick={()=>setFlags({images: false, plans: false, payments: false, bids: true})}> הצעות מחיר</button>
 
         </div>
         <div className="row">
