@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from django.utils import timezone
 
 
 # here we create users and super users
@@ -105,7 +106,7 @@ class Worker(models.Model):
 class Car(models.Model):
     # many to one relation
     my_business = models.ForeignKey(MyBusiness, on_delete=models.CASCADE)
-    driver_email = models.TextField(null=True, default="")
+    driver_email = models.TextField()
     company_name = models.TextField(null=True, default="")
     manufacture_year = models.IntegerField(null=True, default=None)
     license_number = models.IntegerField(default=None, unique=True)
@@ -210,7 +211,6 @@ class Symbol(models.Model):
     type = models.CharField(max_length=255)
     price = models.FloatField()
     photo = models.ImageField(upload_to='bids/symbols/')
-
     REQUIRED_FIELDS = ['my_business', 'type', 'price']
 
     def __str__(self):
@@ -271,9 +271,9 @@ class Task(models.Model):
 class Payment(models.Model):
     my_business = models.ForeignKey(MyBusiness, on_delete=models.CASCADE)
     bid_id = models.ForeignKey(Bid, on_delete=models.PROTECT)
-    version = models.CharField(max_length=255)
+    version = models.CharField(default=None, max_length=255)
     total = models.FloatField()
-    payment_date = models.DateField()
+    payment_date = models.DateField(default=None)
     pay_type = models.CharField(max_length=255)
     contact_mail = models.CharField(max_length=255)
     payer_name = models.CharField(max_length=255)

@@ -41,18 +41,18 @@ const App = () => (
                     <Route exact path='/password/reset/confirm/:uid/:token' component={ResetPasswordConfirm} />
                     <Route exact path='/activate/:uid/:token' component={Activate} />
                     <PrivateRoute exact path='/homepage' component={Homepage} />
-                    <Route exact path='/my-business-details' component={MyBusinessDetails} />
-                    <Route exact path='/my-business-details-update' component={MyBusinessDetailsUpdate} />
-                    <Route exact path='/workers-management' component={WorkersManagement} />
-                    <Route exact path='/work-schedule' component={WorkSchedule} />
-                    <Route exact path='/financial' component={Financial} />
-                    <Route exact path='/projects-management' component={ProjectsManagement} />
-                    <Route path='/project/:my_business/:id' component={Project} />
-                    <Route path='/file-repository/:my_business/:id' component={FileRepository} />
-                    <Route  path='/bid/:id/:my_business' component={Bid} />
-                    <Route exact path='/TableBid/:my_business/:version' component={TableBid} />
-                    <Route exact path='/MapBid/:id/:my_business' component={MapBid} />
-                    {/*<Redirect to='/login'/>*/}
+                    <PrivateRoute exact path='/my-business-details' component={MyBusinessDetails} />
+                    <PrivateRoute exact path='/my-business-details-update' component={MyBusinessDetailsUpdate} />
+                    <PrivateRoute exact path='/workers-management' component={WorkersManagement} />
+                    <PrivateRoute exact path='/work-schedule' component={WorkSchedule} />
+                    <PrivateRoute exact path='/financial' component={Financial} />
+                    <PrivateRoute exact path='/projects-management' component={ProjectsManagement} />
+                    <PrivateRoute path='/project/:my_business/:id' component={Project} />
+                    <PrivateRoute path='/file-repository/:my_business/:id' component={FileRepository} />
+                    <PrivateRoute  path='/bid/:id/:my_business' component={Bid} />
+                    <PrivateRoute exact path='/TableBid/:my_business/:version' component={TableBid} />
+                    <PrivateRoute exact path='/MapBid/:id/:my_business' component={MapBid} />
+                    <Redirect from='*' to='/login' />
                 </Switch>
             </Layout>
         </Router>

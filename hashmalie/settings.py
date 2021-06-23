@@ -12,9 +12,8 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 import os
 from datetime import timedelta
 import django_heroku
-import dj_database_url
 
-#django_heroku.settings(locals())
+
 
 # from pathlib import Path
 
@@ -109,20 +108,24 @@ WSGI_APPLICATION = 'hashmalie.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-
+#
 DATABASES = {
     'default': { #sqlite3
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
-    # 'default': {  # Mongo database
-    #     'ENGINE': 'djongo',
-    #     'NAME': 'hassmalieDB',
-    #     # 'CLIENT': {
-    #     #     'host': 'https://hassmalie.herokuapp.com/',
-    #     # }
-    # }
 }
+#     # 'default': {  # Mongo database
+#     #     'ENGINE': 'djongo',
+#     #     'NAME': 'hassmalieDB',
+#     #     # 'CLIENT': {
+#     #     #     'host': 'https://hassmalie.herokuapp.com/',
+#     #     # }
+#     # }
+# }
+
+
+
 
 # Email: hassmalie.project@gmail.com
 # App Password: egjfbrwuhyjndfef
@@ -245,5 +248,16 @@ DJOSER = {
 AUTH_USER_MODEL = "hassmalieapp.UserAccount"
 
 
+# allowing our resources to be accessed on other domains.
+# CORS_ORIGIN_WHITELIST = (
+#     "localhost:8000",
+#     "localhost:3000",
+#     '127.0.0.1:3000',
+#     '127.0.0.1:8000',
+#     'hassmalie.herokuapp.com'
+# )
+
 CORS_ORIGIN_ALLOW_ALL = True
+
+
 
