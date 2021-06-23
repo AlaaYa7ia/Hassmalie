@@ -326,6 +326,8 @@ const TableBid = ({match}) => {
     const [tableProps, changeTableProps] = useState(tablePropsInit);
     const [fetched, setfetched] = useState(false)
 
+    const [note, setnote] = useState("תלחץ פה כדי להוסף תשלומים אחרים")
+
     const [fetchedData, setfetchedData] = useState("")
     const [versionId, setversionId] = useState("")
     const [myBusiness, setMyBusiness] = useState({my_business: null});
@@ -585,7 +587,7 @@ const TableBid = ({match}) => {
                     dispatch={dispatch2}
                 />
             </div>
-
+            <p contentEditable="true" className=" text-warning d-flex justify-content-around">{note} </p>
         </div>
         </body>
         </html>
