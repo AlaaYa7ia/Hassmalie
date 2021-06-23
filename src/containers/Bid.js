@@ -1,44 +1,11 @@
-import React, {useEffect,useState} from 'react';
 
 // import "react-list-editable/lib/react-list-editable.css";
 import {Link} from "react-router-dom";
 import axios from "axios";
-
-//let symbolData;
-
-/*
-function symbolData(symbolName,price,symbolPic){
-    let symbol={};
-    symbol.setName=function (name) {
-        symbolName=name;}
-
-    symbol.setPrice=function (Num) {
-        price=Num;}
-
-    symbol.getName=function () {
-        return symbolName;}
-
-    symbol.setSymbolNum=function (pic) {
-        symbolPic=pic;}
-
-    symbol.getSymbolNum=function () {
-        return symbolPic;}
-
-    symbol.getPrice=function () {
-        return price;}
-
-    return symbol;
-}
-
-//build object
-let symbolList={};
-symbolList['שקע כפול רגיל']=symbolData('שקע כפול רגיל',2,0)
-symbolList['שקע כח כפול']=symbolData('שקע כח כפול',3,0)
-symbolList['שקע כח יחיד' ]=symbolData('שקע כח יחיד',7,0)
-symbolList['שקע יחיד רגיל']=symbolData('שקע יחיד רגיל',5,0)
-symbolList['שקע כפול מוגן מים רגיל']=symbolData('שקע כפול מוגן מים רגיל',8,0)
-symbolList['שקע יחיד מוגן מים רגיל']=symbolData('שקע יחיד מוגן מים רגיל',6,0)
-*/
+import React, {useCallback, useEffect, useState} from 'react';
+/*import ChatWidget from "react-styled-chat-widget";
+import {Message, MessageSendHandler, SendClickHandler} from "react-styled-chat-widget";
+import Spinner from 'react-bootstrap/Spinner'*/
 
 
 const Bid = ({match})  => {
@@ -92,9 +59,33 @@ const Bid = ({match})  => {
 
 
     };
+/*    const [messages, setMessages] = useState<Message>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        // load some messages from history here using setMessages
+        setLoading(false);
+    }, []);
+
+
+    // used to switch message delivery indicator
+    const onMessageSend = useCallback<MessageSendHandler>((currentID, setDeliveryStatus) => {
+        setDeliveryStatus();
+    }, []);
+
+    // called when user presses the send button
+    const onSendClick = useCallback<SendClickHandler>((message: string) => {
+        setMessages((messages) => {
+            return [
+                ...messages,
+                {id: Math.floor(Math.random() * 10000), isPrimary: true, date: new Date(), sent: true, message, author: 'You'},
+            ]
+        })
+    }, []);*/
+
 
     useEffect(()=>{
-        setMyBusiness({my_business: match.params.my_business})
+        setMyBusiness({my_business: match.params.id})
         setProjectId(match.params.id)
     },[])
 
@@ -113,88 +104,18 @@ const Bid = ({match})  => {
          //   const res = await axios.delete('/api/symbols/', { data: { type: div } });
         }
     }
-    //let fetchedData=false
-
-    // function newElement() {
-    //
-    //
-    //     if (!fetchedData) {
-    //         if ( document.getElementById("myInput").value === ''|| document.getElementById("priceInput").value==='')
-    //             alert("You must write something!");
-    //         else {
-    //             var inputValue =document.getElementById("myInput").value + "    [₪ " + document.getElementById("priceInput").value + "]    "
-    //             console.log(">>>>>>>>>>>>>>>>>>")
-    //             console.log(newSymbol.photo)
-    //             console.log(symbolData.data)
-    //             addElement(inputValue,newSymbol.photo);
-    //         }
-    //     }
-    //     else{
-    //         console.log(symbolData.data)
-    //         for (var i in symbolData.data){
-    //             addElement(symbolData.data[i].type+"    [₪ "+(symbolData.data[i].price)+"]    ",symbolData.data[i].photo/*"https://png.pngtree.com/png-vector/20190330/ourmid/pngtree-img-file-document-icon-png-image_897560.jpg"*/)
-    //         }
-    //         fetchedData=false
-    //
-    //     }
-    //
-    // }
-    // const showList = async () => {
-    //     symbolData = await axios.get('/api/symbols/');
-    //     console.log(symbolData);
-    //     fetchedData = true
-    //
-    //     newElement()
-    //
-    //     const electricObject = document.getElementById("addThing")
-    //     electricObject.style.display = "block"
-    //
-    // }
 
 
 // Create a new list item when clicking on the "Add" button
-    function addElement(inputValue,imgSRC) {
-        var li = document.createElement("li");
-        li.setAttribute("class","row list-group-item")
-        var t = document.createElement("p");
-        t.appendChild( document.createTextNode(inputValue));
-        /*
-                t.setAttribute("class","col-7")
-        */
-        var img= document.createElement("img")
-        img.src=imgSRC
-        console.log(newSymbol.photo)
-        img.setAttribute("class","col-3")
-        var span = document.createElement("SPAN");
-        var txt = document.createTextNode("\u00D7");
-        span.className = "close";
-        li.appendChild(span);
-        span.appendChild(txt);
-        li.appendChild(t);
-        li.appendChild(img);
-
-
-        document.getElementById("myUL").appendChild(li);
-
-        document.getElementById("myInput").value = "";
-
-
-
-        for (i = 0; i < close.length; i++) {
-            close[i].onclick = function() {
-                var div = this.parentElement;
-                div.style.display = "none";
-            }
-        }
-    }
-
-    function showList(){
+    function showList() {
         try {
-        return(
-            symbols.map(sympol => (
-            <div>
-                <li className='row list-group-item'> <p>{sympol.type}    [₪ {sympol.price}] </p>
-                <img className='col-3' src={sympol.photo}/></li>
+            return (
+                symbols.map(sympol => (
+                        <div>
+                            <li className='row list-group-item'>
+                                <span className="close">×</span>
+                                <p>{sympol.type} [₪ {sympol.price}] </p>
+                                <img className='col-3' src={sympol.photo}/></li>
 
 
             </div>
@@ -221,52 +142,74 @@ const Bid = ({match})  => {
                             className="btn btn-dark d-flex justify-content-center">עדכן רשימת פריטים
                     </button>
                     {show &&
-                    <div id="addThing" >
-                        <ul id="myUL" dir="rtl" >
-                            { showList()}
+                    <div id="addThing">
+                        <ul id="myUL" dir="rtl">
+                            {showList()}
                         </ul>
                         <form dir="rtl" onSubmit={e => mapSubmit(e)}>
-                        <div id="myDIV">
-                            <div className="row">
-                                <button className="addBtn btn btn-dark"//onClick={newElement}
-                                        id="imgUpload" type="submit">הוסף</button>
-                            </div>
+                            <div id="myDIV">
+                                <div className="row">
+                                    <button className="addBtn btn btn-dark"//onClick={newElement}
+                                            id="imgUpload" type="submit">הוסף
+                                    </button>
+                                </div>
 
-                            <div className="row">
-                                <input type="text" id="myInput" placeholder="שם פריט" className="col-5"
-                                        name="type"
-                                        value={newSymbol.type}
-                                        onChange={e => newSymbolHandler(e)}/>
-                                <input type="number" id="priceInput" placeholder="מחיר הפריט"
-                                        className="col-3"
-                                        name="price"
-                                       value={newSymbol.price}
-                                        onChange={e => newSymbolHandler(e)}/>
-                                <input className="col-4 form-group"
-                                        type = 'file'
-                                        name='photo'
-                                        onChange={e => fileSelectedHandler(e)}/>
-                            </div>
+                                <div className="row ">
+                                    <input type="text" id="myInput" placeholder="שם פריט" className="col-5"
+                                           name="type"
+                                           value={newSymbol.type}
+                                           onChange={e => newSymbolHandler(e)}/>
+                                    <input type="number" id="priceInput" placeholder="מחיר הפריט"
+                                           className="col-3"
+                                           name="price"
+                                           value={newSymbol.price}
+                                           onChange={e => newSymbolHandler(e)}/>
+                                    <input className="col-4 form-group"
+                                           type='file'
+                                           name='photo'
+                                           onChange={e => fileSelectedHandler(e)}/>
+                                </div>
 
-                        </div>
+                            </div>
                         </form>
                     </div>}
                 </div>
-                <div className='col-12 col-md-4'>
-                    <button className='lead'>
-                        <Link to={"/MapBid/"+projectId+"/"+myBusiness.my_business} >
-                            עידכון פריטים בהמפה</Link>
-                    </button>
-                </div>
-                <div className=' col-12 col-md-4'>
-                    <button className='lead'>
-                        <Link to={'/TableBid/'+projectId+"/"+myBusiness.my_business}>עידכון פריטים בטבלה</Link>
-                    </button>
 
+                <div className='col-12 col-md-4 d-flex justify-content-around'>
+
+                        <Link to={"/MapBid/" + projectId + "/" + myBusiness.my_business}>
+                            <img src="https://static.thenounproject.com/png/3107437-200.png"  title="מפת הפרויקט"></img>
+                        </Link>
+
+                </div>
+                <div className=' col-12 col-md-4 d-flex justify-content-around'>
+                        <Link to={'/TableBid/' + projectId + "/" + myBusiness.my_business}>
+                            <img src="https://cdn.iconscout.com/icon/premium/png-256-thumb/database-table-781612.png"
+                                 title="טבלת פירוט מחיר"></img>
+                        </Link>
                 </div>
             </div>
+            <br></br>
+            <br></br>
+
 
         </div>
+        {/*<ChatWidget
+            defaultPosition={'bottomRight'}
+            messages={messages} // required
+            loading={loading} // required
+            onMessageSend={onMessageSend} // required
+            onSendClick={onSendClick} // required
+            spinner={<Spinner/>} // required
+        >
+            // Header of the widget should be here :)
+            <div>
+                <p>Welcome to support window!</p>
+                <hr/>
+                <p>Here you can chat directly with moderators. They usually answer in a few hours.</p>
+            </div>
+        </ChatWidget>*/}
+
 
         </body>
         </html>

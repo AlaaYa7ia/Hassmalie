@@ -50,7 +50,7 @@ const App = () => (
                     <Route path='/project/:my_business/:id' component={Project} />
                     <Route path='/file-repository/:my_business/:id' component={FileRepository} />
                     <Route  path='/bid/:id/:my_business' component={Bid} />
-                    <Route exact path='/TableBid/:id/:my_business' component={TableBid} />
+                    <Route exact path='/TableBid/:my_business/:version' component={TableBid} />
                     <Route exact path='/MapBid/:id/:my_business' component={MapBid} />
                     {/*<Redirect to='/login'/>*/}
                 </Switch>

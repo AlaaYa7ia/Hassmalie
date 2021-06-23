@@ -47,32 +47,33 @@ function symbolData(symbolName, price, symbolNum) {
 
 //build object
 let symbolList = {};
-symbolList['שקע כפול רגיל'] = symbolData('שקע כפול רגיל', 2, 0)
+/*symbolList['שקע כפול רגיל'] = symbolData('שקע כפול רגיל', 2, 0)
 symbolList['שקע כח כפול'] = symbolData('שקע כח כפול', 3, 0)
 symbolList['שקע כח יחיד'] = symbolData('שקע כח יחיד', 7, 0)
 symbolList['שקע יחיד רגיל'] = symbolData('שקע יחיד רגיל', 5, 0)
 symbolList['שקע כפול מוגן מים רגיל'] = symbolData('שקע כפול מוגן מים רגיל', 8, 0)
-symbolList['שקע יחיד מוגן מים רגיל'] = symbolData('שקע יחיד מוגן מים רגיל', 6, 0)
+symbolList['שקע יחיד מוגן מים רגיל'] = symbolData('שקע יחיד מוגן מים רגיל', 6, 0)*/
 
 const MapBid = ({match}) => {
 
     const [projectId, setProjectId] = useState("")
     const [myBusiness, setMyBusiness] = useState({my_business: null});
+    const [fetched, setfetched] = useState(false)
+
 
     useEffect(() => {
-        setMyBusiness({my_business: match.params.my_business})
-        setProjectId(match.params.id)
+
         InitBids().catch(err => {
             console.log("err", err.response)
         });
-        buildArr().then(labeledBoxesFetching()).catch(err => {
+        buildPAram().then( buildArr().then()).catch(err => {
             console.log("err", err.response)
         });
     }, [])
 
 
     const [symbolLabels, setSymbolLabels] = useState([]);
-    const [bidsVersions, setBidsVersions] = useState([]);
+    const [bidsVersions, setBidsVersions] = useState("");
     const [fetchedBoxes, setFetchedBoxes] = useState([]);
     const [newMap, setNewMap] = useState(null);
     const [imgUploaded, setImgUploaded] = useState(false);
@@ -143,6 +144,11 @@ const MapBid = ({match}) => {
     }
 
 
+    const buildPAram = async () => {
+        setMyBusiness({my_business: match.params.my_business})
+        setProjectId(match.params.id)
+        setfetched(true)
+    }
     const buildArr = async () => {
         let symbols = await axios.get(
             "http://127.0.0.1:8000/api/symbols/"
@@ -152,15 +158,17 @@ const MapBid = ({match}) => {
 
 
         for (let key in symbols.data) {
-            arr.push(symbols.data[key].type);
+           if( symbolList[symbols.data[key].type] == undefined)
+                 symbolList[symbols.data[key].type]=symbolData(symbols.data[key].type, symbols.data[key].price, 0)
+
+        }
+        for(let key in symbolList){
+            arr.push(key);
 
         }
         console.log("arr:", arr)
-        /* var arr=[]
-         for(let key in symbolList){
-             arr.push(symbolList[key].getName());
+        console.log("symbolList:", symbolList)
 
-         }*/
         setSymbolLabels(arr);
     }
     const InitBids = async () => {
@@ -176,18 +184,19 @@ const MapBid = ({match}) => {
 
         }
         console.log("arr:", arr)
+        console.log("arr Len:", arr.length)
         /* var arr=[]
          for(let key in symbolList){
              arr.push(symbolList[key].getName());
 
          }*/
-        setBidsVersions(arr);
+        setBidsVersions(arr.length);
     }
 
     const labeledBoxesFetching = async () => {
 
         const response = await fetch(
-            "http://127.0.0.1:8000/api/labels/"
+            'http://127.0.0.1:8000/api/labels/?my_business=' + myBusiness.my_business + '&version=' + 'B76'
         );
 
         const fetchedData = await response.json();
@@ -222,28 +231,60 @@ const MapBid = ({match}) => {
 
                                console.log(labeledData.boxes)
                                for (var i in labeledData.boxes) {
-                                   formData.append("type", symbolList[[labeledData.boxes[i].annotation]].getName())
-                                   formData.append("price", symbolList[[labeledData.boxes[i].annotation]].getPrice())
-                                   formData.append("count", symbolList[[labeledData.boxes[i].annotation]].getSymbolNum())
-                                   formData.append("total_item_price", symbolList[[labeledData.boxes[i].annotation]].getPrice() * symbolList[[labeledData.boxes[i].annotation]].getSymbolNum())
-                                   formData.append("my_business", 1)
-                                   formData.append("bid_id", 2)
-
-                                   axios({
-                                       method: 'post',
-                                       url: process.env.REACT_APP_API_URL + '/api/bid-table/',
-                                       data: formData,
-                                   })
-                                       .then((dataRes) => {
-
-                                           console.log("bid data", dataRes.data)
-                                       }).catch(err => {
-                                       console.log("err", err.response)
-                                   })
-                                   console.log(formData)
+                                   symbolList[[labeledData.boxes[i].annotation]].setSymbolNum();
                                }
+                               console.log('symbolList',symbolList)
+                                   for (var i in symbolList) {
+                                       if (symbolList[i].getSymbolNum() !==0) {
+                                           formData.append("type", symbolList[i].getName())
+                                           formData.append("price", symbolList[i].getPrice())
+                                           formData.append("count", symbolList[i].getSymbolNum())
+                                           formData.append("total_item_price", symbolList[i].getPrice() * symbolList[i].getSymbolNum())
+                                           formData.append("my_business", myBusiness.my_business)
+                                           formData.append("bid_id", (bidsVersions))
+                                           formData.append("version", "B" + bidsVersions)
 
-                               // window.location.href = "/TableBid";
+                                           axios({
+                                               method: 'post',
+                                               url: process.env.REACT_APP_API_URL + '/api/bid-table/',
+                                               data: formData,
+                                           })
+                                               .then((dataRes) => {
+
+                                                   console.log("bid data", dataRes.data)
+                                               }).catch(err => {
+                                               console.log("err", err.response)
+                                           })
+                                           console.log(formData)
+                                       }
+                                   }
+
+                                   for (var i in labeledData.boxes) {
+                                       {
+                                           formData.append("annotation",labeledData.boxes[i].annotation)
+                                           formData.append("x",labeledData.boxes[i].x)
+                                           formData.append("y",labeledData.boxes[i].y)
+                                           formData.append("h",labeledData.boxes[i].h)
+                                           formData.append("w",labeledData.boxes[i].w)
+                                           formData.append("bid_id", (bidsVersions))
+                                           formData.append("version", "B" + bidsVersions)
+
+                                           axios({
+                                               method: 'post',
+                                               url: process.env.REACT_APP_API_URL + '/api/labels/',
+                                               data: formData,
+                                           })
+                                               .then((dataRes) => {
+
+                                                   console.log("label post data", dataRes.data)
+                                               }).catch(err => {
+                                               console.log("err", err.response)
+                                           })
+                                           console.log(formData)
+                                       }
+                                   }
+
+                                window.location.href = "/TableBid/"  + myBusiness.my_business+ "/"+  "B"+bidsVersions ;
                                /*
                                                        let html = " <tr>     <th scope=\"col\">" + 'סוג' + "</th>" +
                                                            "   <td> " + "מחיר ליח'" + "</td>" /!*+
@@ -299,7 +340,7 @@ const MapBid = ({match}) => {
                     //array.push to save data
 
                            showButton={true}
-                           defaultBoxes={fetchedBoxes}
+                          defaultBoxes={fetchedBoxes}
 
                            style={{
                                width: 1100,
@@ -366,9 +407,9 @@ const MapBid = ({match}) => {
                     onClose={handleClose}
                 >
 
-                        <MenuItem onClick={handleClose}>PDF File</MenuItem>
-                        <MenuItem onClick={handleClose}>CSV File</MenuItem>
-                        <MenuItem onClick={handleClose}>XLS File</MenuItem>
+                    <MenuItem onClick={handleClose}>PDF File</MenuItem>
+                    <MenuItem onClick={handleClose}>CSV File</MenuItem>
+                    <MenuItem onClick={handleClose}>XLS File</MenuItem>
                 </Menu>
             </div>
         );
@@ -382,30 +423,33 @@ const MapBid = ({match}) => {
             </meta>
         </head>
         <body class="container container-fluid p-3 mb-2 bg-secondary text-white " role="alert">
-        <h1 class="text-right  text-warning">מפת הפרויקט</h1>
+        <h1 class="text-right  text-warning d-flex justify-content-center">מפת הפרויקט</h1>
         <form onSubmit={e => mapSubmit(e)} id="buttonToHide" className="row " lang="he" dir="rtl">
-            <div className="col-12 col-md-3" dir="rtl">
-                <h3 class={" text-warning"}>הוספת מפה:</h3>
+
+            <div className="col-12 col-md-6 " dir="rtl">
+
+                <h4 class={"row text-warning d-flex justify-content-center"}>הוספת מפה</h4>
+
+                <div className="row  d-flex justify-content-center">
+                    <input className="form-group"
+                           type='file'
+                           name='photo'
+                           onChange={e => fileSelectedHandler(e)}></input>
+                    <button className="addBtn btn btn-dark"
+                            id="imgUpload" type="submit" /*onClick={buildArr().then(labeledBoxesFetching())}*/>הוספה
+                    </button>
+                </div>
             </div>
-            <div className="col-12 col-md-3">
-                <input className="form-group"
-                       type='file'
-                       name='photo'
-                    onChange={e => fileSelectedHandler(e)}></input>
-            </div>
-            <div className="col-12 col-md-2">
-                <button className="addBtn btn btn-dark"
-                        id="imgUpload" type="submit" /*onClick={buildArr().then(labeledBoxesFetching())}*/>הוספה
-                </button>
-            </div>
-            <div className="col-12 col-md-4">
+
+
+            <div className="col-12 col-md-6 d-flex justify-content-center">
                 {DownloadMenu()}
             </div>
         </form>
 
 
         {console.log(imgUploaded)}
-        {imgUploaded && uploadAnnotation()}
+        {imgUploaded && fetched && uploadAnnotation()}
 
         <div className="row" id="BidExplanation" style={{display: "none"}}>
 
