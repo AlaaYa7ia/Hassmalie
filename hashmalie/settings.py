@@ -14,7 +14,6 @@ from datetime import timedelta
 import django_heroku
 
 
-#django_heroku.settings(locals())
 
 # from pathlib import Path
 
