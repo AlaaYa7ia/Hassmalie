@@ -95,13 +95,13 @@ const MapBid = ({match}) => {
         } catch (err) {
             console.log("didn't change photo.")
         }
-        // console.log(formData.toString());
+        console.log(formData.toString());
         formData.append("project_id", projectId);
         formData.append("my_business", myBusiness.my_business);
 
-        // console.log(formData);
+        console.log(formData);
 
-        // console.log(newMap)
+        console.log(newMap)
         axios({
             method: 'post',
             url: process.env.REACT_APP_API_URL + '/api/bids/',
@@ -128,8 +128,8 @@ const MapBid = ({match}) => {
         await sleep(2000);
         */
 
-        // console.log(process.env.REACT_APP_API_URL + '/media/projects/projectsfiles/' + newMap.name)
-        // console.log(newMap)
+        console.log(process.env.REACT_APP_API_URL + '/media/projects/projectsfiles/' + newMap.name)
+        console.log(newMap)
     }
 
 
@@ -140,10 +140,10 @@ const MapBid = ({match}) => {
     }
     const buildArr = async () => {
         let symbols = await axios.get(
-            process.env.REACT_APP_API_URL + '/api/symbols/'
+            "http://127.0.0.1:8000/api/symbols/"
         );
         var arr = []
-        // console.log("symbols:", symbols)
+        console.log("symbols:", symbols)
 
 
         for (let key in symbols.data) {
@@ -155,14 +155,14 @@ const MapBid = ({match}) => {
             arr.push(key);
 
         }
-        // console.log("arr:", arr)
-        // console.log("symbolList:", symbolList)
+        console.log("arr:", arr)
+        console.log("symbolList:", symbolList)
 
         setSymbolLabels(arr);
     }
     const InitBids = async () => {
         let bids = await axios.get(
-            process.env.REACT_APP_API_URL + "/api/bids/"
+            "http://127.0.0.1:8000/api/bids/"
         );
         /* var arr = []
          console.log("symbols:", bids)
@@ -174,7 +174,7 @@ const MapBid = ({match}) => {
          }*/
         setfetchedBids(bids.data);
         // console.log("arr:", arr)
-        // console.log("arr Len:", bids.data.length)
+        console.log("arr Len:", bids.data.length)
         /* var arr=[]
          for(let key in symbolList){
              arr.push(symbolList[key].getName());
@@ -186,12 +186,11 @@ const MapBid = ({match}) => {
     const labeledBoxesFetching = async () => {
 
         const response = await fetch(
-            process.env.REACT_APP_API_URL + '/api/labels/?my_business=' + myBusiness.my_business + '&version=' + 'B' + newMap.id
+            'http://127.0.0.1:8000/api/labels/?my_business=' + myBusiness.my_business + '&version=' + 'B'+newMap.id
         );
 
         const fetchedData = await response.json();
-        // console.log("fetchedData:", fetchedData)
-        // console.log("bidsVersions  in fetched:", bidsVersions)
+        console.log("fetchedData:", fetchedData)
         /*        for (var i in fetchedData) {
 
                     console.log(i)
@@ -204,8 +203,8 @@ const MapBid = ({match}) => {
 
     function uploadAnnotation() {
         // setImgUploaded(false)
-        // console.log("symbolLabelsIn:", symbolLabels)
-        // console.log("fetchedBoxesIn:", fetchedBoxes)
+        console.log("symbolLabelsIn:", symbolLabels)
+        console.log("fetchedBoxesIn:", fetchedBoxes)
         return (
             <div className="App " id="addThing">
                 {/*  <script>
@@ -221,11 +220,11 @@ const MapBid = ({match}) => {
                            asyncUpload={async (labeledData) => {
                                const formData = new FormData();
 
-                               // console.log(labeledData.boxes)
+                               console.log(labeledData.boxes)
                                for (var i in labeledData.boxes) {
                                    symbolList[[labeledData.boxes[i].annotation]].setSymbolNum();
                                }
-                               // console.log('symbolList', symbolList)
+                               console.log('symbolList', symbolList)
                                for (var i in symbolList) {
                                    if (symbolList[i].getSymbolNum() !== 0) {
                                        formData.append("type", symbolList[i].getName())
@@ -247,7 +246,7 @@ const MapBid = ({match}) => {
                                            }).catch(err => {
                                            console.log("err", err.response)
                                        })
-                                       // console.log(formData)
+                                       console.log(formData)
                                    }
                                }
 
@@ -272,12 +271,52 @@ const MapBid = ({match}) => {
                                            }).catch(err => {
                                            console.log("err", err.response)
                                        })
-                                       // console.log(formData)
+                                       console.log(formData)
                                    }
                                }
 
                                window.location.href = "/TableBid/" + myBusiness.my_business + "/" + "B" + bidsVersions;
+                               /*
+                                                       let html = " <tr>     <th scope=\"col\">" + 'סוג' + "</th>" +
+                                                           "   <td> " + "מחיר ליח'" + "</td>" /!*+
+                                                               "   <td> " + "כמות" + "</td>" +
+                                                               "   <td> " + "מחיר כללי" + "</td>"*!/;
+                                                       let price = 0
+                                                       const electricObject = document.getElementById("addThing")
+                                                       document.getElementById("BidExplanation").style.display = "block"
+                                                       document.addEventListener("DOMContentLoaded",()=>
+                                                       {
+                                                           document.querySelector(".ant-btn").nextElementSibling.innerText = "extract as table"
+                                                       });
 
+                                                       if (labeledData.boxes != null) {
+
+                                                           electricObject.style.display = "block"
+
+                                                           // reports.forEach(report => (
+                                                           //     w[report.worker_id]=workers.find((worker)=>worker.id === report.worker_id)
+                                                           // ))
+
+                                                           for (let i in labeledData.boxes) {
+                                                               symbolList[labeledData.boxes[i].annotation].setSymbolNum();
+                                                           }
+                                                           for (let i in  symbolList) {
+                                                               // symbolList[labeledData.boxes[i].annotation].price
+                                                               //symbolList[labeledData.boxes[i].annotation].num++
+                                                               html += " <tr>     <th scope=\"col\">" +symbolList[i].getName() + "</th>" +
+                                                                   "   <td> " + symbolList[i].getPrice() + "</td>"/!*+
+                                                                       "   <td> " + "100" + "</td>"+
+                                                                       "   <td> " + //symbolList[labeledData.boxes[i].annotation].num++
+                                                                        + "</td>"*!/;//symbolList[labeledData.boxes[i].annotation].price
+                                                               price += symbolList[i].getPrice()//symbolList[labeledData.boxes[i].annotation].price
+
+                                                           }
+                                                           console.log(symbolList)
+                                                           // electricObject.appendChild(html) ;
+                                                       }
+                                                       html += " <tr>     <th scope=\"col\">" + 'סכום' + "</th>" +
+                                                           "   <td> " + price + "</td>";
+                                                       electricObject.innerHTML = html;*/
                            }}
                     //disableAnnotation={true}
                            types={symbolLabels/*['A', 'B', 'Cylinder']*//*buildArr()*/}
@@ -313,17 +352,15 @@ const MapBid = ({match}) => {
 
     const projectChange = e => {
         setNewMap({...newMap, [e.target.name]: e.target.value})
-        setBidsVersions(newMap.id)
-
     };
 
 
     const handleClick = e => {
         e.preventDefault();
-        let bid1 = fetchedBids[newMap.id - 1]
-        /*   console.log("event value", newMap.id)
-           console.log("selected Bid", bid1)
-           console.log("fetchedBids Bid", fetchedBids)*/
+        let bid1 = fetchedBids[newMap.id-1]
+        console.log("event value", newMap.id)
+        console.log("selected Bid", bid1)
+        console.log("fetchedBids Bid", fetchedBids)
         setNewMap(bid1)
 
         setImgUploaded(true)
@@ -350,14 +387,31 @@ const MapBid = ({match}) => {
         </head>
         <body class="container container-fluid p-3 mb-2 bg-secondary text-white " role="alert">
         <h1 class="text-right  text-warning d-flex justify-content-center">מפת הפרויקט</h1>
-        <div id="buttonToHide" className="row">
+        <div id="buttonToHide">
+            <div className="col-12 col-md-6 " dir="rtl">
+
+                <form onSubmit={e => mapSubmit(e)} className="row " lang="he" dir="rtl">
+                    <h4 class={"row text-warning d-flex justify-content-center"}>הוספת מפה</h4>
+
+                    <div className="row  d-flex justify-content-center">
+                        <input className="form-group"
+                               type='file'
+                               name='photo'
+                               onChange={e => fileSelectedHandler(e)}></input>
+                        <button className="addBtn btn btn-dark"
+                                id="imgUpload" type="submit" /*onClick={buildArr().then(labeledBoxesFetching())}*/>הוספה
+                        </button>
+                    </div>
+                </form>
+            </div>
+
             <div className="col-12 col-md-6 d-flex justify-content-center">
 
-                <form className="row right-text" dir='rtl' onSubmit={e => handleClick(e)}>
+                <form className="right-text" dir='rtl' onSubmit={e => handleClick(e)}>
                     <div className='form-group dropdown'>
                         <select
                             className='form-control right-text'
-                            placeholder='בחר גרסה ישנה '
+                            placeholder='בחר גרסה'
                             name='id'
                             /*value={newMap.id}*/
                             onChange={e => projectChange(e)}
@@ -372,28 +426,10 @@ const MapBid = ({match}) => {
                     </button>
                 </form>
             </div>
-
-
-            <div className="col-12 col-md-6 " dir="rtl">
-
-                <form onSubmit={e => mapSubmit(e)} className="row " lang="he" dir="rtl">
-                    <h4 className={" text-warning "}>הוספת מפה</h4>
-                    <div className="  d-flex justify-content-center">
-                        <input className="form-group"
-                               type='file'
-                               name='photo'
-                               onChange={e => fileSelectedHandler(e)}></input>
-                        <button className="addBtn btn btn-dark"
-                                id="imgUpload" type="submit" /*onClick={buildArr().then(labeledBoxesFetching())}*/>הוספה
-                        </button>
-                    </div>
-                </form>
-            </div>
-
         </div>
 
 
-        {/*console.log(imgUploaded)*/}
+        {console.log(imgUploaded)}
         {imgUploaded && fetched && labeledBoxesFetching() && fetchedLabels && uploadAnnotation()}
 
         <div className="row" id="BidExplanation" style={{display: "none"}}>
