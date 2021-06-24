@@ -50,7 +50,7 @@ const App = () => (
                     <PrivateRoute path='/project/:my_business/:id' component={Project} />
                     <PrivateRoute path='/file-repository/:my_business/:id' component={FileRepository} />
                     <PrivateRoute  path='/bid/:id/:my_business' component={Bid} />
-                    <PrivateRoute exact path='/TableBid/:id/:my_business' component={TableBid} />
+                    <PrivateRoute exact path='/TableBid/:my_business/:version' component={TableBid} />
                     <PrivateRoute exact path='/MapBid/:id/:my_business' component={MapBid} />
                     <Redirect from='*' to='/login' />
                 </Switch>
