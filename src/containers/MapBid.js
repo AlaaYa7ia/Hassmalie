@@ -186,7 +186,7 @@ const MapBid = ({match}) => {
     const labeledBoxesFetching = async () => {
 
         const response = await fetch(
-            process.env.REACT_APP_API_URL + '/api/labels/?my_business=' + myBusiness.my_business + '&version=' + 'B' + bidsVersions
+            process.env.REACT_APP_API_URL + '/api/labels/?my_business=' + myBusiness.my_business + '&version=' + 'B' + newMap.id
         );
 
         const fetchedData = await response.json();
