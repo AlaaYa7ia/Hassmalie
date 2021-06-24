@@ -333,7 +333,7 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
 
                 </div>
                 <div className='col-5'>
-                    <img src={getImgUrl(car.image, "car")} height={200} width={300}></img>
+                    <img src={getImgUrl(car.image, "car")} height={150} width={150}></img>
                 </div>
             </div>
         )
