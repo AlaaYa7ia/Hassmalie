@@ -1,3 +1,25 @@
+body{
+  background-color: #e5e1e1;
+}
+
+.form-control:hover{
+  background-color: #e6f7ff;
+  border: 3px solid whitesmoke;
+}
+
+div.polaroid {
+  background-color: white;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  margin-bottom: 25px;
+}
+
+/*div.container {*/
+/*  text-align: center;*/
+/*  padding: 10px 20px;*/
+/*}*/
+
+
+
 .right-text {
   text-align: right;
 }
@@ -24,6 +46,7 @@
   font-size: x-large;
   color: #1b1e21;
 }
+
 
 .center {
   margin: auto;
@@ -76,4 +99,5 @@
 .img-container:hover {
   transform: scale(1.2);
 }
+
 

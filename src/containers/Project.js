@@ -90,7 +90,7 @@ const Project = ({match}) => {
     function loadCustomer(customer){
         return(
             <div id={"accordion"+ customer.id}  className='col-4'>
-                <div className="card">
+                <div className="card polaroid">
                     <div className="card-header" id={"heading"+customer.id} >
 
                         <button className="btn btn-link " data-toggle="collapse" data-target={"#collapse"+customer.id}
@@ -117,13 +117,13 @@ const Project = ({match}) => {
     
     function loadPeople(worker){
         return(
-            <div id={"accordion"+ worker.id}  className='col-4'>
-                <div className="card">
+            <div id={"accordion"+ worker.id}  className='col-4' >
+                <div className="card polaroid">
                     <div className="card-header" id={"heading"+worker.id} >
 
-                        <button className="btn btn-link " data-toggle="collapse" data-target={"#collapse"+worker.id}
+                        <button className="btn btn-link" data-toggle="collapse" data-target={"#collapse"+worker.id}
                                 aria-expanded="true" aria-controls={"collapse"+worker.id}>
-                            <img src={getImgUrl(worker.photo, "worker")} height={120} width={120}></img>
+                           <img className='polaroid' src={getImgUrl(worker.photo, "worker")} height={120} width={120}></img>
                             <p className='lead'>{worker.first_name} {worker.last_name} - {WORKER_TYPE[worker.title]}</p>
                         </button>
 
@@ -334,8 +334,8 @@ const Project = ({match}) => {
                        onChange={e => fileSelectedHandler(e)}
                 />
                 <br></br>
-                <button className='btn btn-success' type='submit'>עריכה</button>
-                <button className='btn btn-danger' onClick={dontAddProjectClickHandler}>בטל עריכת פרויקט</button>
+                <button className='btn btn-outline-success' type='submit'>עריכה</button>
+                <button className='btn btn-outline-danger' onClick={dontAddProjectClickHandler}>בטל עריכת פרויקט</button>
             </form>
         )
     }
@@ -376,8 +376,8 @@ const Project = ({match}) => {
             <div className='col-4 m-5'>
                 <div className='row'>
                 <div className='col-2'></div>
-                <div className='col-10'>
-                <img src={getImgUrl(project.buildingImage, "project")} height={450} width={450}/>
+                <div className='col-10 polaroid'>
+                <img className='polaroid' src={getImgUrl(project.buildingImage, "project")} height={450} width={370}/>
                 <div className='row'>
                 <div  className='col-6'>
                     <p>{project.name}</p>
@@ -385,28 +385,34 @@ const Project = ({match}) => {
                     <p>{project.address}</p>
                     <p>{project.description}</p>
                 </div>
-                    <div className=' container-fluid  mt-5 col-6' style={{justifyContent: 'right'}}>
-                        {addProject.showButton && <button className='btn btn-primary mr-5' onClick={addProjectClickHandler}
-                                                          style={{display: 'flex', alignItems: 'right'}}>לעריכת פרטי הפרויקט</button>}
-
-                    </div>
                 </div>
                     <div className="progress">
                         <div className="progress-bar progress-bar-striped active text-dark " role="progressbar" aria-valuenow={project.progress}
                              aria-valuemin="0" aria-valuemax="100" style={{width: project.progress+'%'}}>
                             {project.progress}%
                         </div>
+
+
                     </div>
+                    <br/>
+
                 </div>
+                    <div className='mt-2 mr-5' >
+                        {addProject.showButton && <button className='btn btn-outline-warning mr-5' onClick={addProjectClickHandler}
+                        >לעריכת פרטי הפרויקט</button>}
+
+                    </div>
+
             </div>
 
             </div>
-            {addProject.showForm && <div className='col-5'> {projectForm()}</div>}
-            <div className='row col-4'>
+
+            <div className='row col-6 m-5'>
                 {loadPeople(contractor)}
                 {loadPeople(architect)}
                 {loadCustomer(customer)}
             </div>
+            {addProject.showForm && <div className='col-5'> {projectForm()}</div>}
         </div>
         </div>
 

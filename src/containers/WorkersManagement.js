@@ -367,7 +367,7 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
             return(
         workers.map(worker => (
             <div id={"accordion"+ worker.id}  className='col-2' >
-                <div className="card">
+                <div className="card polaroid ">
                     <div className="card-header" id={"heading"+worker.id.toString()} >
 
                         <button className="btn btn-link " data-toggle="collapse" data-target={"#collapse"+worker.id}
@@ -408,7 +408,8 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
         <meta charSet="utf-8"></meta>
         </head>
         <body dir="rtl">
-        <div class = "container-fluid row mt-5 mr-5">
+
+        <div class = "container-fluid row mt-5 ml-3 right-text">
              {loadWorkers()}
         </div>
 

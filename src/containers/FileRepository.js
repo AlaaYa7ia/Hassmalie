@@ -146,6 +146,16 @@ const FileRepository = ({match}) => {
         return(url.match(/\.(jpeg|jpg|gif|png)$/) != null);
     }
 
+    function getImageByType(url) {
+        if(url.match(/\.(pdf)$/) != null){
+            return '/media/defaultpictuers/icon8.png';
+        }
+        if(url.match(/\.(mp4|wmv|avi|mov)$/) != null){
+            return '/media/defaultpictuers/icon10.png';
+        }
+        return '/media/defaultpictuers/icon7.png';
+    }
+
     function showFiles(list){
         try{
             return (
@@ -155,10 +165,10 @@ const FileRepository = ({match}) => {
                     <div className="content">
                         {checkURLIfImage(file.file) ?
                             <img src={file.file} style={{width:'100%'}}/> :
-                            <img src={process.env.REACT_APP_API_URL + '/media/defaultpictuers/icon5.png'}
+                            <img src={process.env.REACT_APP_API_URL + getImageByType(file.file)}
                                  style={{width:'100%'}}/>}
-                            <h3>{file.name}</h3>
-                            <h4>{file.description}</h4>
+                            <h4>{file.name}</h4>
+                            <a className='text-dark'>{file.description}</a>
 
                     </div>
                     </a>

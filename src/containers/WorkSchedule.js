@@ -317,7 +317,7 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
                onChange={e => fileSelectedHandler(e)}
         />
         </div>
-        <button className='btn btn-success' type='submit'>הוספת דוח</button>
+        <button className='btn btn-outline-success' type='submit'>הוספת דוח</button>
          </form>
         )
     }
@@ -471,7 +471,7 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
                     onChange={e => fileSelectedHandlerEdit(e)}
              />
         </div>
-        <button className='btn btn-success' type='submit'>עדכן דוח</button>
+        <button className='btn btn-outline-success' type='submit'>עדכן דוח</button>
          </form>
         )
     }
@@ -488,16 +488,17 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
     }
     }
     return(
-    <html lang="he" className="right-text" style={{backgroundColor: 'rgba(145, 255, 0, 0.1)'}}>
+    <html lang="he" className="right-text" >
 
          <div class=' container-fluid mb-5 center1' lang="he"  style={{  justifyContent:'center' }}>
              <div className="right-text col-8 mt-5 center1" dir='rtl'>
              <h1>דיווחים של העובדים</h1>
+                 <hr/>
              <button
-                 className="btn btn-primary mt-5"
+                 className="btn btn-outline-warning mt-5"
                  onClick={() => generatePDF(dataf)}
              >
-                 להפקת דוח חודשי
+                    להפקת דוח חודשי (PDF)
              </button>
              </div>
 

@@ -47,7 +47,7 @@ const Signup = ({ signup, isAuthenticated }) => {
     }
 
     return (
-        <html  lang="he" dir="rtl" style={{ backgroundColor: 'rgba(184, 160, 191)' }}>
+        <html  lang="he" dir="rtl" >
         <div><br></br> <br></br> <br></br><br></br></div>
     <div dir='rtl' class='col-3 container-fluid right-text ' lang="he" style={{display: 'flex',  justifyContent:'center', alignItems:'center', height: '70vh'}} >
         <div className='container' dir= "rtl" >
