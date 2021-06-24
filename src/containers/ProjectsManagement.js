@@ -259,8 +259,8 @@ const ProjectsManagement  = ({ get_user_data, isAuthenticated}) => {
                        onChange={e => fileSelectedHandler(e)}
                 />
                 <br></br>
-                <button className='btn btn-success' type='submit'>הוספה</button>
-                <button className='btn btn-danger' onClick={dontAddProjectClickHandler}>בטל הוספת פרויקט</button>
+                <button className='btn btn-outline-success ml-1' type='submit'>הוספה</button>
+                <button className='btn btn-outline-danger' onClick={dontAddProjectClickHandler}>בטל הוספת פרויקט</button>
             </form>
         )
     }
@@ -270,7 +270,7 @@ const ProjectsManagement  = ({ get_user_data, isAuthenticated}) => {
 
         return(
             projects.map(project => (
-                <Link to={"/project/"+myBusiness.my_business+"/"+project.id} className="img-container m-3 ">
+                <Link to={"/project/"+myBusiness.my_business+"/"+project.id} className="img-container m-3">
                     <img src={getImgUrl(project.buildingImage, "project")} alt="Avatar" className="image"/>
                         <div className="overlay">{project.name + " - " + project.address}</div>
                     <div className="progress">
@@ -295,7 +295,7 @@ const ProjectsManagement  = ({ get_user_data, isAuthenticated}) => {
             </head>
             <body dir="rtl">
             <div className=' container-fluid  mt-5' style={{justifyContent: 'right'}}>
-                {addProject.showButton && <button className='btn btn-primary mr-5' onClick={addProjectClickHandler}
+                {addProject.showButton && <button className='btn btn-outline-warning m-5' onClick={addProjectClickHandler}
                                                   style={{display: 'flex', alignItems: 'right'}}>תוסיף פרויקט
                     חדש</button>}
                 {addProject.showForm && projectForm()}

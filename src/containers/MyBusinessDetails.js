@@ -78,7 +78,8 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
                 setCars(dataRes.data)
             })
     }
-    
+
+
     useEffect(()=>{
         get_user()
     },[])
@@ -378,26 +379,28 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
         <meta charset="utf-8"></meta>
         </head>
         <body dir="rtl">
-
-        <div class = "container-fluid right-text row mt-5 mb-5">
+        <div class = "container-fluid right-text row mt-5 mb-5 ">
             <div className='col-1'></div>
             <form className='col-3'>
             <Link class='btn btn-outline-warning btn-lg' to='/my-business-details-update' role='button' >עדכן את פרטי העסק שלי</Link>
             </form>
-                <div className='col-3'></div>
-                <h1 className='col-2'>{business.name}</h1>
+                <div className='col-2'></div>
+                <h1 className='col-3'>{business.name}</h1>
                <img className='col-1' src={getImgUrl(business.logo, "business")} height={70} width={70} ></img>
             <div className='col-1'></div>
+
         </div>
+        <hr className='col-10'/>
         <div class = "container-fluid right-text align-items-center">
         <div class = "row ">
+
             <div className='col-1'></div>
-        <div className='container col-5' >
+        <div className='container col-4' >
            <div class = "row ">
-           <div class=' mt-5 col-3'>
+           <div class=' mt-5 col-6'>
                 <h1 class='display-4'>מנהל העסק</h1>
            </div>
-               <div class='mt-5 col-3'>
+               <div class='mt-5 col-6'>
                    <img src={getImgUrl(manager.photo, "user")} height={150} width={150} ></img>
                </div>
            </div>
@@ -412,10 +415,10 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
         </div>
         <div className='container col-5' >
            <div class = "row ">
-           <div class='mt-5 col-3'>
+           <div class='mt-5 col-6'>
                 <h1 class='display-4'>סגן מנהל</h1>
            </div>
-               <div class='mt-5 col-3'>
+               <div class='mt-5 col-6'>
                    <img src={getImgUrl(director.photo, "user")} height={150} width={150} ></img>
                </div>
            </div>
@@ -427,8 +430,9 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
                 <p class='lead'>גיל: {director.age}</p>
 
         </div>
-
         <div class = "container-fluid col-10" dir="rtl">
+            <hr/>
+            <br/>
                 <h1 class='display-4'>רכבים בעסק</h1>
                <div id="accordion">
                    {loadCars()}

@@ -30,7 +30,7 @@ const Login = ({ login, isAuthenticated }) => {
     }
 
     return (
-    <html  lang="he" dir="rtl" style={{ backgroundColor: 'rgba(184, 160, 191)' }} >
+    <html  lang="he" dir="rtl"  >
     <div  class='col-3 container-fluid right-text mb-5' lang="he"  style={{display: 'flex',  justifyContent:'center', alignItems:'center', height: '70vh'}}>
         <div className='container mt-5' dir= "rtl" >
             <h1 dir= "rtl">כניסה</h1>
