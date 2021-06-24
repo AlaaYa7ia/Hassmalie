@@ -180,7 +180,7 @@ const MapBid = ({match}) => {
              arr.push(symbolList[key].getName());
 
          }*/
-        setBidsVersions(bids.data.length);
+        setBidsVersions(bids.data.length+1);
     }
 
     const labeledBoxesFetching = async () => {
