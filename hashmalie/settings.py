@@ -249,15 +249,15 @@ AUTH_USER_MODEL = "hassmalieapp.UserAccount"
 
 
 # allowing our resources to be accessed on other domains.
-# CORS_ORIGIN_WHITELIST = (
-#     "localhost:8000",
-#     "localhost:3000",
-#     '127.0.0.1:3000',
-#     '127.0.0.1:8000',
-#     'hassmalie.herokuapp.com'
-# )
+CORS_ORIGIN_WHITELIST = (
+    "localhost:8000",
+    "localhost:3000",
+    '127.0.0.1:3000',
+    '127.0.0.1:8000',
+    'hassmalie.herokuapp.com'
+)
 
-CORS_ORIGIN_ALLOW_ALL = True
+#CORS_ORIGIN_ALLOW_ALL = True
 
 
 
