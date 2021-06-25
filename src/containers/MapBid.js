@@ -276,7 +276,7 @@ const MapBid = ({match}) => {
                                    }
                                }
 
-                               window.location.href = "/TableBid/" + myBusiness.my_business + "/" + "B" + bidsVersions;
+                               window.location.href = "/TableBid/" + myBusiness.my_business + "/" + "B" +  newMap.id;
 
                            }}
                     //disableAnnotation={true}
