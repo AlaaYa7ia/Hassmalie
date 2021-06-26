@@ -44,6 +44,7 @@ ALLOWED_HOSTS = ['hassmalie.herokuapp.com','127.0.0.1', 'localhost']
 # Application definition
 INSTALLED_APPS = [
     'corsheaders',
+    'django_extensions',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -69,6 +70,11 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+GRAPH_MODELS = {
+    'all_applications': True,
+    'group_models': True,
+}
 
 # A list of origins that are authorized to make cross-site HTTP requests.
 CORS_ALLOWED_ORIGINS = [
@@ -249,15 +255,15 @@ AUTH_USER_MODEL = "hassmalieapp.UserAccount"
 
 
 # allowing our resources to be accessed on other domains.
-CORS_ORIGIN_WHITELIST = (
-    "localhost:8000",
-    "localhost:3000",
-    '127.0.0.1:3000',
-    '127.0.0.1:8000',
-    'hassmalie.herokuapp.com'
-)
+# CORS_ORIGIN_WHITELIST = (
+#     "localhost:8000",
+#     "localhost:3000",
+#     '127.0.0.1:3000',
+#     '127.0.0.1:8000',
+#     'hassmalie.herokuapp.com'
+# )
 
-#CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_ALLOW_ALL = True
 
 
 

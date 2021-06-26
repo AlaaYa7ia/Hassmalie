@@ -16,7 +16,6 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
     const [showForm, setShowForm] = useState(false);
     const [workers, setWorkers] = useState([]);
 
-
     const get_workers = async () =>{
         const projects_Res = await axios.get('/api/workers/?my_business=' + business.manager +'&is_active=true')
         setWorkers(projects_Res.data);
