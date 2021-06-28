@@ -12,7 +12,7 @@ from hassmalieapp.views import redirect_url
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path(r'^api/', redirect_url),
+    #path(r'^api/', redirect_url),
     path('', include('hassmalieapp.urls')),
     # path('', TemplateView.as_view(template_name='index.html'))
     path('auth/', include('djoser.urls')),
