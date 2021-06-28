@@ -328,21 +328,23 @@ const TableBid = ({match}) => {
 
     const [note, setnote] = useState("תלחץ פה כדי להוסף תשלומים אחרים")
 
-    const [fetchedData, setfetchedData] = useState("")
-    const [versionId, setversionId] = useState("")
+    const [fetchedData, setFetchedData] = useState("")
+    const [versionId, setVersionId] = useState("")
     const [myBusiness, setMyBusiness] = useState({my_business: null});
     useEffect(() => {
         setMyBusiness({my_business: match.params.my_business})
-        setversionId(match.params.version)
+        setVersionId(match.params.version)
+
     }, [])
     useEffect(async () => {
         if (myBusiness.my_business !== null && versionId !== "") {
+            console.log("version B:  => ",versionId)
             const response = await fetch(
-                'http://127.0.0.1:8000/api/bid-table/?my_business=' + myBusiness.my_business + '&version=' + versionId
+                process.env.REACT_APP_API_URL + '/api/bid-table/?my_business=' + myBusiness.my_business + '&version=' + versionId
             );
             var fetchedData1 = await response.json();
-            setfetchedData(fetchedData1)
-            console.log(fetchedData)
+            setFetchedData(fetchedData1)
+            console.log("fetchedData1 ==> ",fetchedData1)
             setfetched(true)
         }
 
@@ -368,7 +370,7 @@ const TableBid = ({match}) => {
 
         if (action.type === ActionType.LoadData) {
             const response = await fetch(
-                "http://localhost:8000/api/payments/"
+                process.env.REACT_APP_API_URL + "/api/payments/"
             );
             fetchedData2 = await response.json();
             console.log(fetchedData2)
