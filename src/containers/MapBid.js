@@ -70,11 +70,14 @@ const MapBid = ({match}) => {
     const [project, setProject] = useState({});
     const [symbolLabels, setSymbolLabels] = useState([]);
     const [bidsVersions, setBidsVersions] = useState("");
+    const [bidsId, setBidsId] = useState("");
     const [fetchedBoxes, setFetchedBoxes] = useState([]);
     const [newMap, setNewMap] = useState({id: ""});
     const [imgUploaded, setImgUploaded] = useState(false);
     let fileSelectedHandler = e => {
         setNewMap(e.target.files[0])
+        setBidsId(bidsVersions);
+        console.log('bidsID',bidsId)
 
     }
 
@@ -181,6 +184,8 @@ const MapBid = ({match}) => {
 
          }*/
         setBidsVersions(bids.data.length+1);
+        setBidsId(bids.data.length+1);
+        console.log('bidsID',bidsId)
     }
 
     const labeledBoxesFetching = async () => {
@@ -224,6 +229,7 @@ const MapBid = ({match}) => {
                            asyncUpload={async (labeledData) => {
                                const formData ={};
                                console.log('bidsVersions',bidsVersions)
+                               console.log('bidsId',bidsId)
                                console.log('myBusiness.my_business',myBusiness.my_business)
                                console.log('labeledData.boxes',labeledData.boxes)
                                let j=0
@@ -243,7 +249,7 @@ const MapBid = ({match}) => {
                                        formData[j].append("count", symbolList[i].getSymbolNum())
                                        formData[j].append("total_item_price", symbolList[i].getPrice() * symbolList[i].getSymbolNum())
                                        formData[j].append("my_business", myBusiness.my_business)
-                                       formData[j].append("bid_id", (bidsVersions))
+                                       formData[j].append("bid_id", bidsId)
                                        formData[j].append("version", "B" + bidsVersions)
 
                                        axios({
@@ -252,7 +258,6 @@ const MapBid = ({match}) => {
                                            data: formData[j],
                                        })
                                            .then((dataRes) => {
-
                                                console.log("bid data", dataRes.data)
                                            }).catch(err => {
                                            console.log("err", err.response)
@@ -270,7 +275,8 @@ const MapBid = ({match}) => {
                                        formData[j].append("y", labeledData.boxes[i].y)
                                        formData[j].append("h", labeledData.boxes[i].h)
                                        formData[j].append("w", labeledData.boxes[i].w)
-                                       formData[j].append("bid_id", (bidsVersions))
+                                       formData[j].append("my_business", myBusiness.my_business)
+                                       formData[j].append("bid_id", bidsId)
                                        formData[j].append("version", "B" + bidsVersions)
 
                                        axios({
@@ -288,7 +294,7 @@ const MapBid = ({match}) => {
 
                                }
 
-                             //  window.location.href = "/TableBid/" + myBusiness.my_business + "/" + "B" +  newMap.id;
+                             // window.location.href = "/TableBid/" + myBusiness.my_business + "/" + "B" +  newMap.id;
 
                            }}
                     //disableAnnotation={true}
@@ -327,6 +333,8 @@ const MapBid = ({match}) => {
     const projectChange = e => {
         setNewMap({...newMap, [e.target.name]: e.target.value})
         setBidsVersions(newMap.id)
+        setBidsId(newMap.id-1)
+        console.log("setBidsId",bidsId)
 
     };
 
@@ -424,7 +432,6 @@ const MapBid = ({match}) => {
             </div>
             <div className="col-12 col-md-4">
                 <h3>
-                    <button><Link to='/TableBid'>עידכון פריטים בטבלה</Link></button>
                 </h3>
             </div>
             <div className="col-12 col-md-4">
