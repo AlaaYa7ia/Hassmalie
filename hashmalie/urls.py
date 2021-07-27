@@ -8,9 +8,11 @@ from django.urls import path, include, re_path
 from django.views.generic import TemplateView
 from django.conf import settings
 from django.conf.urls.static import static
+from hassmalieapp.views import redirect_url
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    #path(r'^api/', redirect_url),
     path('', include('hassmalieapp.urls')),
     # path('', TemplateView.as_view(template_name='index.html'))
     path('auth/', include('djoser.urls')),

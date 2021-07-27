@@ -2,13 +2,17 @@
 Views are callable which takes a request and returns a response.
 Here's our application views.
 """
-from django.shortcuts import render
+from django.shortcuts import redirect
 from django.http import HttpResponse
 from rest_framework import viewsets, generics
 from django_filters import rest_framework as filters
 from .serializers import *
 from .models import *
 from django_filters.rest_framework import DjangoFilterBackend
+
+
+def redirect_url(request):
+    return redirect('/', permanent=True)
 
 
 class UserView(viewsets.ModelViewSet):
