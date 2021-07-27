@@ -352,10 +352,10 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
         />
         <br/>
         <br/>
-        {! addWorker.edit && <button className='btn btn-success' type='submit'>הוספה</button>}
-        {addWorker.edit && <button className='btn btn-success' type='submit'>עריכה</button>}
-        {! addWorker.edit && <button className='btn btn-danger' onClick={dontAddWorkerClickHandler}>בטל הוספת עובד</button>}
-        {addWorker.edit && <button className='btn btn-danger' onClick={dontAddWorkerClickHandler}>בטל עריכת עובד</button>}
+        {! addWorker.edit && <button className='btn btn-warning ml-2' type='submit'>הוספה</button>}
+        {addWorker.edit && <button className='btn btn-warning ml-2' type='submit'>עריכה</button>}
+        {! addWorker.edit && <button className='btn btn-outline-danger' onClick={dontAddWorkerClickHandler}>בטל הוספת עובד</button>}
+        {addWorker.edit && <button className='btn btn-outline-danger' onClick={dontAddWorkerClickHandler}>בטל עריכת עובד</button>}
 
 
     </form>
@@ -366,13 +366,13 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
         try{
             return(
         workers.map(worker => (
-            <div id={"accordion"+ worker.id}  className='col-2' >
-                <div className="card polaroid ">
+            <div id={"accordion"+ worker.id}  className='col-3'  >
+                <div className="card polaroid " style={{ backgroundColor: 'rgba(229, 225, 225)'}}>
                     <div className="card-header" id={"heading"+worker.id.toString()} >
 
                         <button className="btn btn-link " data-toggle="collapse" data-target={"#collapse"+worker.id}
                                 aria-expanded="true" aria-controls={"collapse"+worker.id}>
-                            <img src={getImgUrl(worker.photo, "worker")} height={150} width={150}></img>
+                            <img src={getImgUrl(worker.photo, "worker")} height={150} width="100%"></img>
                             <p className='lead'>{worker.first_name} {worker.last_name} - {WORKER_TYPE[worker.title]}</p>
                         </button>
 
@@ -407,14 +407,16 @@ const WorkersManagement  = ({ get_user_data, isAuthenticated}) => {
         <head>
         <meta charSet="utf-8"></meta>
         </head>
-        <body dir="rtl">
-
+        <body className="counter container-fluid center2 text-black-70" dir="rtl" style={{ backgroundColor: 'rgba(60, 60, 60, 0.2)'}}>
+        <h1 className='right-text m-3'>ניהול עובדים</h1>
+        <p className='right-text m-3'> תלחץ על תמונה של העובד כדי לראות את הפרטים שלו ולעדכן אותם, אפשר להוסיף עובד חדש באמצעות הכפתור להוספת עובד.</p>
+        <hr/>
         <div class = "container-fluid row mt-5 ml-3 right-text">
              {loadWorkers()}
         </div>
 
             <div  class=' container-fluid  mt-5'  style={{  justifyContent:'right'}} >
-                 {addWorker.showButton && <button  className='btn btn-primary mr-5' onClick={addWorkerClickHandler} style={{ display: 'flex', alignItems:'right'}} >תוסיף עובד חדש</button>}
+                 {addWorker.showButton && <button  className='btn btn-warning mr-5' onClick={addWorkerClickHandler} style={{ display: 'flex', alignItems:'right'}} >תוסיף עובד חדש</button>}
 
                 {addWorker.showForm && workerForm()}
 

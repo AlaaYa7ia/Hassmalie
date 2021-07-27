@@ -3,6 +3,7 @@ import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { signup } from '../actions/auth';
 import PlacesAutocomplete from "react-places-autocomplete";
+import axios from "axios";
 
 const Signup = ({ signup, isAuthenticated }) => {
     const [accountCreated, setAccountCreated] = useState(false);
@@ -29,8 +30,9 @@ const Signup = ({ signup, isAuthenticated }) => {
         if (password === re_password) {
             let flag;
             await signup(first_name, last_name, email, title, phone_number, address, password, re_password)
-                .then(result => flag = result);
-            if (!flag) {
+                .then(result => {flag = result;
+            newBussinessSubmit(result)})
+            if (flag === -1) {
                 setAlert({showAlert: true, alert: "האיימיל שהזנת קיים כבר במערכת, נא לבחור איימיל אחר."})
             }else {
                 setAccountCreated(true);
@@ -38,6 +40,26 @@ const Signup = ({ signup, isAuthenticated }) => {
 
         }
     };
+
+    function newBussinessSubmit(res) {
+        axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+        axios.defaults.xsrfCookieName = "csrftoken";
+        axios.defaults.withCredentials = true;
+        const formData = new FormData();
+        console.log("res>>>>>>>>>>>",res)
+        formData.append('manager', res);
+        formData.append('name', "עסק חדש");
+        formData.append("deputy_director", res)
+        axios({
+            method: 'post',
+            url: "/api/my-business/",
+            data: formData,
+        })
+            .then((dataRes) => {
+                console.log("projects data", dataRes.data)
+            }).catch(err=>{ console.log("err", err.response)})
+
+    }
 
     if (isAuthenticated) {
         return <Redirect to='/' />

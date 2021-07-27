@@ -10,9 +10,9 @@ from .serializers import *
 from .models import *
 from django_filters.rest_framework import DjangoFilterBackend
 
-
-def redirect_url(request):
-    return redirect('/', permanent=True)
+#
+# def redirect_url(request):
+#     return redirect('/', permanent=True)
 
 
 class UserView(viewsets.ModelViewSet):

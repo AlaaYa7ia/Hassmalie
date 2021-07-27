@@ -90,12 +90,12 @@ const Project = ({match}) => {
     function loadCustomer(customer){
         return(
             <div id={"accordion"+ customer.id}  className='col-4'>
-                <div className="card polaroid">
+                <div className="card" style={{ backgroundColor: 'rgba(229, 225, 225)'}}>
                     <div className="card-header" id={"heading"+customer.id} >
 
-                        <button className="btn btn-link " data-toggle="collapse" data-target={"#collapse"+customer.id}
+                        <button className="btn btn-link text-dark " data-toggle="collapse" data-target={"#collapse"+customer.id}
                                 aria-expanded="true" aria-controls={"collapse"+customer.id}>
-                            <img src={getImgUrl(customer.photo, "customer")} height={120} width={120}></img>
+                            <img src={getImgUrl(customer.photo, "customer")} height={120} width='100%'></img>
                             <p className='lead'>{customer.first_name} {customer.last_name} - לקוח\ בעל הבית </p>
                         </button>
 
@@ -118,12 +118,12 @@ const Project = ({match}) => {
     function loadPeople(worker){
         return(
             <div id={"accordion"+ worker.id}  className='col-4' >
-                <div className="card polaroid">
+                <div className="card polaroid" style={{ backgroundColor: 'rgba(229, 225, 225)'}}>
                     <div className="card-header" id={"heading"+worker.id} >
 
-                        <button className="btn btn-link" data-toggle="collapse" data-target={"#collapse"+worker.id}
+                        <button className="btn btn-link text-dark" data-toggle="collapse" data-target={"#collapse"+worker.id}
                                 aria-expanded="true" aria-controls={"collapse"+worker.id}>
-                           <img className='polaroid' src={getImgUrl(worker.photo, "worker")} height={120} width={120}></img>
+                           <img className='polaroid' src={getImgUrl(worker.photo, "worker")} height={120} width='100%'></img>
                             <p className='lead'>{worker.first_name} {worker.last_name} - {WORKER_TYPE[worker.title]}</p>
                         </button>
 
@@ -334,7 +334,7 @@ const Project = ({match}) => {
                        onChange={e => fileSelectedHandler(e)}
                 />
                 <br></br>
-                <button className='btn btn-outline-success' type='submit'>עריכה</button>
+                <button className='btn btn-warning m-2' type='submit'>עריכה</button>
                 <button className='btn btn-outline-danger' onClick={dontAddProjectClickHandler}>בטל עריכת פרויקט</button>
             </form>
         )
@@ -346,13 +346,13 @@ const Project = ({match}) => {
             <meta charSet="utf-8"></meta>
 
         </head>
-        <body className='right-text' dir="rtl">
+        <body className="counter container-fluid center2 text-black-70" dir="rtl" style={{ backgroundColor: 'rgba(60, 60, 60, 0.2)'}}>
         <div>
             <div className=' container-fluid row' style={{justifyContent: 'right'}}>
-                <div className='mt-5 mb-5 col-5'>
+                <div className='text-right mt-5 mb-5 col-9'>
                     <h1>פרויקט: {project.name}</h1>
+                    <p>בדף זה מוצגים כל פרטי הפרויקט ואחוז ההתקדמות בפרויקט בנוסף לפרטים של הקבלן, האדרכן ובעל הבית. </p>
                 </div>
-                <div className='col-4'></div>
                 <div className="text-container col-1 mt-5">
                     <Link to={"/file-repository/"+project.id+"/"+myBusiness.my_business}>
                         <img className='img-link'
@@ -373,11 +373,11 @@ const Project = ({match}) => {
             </div>
         <div className=' container-fluid  mt-5' style={{justifyContent: 'right'}}>
         <div className='row'>
-            <div className='col-4 m-5'>
+            <div className='col-4 '>
                 <div className='row'>
                 <div className='col-2'></div>
-                <div className='col-10 polaroid'>
-                <img className='polaroid' src={getImgUrl(project.buildingImage, "project")} height={450} width={370}/>
+                <div className='col-10 polaroid' style={{ backgroundColor: 'rgba(229, 225, 225)'}}>
+                <img className='polaroid' src={getImgUrl(project.buildingImage, "project")} height={450} width='100%'/>
                 <div className='row'>
                 <div  className='col-6'>
                     <p>{project.name}</p>
@@ -398,7 +398,7 @@ const Project = ({match}) => {
 
                 </div>
                     <div className='mt-2 mr-5' >
-                        {addProject.showButton && <button className='btn btn-outline-warning mr-5' onClick={addProjectClickHandler}
+                        {addProject.showButton && <button className='btn btn-warning mr-2' onClick={addProjectClickHandler}
                         >לעריכת פרטי הפרויקט</button>}
 
                     </div>
@@ -407,16 +407,20 @@ const Project = ({match}) => {
 
             </div>
 
-            <div className='row col-6 m-5'>
+            <div className='row col-7 m-5'>
                 {loadPeople(contractor)}
                 {loadPeople(architect)}
                 {loadCustomer(customer)}
             </div>
-            {addProject.showForm && <div className='col-5'> {projectForm()}</div>}
+            {addProject.showForm && <div className='m-5 col-7'> {projectForm()}</div>}
         </div>
         </div>
 
         </div>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
         </body>
         </html>
     )

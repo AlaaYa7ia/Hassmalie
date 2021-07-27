@@ -8,7 +8,7 @@ from django.urls import path, include, re_path
 from django.views.generic import TemplateView
 from django.conf import settings
 from django.conf.urls.static import static
-from hassmalieapp.views import redirect_url
+#from hassmalieapp.views import redirect_url
 
 urlpatterns = [
     path('admin/', admin.site.urls),

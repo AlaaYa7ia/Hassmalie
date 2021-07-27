@@ -36,7 +36,7 @@ const Navbar = ({ get_user_data,logout, isAuthenticated}) => {
 
     <Fragment>
         <li className='nav-item'>
-                <Link className='nav-link text-warning' to='/homepage'>העסק שלי</Link>
+                <Link className='nav-link text-warning' to='/homepage'>העסק שלי </Link>
         </li>
         {<li className='nav-item'>
             <Link className='nav-link text-warning disabled'>ברוך הבא {data.first_name+ " " + data.last_name}</Link>

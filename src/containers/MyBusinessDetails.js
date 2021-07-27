@@ -45,6 +45,8 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
 
     const get_business = async (title)=> {
         if(title === 'M'){
+            // console.log("heereeee", manager.id)
+            // const Res = await axios.get(process.env.REACT_APP_API_URL+'/api/my-business/?manager=' + manager.id);
             const Res = await axios.get(process.env.REACT_APP_API_URL+'/api/my-business/' + manager.id+"/");
             setBusiness(Res.data)
         }else{
@@ -291,7 +293,7 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
                 onChange={e => editCarCheckChange(e)}
             />
             <br/>
-            <button className='btn btn-primary' type='submit'>עדכן את פרטי הרכב</button>
+            <button className='btn btn-warning' type='submit'>עדכן את פרטי הרכב</button>
         </form>
         )
     }
@@ -327,12 +329,12 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
                     <p className='lead'>תוקף ביטוח: {car.insurance_validity}</p>
                     <p className='lead'>ביטוח עד גיל: {car.insurance_up_to_age}</p>
                     <p className='lead'>תיאור הרכב: {car.description}</p>
-                    <img src={process.env.REACT_APP_API_URL+"/media/defaultpictuers/edit.png"} height={20} width={20} style={{cursor: "pointer"}}
+                    <img className='shadow' src={process.env.REACT_APP_API_URL+"/media/defaultpictuers/edit.png"} height={20} width={20} style={{cursor: "pointer"}}
                          onClick={() => {setEditCar(car); setShowForm(true)}}/>
 
                 </div>
                 <div className='col-5'>
-                    <img src={getImgUrl(car.image, "car")} height={150} width={150}></img>
+                    <img  className='shadow' src={getImgUrl(car.image, "car")} height={150} width={150}></img>
                 </div>
             </div>
         )
@@ -342,11 +344,11 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
         try{
         return(
         cars.map(car => (
-            <div className="card">
+            <div className="card" style={{ backgroundColor: 'rgba(229, 225, 225)'}}>
                 <div className="card-header" id={"heading"+car.id.toString()}>
 
                     <h5 className="mb-0">
-                        <button className="btn btn-link" data-toggle="collapse" data-target={"#collapse"+car.id}
+                        <button className="btn btn-link text-dark" data-toggle="collapse" data-target={"#collapse"+car.id}
                                 aria-expanded="true" aria-controls={"collapse"+car.id}>
                             {car.company_name} - {car.manufacture_year}
                         </button>
@@ -377,16 +379,17 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
         <head>
         <meta charset="utf-8"></meta>
         </head>
-        <body dir="rtl">
+        <body className="counter container-fluid center2 text-black-70" dir="rtl" style={{ backgroundColor: 'rgba(60, 60, 60, 0.2)'}}>
         <div class = "container-fluid right-text row mt-5 mb-5 ">
-            <div className='col-1'></div>
-            <form className='col-3'>
-            <Link class='btn btn-outline-warning btn-lg' to='/my-business-details-update' role='button' >עדכן את פרטי העסק שלי</Link>
-            </form>
+            <div className='row'>
                 <div className='col-2'></div>
-                <h1 className='col-3'>{business.name}</h1>
-               <img className='col-1' src={getImgUrl(business.logo, "business")} height={70} width={70} ></img>
-            <div className='col-1'></div>
+                <h1 className='col-6'>{business.name}</h1>
+                <div className='col-1'></div>
+                <div className='col-2'>
+               <img className='shadow' src={getImgUrl(business.logo, "business")} height={100} width='100%' ></img>
+                </div>
+                    <div className='col-1'></div>
+            </div>
 
         </div>
         <hr className='col-10'/>
@@ -400,7 +403,7 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
                 <h1 class='display-4'>מנהל העסק</h1>
            </div>
                <div class='mt-5 col-6'>
-                   <img src={getImgUrl(manager.photo, "user")} height={150} width={150} ></img>
+                   <img className='shadow' src={getImgUrl(manager.photo, "user")} height={150} width='100%' ></img>
                </div>
            </div>
                 <p class='lead'>שם פרטי: {manager.first_name }</p>
@@ -410,15 +413,15 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
                 <p class='lead'>כתובת מגורים: {manager.address}</p>
                 <p class='lead'>גיל: {manager.age}</p>
 
-
         </div>
+
         <div className='container col-5' >
            <div class = "row ">
            <div class='mt-5 col-6'>
                 <h1 class='display-4'>סגן מנהל</h1>
            </div>
-               <div class='mt-5 col-6'>
-                   <img src={getImgUrl(director.photo, "user")} height={150} width={150} ></img>
+               <div class=' mt-5 col-6'>
+                   <img className='shadow' src={getImgUrl(director.photo, "user")} height={150} width='100%' ></img>
                </div>
            </div>
                 <p class='lead'>שם פרטי: {director.first_name}</p>
@@ -429,6 +432,14 @@ const MyBusinessDetails = ({ get_user_data, isAuthenticated}) => {
                 <p class='lead'>גיל: {director.age}</p>
 
         </div>
+            <div className=' row container-fluid'>
+                <div className='col-1'></div>
+                <div>
+            <form className='mr-lg-5'>
+                <Link class='btn btn-warning btn-lg' to='/my-business-details-update' role='button' >עדכן את פרטי העסק שלי</Link>
+            </form>
+                </div>
+            </div>
         <div class = "container-fluid col-10" dir="rtl">
             <hr/>
             <br/>

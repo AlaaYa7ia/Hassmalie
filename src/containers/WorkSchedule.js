@@ -247,7 +247,8 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
     function scheduleForm(){
         return(
 
-         <form className="right-text col-8 mt-5 center1" dir='rtl' onSubmit={e => newReportSubmit(e)}>
+         <form className="right-text col-10 mt-5 center1" dir='rtl' onSubmit={e => newReportSubmit(e)}>
+             <p>להוספת דוח חדש:</p>
          <div className="row">
              <div className='form-group dropdown'>
                  <select
@@ -317,7 +318,7 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
                onChange={e => fileSelectedHandler(e)}
         />
         </div>
-        <button className='btn btn-outline-success' type='submit'>הוספת דוח</button>
+        <button className='btn btn-warning' type='submit'>הוספת דוח</button>
          </form>
         )
     }
@@ -406,7 +407,8 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
 
     function editMyReport(){
         return(
-         <form className="right-text col-8 center1" dir='rtl' onSubmit={e => editReportSubmit(e)}>
+         <form className="right-text col-10 center1" dir='rtl' onSubmit={e => editReportSubmit(e)}>
+             <p>לעדכון דוח:</p>
          <div className="row">
          <input
              className='form-control col-2'
@@ -471,7 +473,7 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
                     onChange={e => fileSelectedHandlerEdit(e)}
              />
         </div>
-        <button className='btn btn-outline-success' type='submit'>עדכן דוח</button>
+        <button className='btn btn-warning' type='submit'>עדכן דוח</button>
          </form>
         )
     }
@@ -490,20 +492,24 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
     return(
     <html lang="he" className="right-text" >
 
-         <div class=' container-fluid mb-5 center1' lang="he"  style={{  justifyContent:'center' }}>
-             <div className="right-text col-8 mt-5 center1" dir='rtl'>
+    {/*<body className="counter container-fluid center2 text-black-70"  style={{ backgroundColor: 'rgba(60, 60, 60, 0.2)'}}>*/}
+    <div class='counter container-fluid  center2 text-black-70' lang="he"   style={{  backgroundColor: 'rgba(60, 60, 60, 0.2)' }}>
+             <div className="right-text col-10 mt-5 center1" dir='rtl'>
              <h1>דיווחים של העובדים</h1>
+                 <p>בדף זה נמצים הדיווחים החדשים של העובדים, אפשר לסננן אותם ולעדכנם ולהפיק דוח חודשי מהם. </p>
                  <hr/>
              <button
-                 className="btn btn-outline-warning mt-5"
+                 className="btn btn-warning mt-5"
                  onClick={() => generatePDF(dataf)}
              >
                     להפקת דוח חודשי (PDF)
              </button>
+                 <br/> <br/><br/><br/>
              </div>
 
+
           {showTable()}
-                 <div className="right-text col-8 center1" dir='rtl'>
+                 <div className="right-text col-10 center1" dir='rtl'>
              {alert.showAlert && <div className="alert alert-danger" role="alert">
                  {alert.alert}
              </div>}
@@ -512,7 +518,7 @@ const WorkSchedule  = ({ get_user_data, isAuthenticated}) => {
           {scheduleForm()}
              <div><br></br><br></br><br></br></div>
          </div>
-
+    {/*</body>*/}
     </html>
     )
 }

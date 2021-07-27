@@ -162,7 +162,7 @@ const FileRepository = ({match}) => {
             list.map(file => (
                 <div className={"column"}>
                     <a href={file.file} target="_blank" download >
-                    <div className="content">
+                    <div className="content " style={{ backgroundColor: 'rgba(229, 225, 225)'}}>
                         {checkURLIfImage(file.file) ?
                             <img src={file.file} style={{width:'100%'}}/> :
                             <img src={process.env.REACT_APP_API_URL + getImageByType(file.file)}
@@ -173,7 +173,7 @@ const FileRepository = ({match}) => {
                     </div>
                     </a>
                     <form  onSubmit={e => deleteFileReq(e, file)}>
-                    <button className='btn btn-danger'  type='submit'
+                    <button className='btn btn-outline-danger mt-1'  type='submit'
                             style={{display: 'flex', alignItems: 'right'}}>מחיקת קובץ</button>
                     </form>
                 </div>
@@ -188,9 +188,9 @@ const FileRepository = ({match}) => {
     function showbuildingimage(){
         if (image !== null) {
             return (
-                <div  className="column images">
+                <div  className="column images" >
                     <a href={image} target="_blank" download >
-                    <div className="content">
+                    <div className="content" style={{ backgroundColor: 'rgba(229, 225, 225)'}}>
                         <img src={image} style={{width:'100%'}}/>
                         <h4>תמונה ראשית של הבניין</h4>
                     </div>
@@ -258,7 +258,10 @@ const FileRepository = ({match}) => {
     return(
 
     <html lang="he" className="right-text" dir='rtl'>
-    <body>
+    <body className="counter container-fluid center2 text-black-70" dir="rtl" style={{ backgroundColor: 'rgba(60, 60, 60, 0.2)'}}>
+    <h1 className='right-text m-3'>מאגר הקבצים של פרויקט: {project.name}</h1>
+    <p className='right-text m-3'> כאן ניתן לצפות בקבצים קיימים או לעלות חדשים, אפשר גם למחוק קבצים מהמאגר.</p>
+    <hr/>
     <div className="main">
         <div id="myBtnContainer" className='right-text' >
             {fileForm()}
@@ -267,7 +270,7 @@ const FileRepository = ({match}) => {
             <button className="btn active"
                     onClick={()=>setFlags({images: true, plans: true, payments: true, bids: true})}>
                 הכל</button>
-            <button className="btn btnx" onClick={()=>setFlags({images: true, plans: false, payments: false, bids: false})}> תמונות</button>
+            <button className="btn  btnx" onClick={()=>setFlags({images: true, plans: false, payments: false, bids: false})}> תמונות</button>
             <button className="btn btnx" onClick={()=>setFlags({images: false, plans: true, payments: false, bids: false})}> תוכניות</button>
             <button className="btn btnx" onClick={()=>setFlags({images: false, plans: false, payments: true, bids: false})}> תשלומים</button>
             <button className="btn btnx" onClick={()=>setFlags({images: false, plans: false, payments: false, bids: true})}> הצעות מחיר</button>

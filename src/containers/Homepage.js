@@ -19,7 +19,7 @@ const Homepage = () => {
                         <img className='img-link polaroid'
                              src={process.env.REACT_APP_API_URL + '/media/defaultpictuers/10.png'} height={300}
                              width={300}/>
-                        <p className="centered lead">פרטי העסק שלי</p>
+                        <p className="centered lead" >פרטי העסק שלי</p>
                     </Link>
                 </div>
                 <div className="text-container col-2">

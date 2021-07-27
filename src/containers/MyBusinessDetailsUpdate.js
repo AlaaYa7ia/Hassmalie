@@ -304,8 +304,16 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
     return (
 
 
-    <div dir='rtl' className='container-fluid mt-5 right-text center' lang="he" >
-            <h1 dir='rtl'>עדכון פרטי העסק שלי</h1>
+    <div>
+        <html lang="he">
+        <head>
+            <meta charSet="utf-8"></meta>
+        </head>
+        <body className="counter container-fluid center2 text-black-70 right-text" dir="rtl"
+              style={{backgroundColor: 'rgba(60, 60, 60, 0.2)'}}>
+
+        <h1 className='right-text m-3'>עדכון פרטי העסק</h1>
+        <hr/>
 
             <form dir='rtl' onSubmit={e => businessSubmit(e)}>
                 <p>תעדכן את פרטי העסק</p>
@@ -327,12 +335,12 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
                 />
                 </div>
 
-                <button className='btn btn-primary' type='submit'>עדכן פרטים העסק</button>
+                <button className='btn btn-dark' type='submit'>עדכן פרטים העסק</button>
             </form>
 
             <div class = "container-fluid row">
 
-            <form  onSubmit={e => mangerSubmit(e)}>
+            <form className='col-6'  onSubmit={e => mangerSubmit(e)}>
                 <p>תעדכן את פרטי המנהל</p>
                 <div className='form-group'>
                     <input
@@ -427,11 +435,11 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
                 />
                 </div>
 
-                <button className='btn btn-primary' type='submit'>עדכן פרטים שלי</button>
+                <button className='btn btn-dark' type='submit'>עדכן פרטים שלי</button>
             </form>
 
 
-            <form  onSubmit={e => directorSubmit(e)}>
+            <form  className='col-6' onSubmit={e => directorSubmit(e)}>
             <p>תעדכן את פרטי סגן המנהל</p>
                 <div className='form-group'>
                     <input
@@ -524,10 +532,10 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
                 />
                 </div>
 
-                <button className='btn btn-primary' type='submit' >עדכן פרטי הסגן מנהל</button>
+                <button className='btn btn-dark' type='submit' >עדכן פרטי הסגן מנהל</button>
             </form>
-
-            <form dir='rtl' onSubmit={e => newCarSubmit(e)}>
+            </div>
+            <form className='col-6'  dir='rtl' onSubmit={e => newCarSubmit(e)}>
             <p>תוסיף רכב חדש</p>
                 <div className='form-group'>
                     <input
@@ -641,10 +649,11 @@ const MyBusinessDetailsUpdate = ({ get_user_data,logout, isAuthenticated}) => {
                 onChange={e => carImageHandler(e)}
                 />
                 </div>
-                <button className='btn btn-primary' type='submit'>תוסיף רכב חדש</button>
+                <button className='btn btn-dark' type='submit'>תוסיף רכב חדש</button>
             </form>
-            </div>
-            <p> <Link className='nav-link btn btn-outline-warning mt-5' to='/my-business-details'>סיימתי עדכון</Link></p>
+
+            <p> <Link className='nav-link btn btn-warning mt-5 col-2' to='/my-business-details'>סיימתי עדכון</Link></p>
+        </body></html>
         </div>
     );
 };

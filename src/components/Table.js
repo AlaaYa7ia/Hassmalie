@@ -72,39 +72,50 @@ export default function Table({ columns, data, dataf }) {
     }
 
   return (
-    <div dir='rtl' class=' container-fluid col-8 mt-2' lang="he"  style={{  justifyContent:'right'}}>
-    <p>מסננים:</p>
+    <div dir='rtl' class=' container-fluid col-10 ' lang="he"  style={{  justifyContent:'right'}}>
+        <div className='shadow ' style={{ backgroundColor: 'rgba(229, 225, 225)'}}>
+            <br/>
+    <p className='m-5'>מסננים:</p>
+
     <input
+        className='mr-5 ml-1'
         value={filterInput.worker_name}
         onChange={handleNameFilterChange}
         placeholder={"סנן לפי שם עובד"}
     />
     <input
+        className='m-1'
         type='number'
       value={filterInput.project_id}
       onChange={handleProjectFilterChange}
       placeholder={"סנן לפי מספר פרויקט"}
     />
     <input
+        className='m-1'
       type='date'
       value={filterInput.first_reporting_date}
       onChange={handleFirstDateFilterChange}
       placeholder={"סננן מתאיך"}
     />
     <input
+        className='m-1'
       type='date'
       value={filterInput.last_reporting_date}
       onChange={handleLastDateFilterChange}
       placeholder={"עד תאריך"}
     />
-    <p>תלחץ על עמודה כדי למיין אותה</p>
-    <table class="table" {...getTableProps()}>
+
+        <br/><br/><br/><br/>
+    <p className='mr-5'>תלחץ על עמודה כדי למיין אותה, על סימן ה-X כדי להסיר שורה ועל סימן העריכה כדי לערוך דוח.</p>
+    <table class="table " {...getTableProps()} >
       <thead>
         {headerGroups.map(headerGroup => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
+          <tr {...headerGroup.getHeaderGroupProps()}
+              style={{ borderTop: 'solid 2px gray'}}>
             {headerGroup.headers.map(column => (
               <th
                   {...column.getHeaderProps(column.getSortByToggleProps())}
+
                   className={
                     column.isSorted
                       ? column.isSortedDesc
@@ -119,19 +130,21 @@ export default function Table({ columns, data, dataf }) {
           </tr>
         ))}
       </thead>
-      <tbody {...getTableBodyProps()}>
+      <tbody {...getTableBodyProps()}
+             >
         {dataf.clear()}
         {
         rows.map((row, i) => {
           prepareRow(row);
           return (
-            <tr class='line' {...row.getRowProps()}>
+            <tr class='line' {...row.getRowProps()}
+                style={{ borderTop: 'solid 2px gray'}}>
               {
               row.cells.map(cell => {
                 if (in_date_range(cell.row.values.reporting_date)){
                     dataf.add(cell.row.values)
                     if(cell.column.Header === 'קובץ מצורף'){
-                        return <td {...cell.getCellProps()}><a href={cell.value}>{cell.render("Cell")}</a></td>;
+                        return <td {...cell.getCellProps()} ><a href={cell.value}>{cell.render("Cell")}</a></td>;
                     }else{
                         return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
                     }
@@ -143,6 +156,7 @@ export default function Table({ columns, data, dataf }) {
         })}
       </tbody>
     </table>
+        </div>
     </div>
   );
 }

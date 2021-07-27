@@ -259,7 +259,7 @@ const ProjectsManagement  = ({ get_user_data, isAuthenticated}) => {
                        onChange={e => fileSelectedHandler(e)}
                 />
                 <br></br>
-                <button className='btn btn-outline-success ml-1' type='submit'>הוספה</button>
+                <button className='btn btn-warning ml-1' type='submit'>הוספה</button>
                 <button className='btn btn-outline-danger' onClick={dontAddProjectClickHandler}>בטל הוספת פרויקט</button>
             </form>
         )
@@ -270,7 +270,7 @@ const ProjectsManagement  = ({ get_user_data, isAuthenticated}) => {
 
         return(
             projects.map(project => (
-                <Link to={"/project/"+myBusiness.my_business+"/"+project.id} className="img-container m-3">
+                <Link  to={"/project/"+myBusiness.my_business+"/"+project.id} className="img-container m-3">
                     <img src={getImgUrl(project.buildingImage, "project")} alt="Avatar" className="image"/>
                         <div className="overlay">{project.name + " - " + project.address}</div>
                     <div className="progress">
@@ -293,9 +293,13 @@ const ProjectsManagement  = ({ get_user_data, isAuthenticated}) => {
                 <meta charSet="utf-8"></meta>
 
             </head>
-            <body dir="rtl">
+
+            <body className="counter container-fluid center2 text-black-70" dir="rtl" style={{ backgroundColor: 'rgba(60, 60, 60, 0.2)'}}>
+            <h1 className='right-text m-3'>ניהול פרויקטים</h1>
+            <p className='right-text m-3'> תלחץ על תמונה של הפרויקט כדי לעבור לדף של הפרויקט, או תוסיף פרויקט חדש באמצעות הכפתור.</p>
+            <hr/>
             <div className=' container-fluid  mt-5' style={{justifyContent: 'right'}}>
-                {addProject.showButton && <button className='btn btn-outline-warning m-5' onClick={addProjectClickHandler}
+                {addProject.showButton && <button className='btn btn-warning m-5' onClick={addProjectClickHandler}
                                                   style={{display: 'flex', alignItems: 'right'}}>תוסיף פרויקט
                     חדש</button>}
                 {addProject.showForm && projectForm()}
@@ -304,6 +308,7 @@ const ProjectsManagement  = ({ get_user_data, isAuthenticated}) => {
             <div class = "container-fluid row mt-5 mr-5">
                 {loadProjects()}
             </div>
+            <br/> <br/><br/>
             </body>
             </html>
         </div>

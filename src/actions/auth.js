@@ -128,13 +128,13 @@ export const signup = (first_name, last_name, email, title, phone_number, addres
             type: SIGNUP_SUCCESS,
             payload: res.data
         });
+        return res.data.id;
     } catch (err) {
         dispatch({
             type: SIGNUP_FAIL
         })
-        return false;
+        return -1;
     }
-    return true;
 };
 
 export const verify = (uid, token) => async dispatch => {
