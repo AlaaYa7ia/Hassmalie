@@ -221,6 +221,13 @@ const MapBid = ({match}) => {
                     document.querySelector(".ant-btn").nextElementSibling.innerText = "extract as table"
                 });
                 </script>*/}
+                <div className="alert alert-warning d-flex justify-content-center" role="alert">
+                     כדי להזיז את המפה בהתאם To Move
+                    <h5 className="text-danger"> |  |</h5>
+                    מפיקה טבלת הצעת מחיר ושומרת את המפה והסימוהים שלך upload
+                    <h5 className="text-danger"> |  | </h5>
+                     כדי להתחיל לסמן פריטים To Annotate
+                </div>
                 <Annotator id="annotationField"
                            height={700}
                            width={1000}
