@@ -13,7 +13,7 @@ import Menu from '@material-ui/core/Menu';
 import Button from '@material-ui/core/Button';
 
 
-const dataArray = Array()
+let dataArray = 0
 
 function symbolData(symbolName, price, symbolNum) {
     let symbol = {};
@@ -70,11 +70,14 @@ const MapBid = ({match}) => {
     const [project, setProject] = useState({});
     const [symbolLabels, setSymbolLabels] = useState([]);
     const [bidsVersions, setBidsVersions] = useState("");
+    const [bidsId, setBidsId] = useState("");
     const [fetchedBoxes, setFetchedBoxes] = useState([]);
     const [newMap, setNewMap] = useState({id: ""});
     const [imgUploaded, setImgUploaded] = useState(false);
     let fileSelectedHandler = e => {
         setNewMap(e.target.files[0])
+        setBidsId(bidsVersions);
+        console.log('bidsID',bidsId)
 
     }
 
@@ -181,10 +184,12 @@ const MapBid = ({match}) => {
 
          }*/
         setBidsVersions(bids.data.length+1);
+        setBidsId(bids.data.length+1);
+        console.log('bidsID',bidsId)
     }
 
     const labeledBoxesFetching = async () => {
-
+        if(dataArray==0){
         const response = await fetch(
             process.env.REACT_APP_API_URL + '/api/labels/?my_business=' + myBusiness.my_business + '&version=' + 'B' + newMap.id
         );
@@ -200,6 +205,9 @@ const MapBid = ({match}) => {
                 }*/
         setFetchedBoxes(fetchedData)
         setfetchedLabels(true)
+
+        dataArray++;
+        }
     }
 
     function uploadAnnotation() {
@@ -213,70 +221,87 @@ const MapBid = ({match}) => {
                     document.querySelector(".ant-btn").nextElementSibling.innerText = "extract as table"
                 });
                 </script>*/}
+                <div className="alert alert-warning d-flex justify-content-center" role="alert">
+                     כדי להזיז את המפה בהתאם To Move
+                    <h5 className="text-danger"> |  |</h5>
+                    מפיקה טבלת הצעת מחיר ושומרת את המפה והסימוהים שלך upload
+                    <h5 className="text-danger"> |  | </h5>
+                     כדי להתחיל לסמן פריטים To Annotate
+                </div>
                 <Annotator id="annotationField"
                            height={700}
                            width={1000}
                            imageUrl={newMap.photo
                                /* "http://127.0.0.1:8000/media/projects/projectsfiles/electrical-wiring-example_QzGkf0q.jpg"*/}
                            asyncUpload={async (labeledData) => {
-                               const formData = new FormData();
-
-                               // console.log(labeledData.boxes)
+                               const formData ={};
+                               console.log('bidsVersions',bidsVersions)
+                               console.log('bidsId',bidsId)
+                               console.log('myBusiness.my_business',myBusiness.my_business)
+                               console.log('labeledData.boxes',labeledData.boxes)
+                               let j=0
                                for (var i in labeledData.boxes) {
                                    symbolList[[labeledData.boxes[i].annotation]].setSymbolNum();
+                                   formData[j]= new FormData();
+                                   j++
+                                   formData[j]= new FormData();
+                                   j++
                                }
-                               // console.log('symbolList', symbolList)
+                               console.log('symbolList', symbolList)
+                               j=0;
                                for (var i in symbolList) {
                                    if (symbolList[i].getSymbolNum() !== 0) {
-                                       formData.append("type", symbolList[i].getName())
-                                       formData.append("price", symbolList[i].getPrice())
-                                       formData.append("count", symbolList[i].getSymbolNum())
-                                       formData.append("total_item_price", symbolList[i].getPrice() * symbolList[i].getSymbolNum())
-                                       formData.append("my_business", myBusiness.my_business)
-                                       formData.append("bid_id", (bidsVersions))
-                                       formData.append("version", "B" + bidsVersions)
+                                       formData[j].append("type", symbolList[i].getName())
+                                       formData[j].append("price", symbolList[i].getPrice())
+                                       formData[j].append("count", symbolList[i].getSymbolNum())
+                                       formData[j].append("total_item_price", symbolList[i].getPrice() * symbolList[i].getSymbolNum())
+                                       formData[j].append("my_business", myBusiness.my_business)
+                                       formData[j].append("bid_id", bidsId)
+                                       formData[j].append("version", "B" + bidsVersions)
 
                                        axios({
                                            method: 'post',
                                            url: process.env.REACT_APP_API_URL + '/api/bid-table/',
-                                           data: formData,
+                                           data: formData[j],
                                        })
                                            .then((dataRes) => {
-
                                                console.log("bid data", dataRes.data)
                                            }).catch(err => {
                                            console.log("err", err.response)
                                        })
-                                       // console.log(formData)
+                                       j++;
                                    }
+
                                }
+
 
                                for (var i in labeledData.boxes) {
                                    {
-                                       formData.append("annotation", labeledData.boxes[i].annotation)
-                                       formData.append("x", labeledData.boxes[i].x)
-                                       formData.append("y", labeledData.boxes[i].y)
-                                       formData.append("h", labeledData.boxes[i].h)
-                                       formData.append("w", labeledData.boxes[i].w)
-                                       formData.append("bid_id", (bidsVersions))
-                                       formData.append("version", "B" + bidsVersions)
+                                       formData[j].append("annotation", labeledData.boxes[i].annotation)
+                                       formData[j].append("x", labeledData.boxes[i].x)
+                                       formData[j].append("y", labeledData.boxes[i].y)
+                                       formData[j].append("h", labeledData.boxes[i].h)
+                                       formData[j].append("w", labeledData.boxes[i].w)
+                                       formData[j].append("my_business", myBusiness.my_business)
+                                       formData[j].append("bid_id", bidsId)
+                                       formData[j].append("version", "B" + bidsVersions)
 
                                        axios({
                                            method: 'post',
                                            url: process.env.REACT_APP_API_URL + '/api/labels/',
-                                           data: formData,
+                                           data: formData[j],
                                        })
                                            .then((dataRes) => {
-
                                                console.log("label post data", dataRes.data)
                                            }).catch(err => {
                                            console.log("err", err.response)
                                        })
-                                       // console.log(formData)
+                                       j++;
                                    }
+
                                }
 
-                               window.location.href = "/TableBid/" + myBusiness.my_business + "/" + "B" +  newMap.id;
+                             // window.location.href = "/TableBid/" + myBusiness.my_business + "/" + "B" +  newMap.id;
 
                            }}
                     //disableAnnotation={true}
@@ -299,13 +324,14 @@ const MapBid = ({match}) => {
                                height: 800,
                                margin: "20px auto",
                                position: "relative",
-                               backgroundColor: "#413b1a",
+                               backgroundColor: "#ffffff00 ",
                                borderRadius: 8,
                                padding: 10
                            }}
 
                     // sceneTypes={['1', '2', '3']}
                 />
+
             </div>
 
         );
@@ -314,6 +340,8 @@ const MapBid = ({match}) => {
     const projectChange = e => {
         setNewMap({...newMap, [e.target.name]: e.target.value})
         setBidsVersions(newMap.id)
+        setBidsId(newMap.id-1)
+        console.log("setBidsId",bidsId)
 
     };
 
@@ -355,21 +383,24 @@ const MapBid = ({match}) => {
 
                 <form className="row right-text" dir='rtl' onSubmit={e => handleClick(e)}>
                     <div className='form-group dropdown'>
+                        <h4 className={" text-warning "}>בחירה מפה ישנה </h4>
+
                         <select
                             className='form-control right-text'
-                            placeholder='בחר גרסה ישנה '
+                            placeholder='בחר גרסה'
                             name='id'
                             /*value={newMap.id}*/
                             onChange={e => projectChange(e)}
                             required
                         >
-                            <option value="">בחר גרסה</option>
+                            <option value=""> בחר גרסה </option>
                             {MenuInit()}
                         </select>
+                        <button className="addBtn btn btn-dark"
+                                id="imgUpload" type="submit">בחירה
+                        </button>
                     </div>
-                    <button className="addBtn btn btn-dark"
-                            id="imgUpload" type="submit">בחירה
-                    </button>
+
                 </form>
             </div>
 
@@ -377,7 +408,7 @@ const MapBid = ({match}) => {
             <div className="col-12 col-md-6 " dir="rtl">
 
                 <form onSubmit={e => mapSubmit(e)} className="row " lang="he" dir="rtl">
-                    <h4 className={" text-warning "}>הוספת מפה</h4>
+                    <h4 className={" text-warning "}>הוספת מפה חדשה </h4>
                     <div className="  d-flex justify-content-center">
                         <input className="form-group"
                                type='file'
@@ -411,7 +442,6 @@ const MapBid = ({match}) => {
             </div>
             <div className="col-12 col-md-4">
                 <h3>
-                    <button><Link to='/TableBid'>עידכון פריטים בטבלה</Link></button>
                 </h3>
             </div>
             <div className="col-12 col-md-4">

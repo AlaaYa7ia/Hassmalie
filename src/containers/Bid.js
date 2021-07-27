@@ -112,10 +112,11 @@ const Bid = ({match})  => {
             return (
                 symbols.map(sympol => (
                         <div>
-                            <li className='row list-group-item'>
+                            <li className='row list-group-item  d-flex justify-content-center shadow-lg p-3 bg-body rounded'>
                                 <span className="close">×</span>
+                                <img className='col-3' src={sympol.photo}/>
                                 <p>{sympol.type} [₪ {sympol.price}] </p>
-                                <img className='col-3' src={sympol.photo}/></li>
+                                </li>
 
 
             </div>
@@ -133,8 +134,10 @@ const Bid = ({match})  => {
         </head>
 
         <body class="container container-fluid " role="alert" dir="rtl">
-        <h1 class="text-center p-3 mb-2 bg-warning text-dark">הצעת מחיר</h1>
-        <div className="jumbotron mt-5 ">
+        <div className="p-3 mb-2 bg-white text-dark">
+            <h1 className="text-right  text-warning d-flex justify-content-center ">הצעת מחיר</h1>
+            <br/>
+            <br/>
 
             <div className="row" >
                 <div className="col-12 col-md-4" >
@@ -176,17 +179,16 @@ const Bid = ({match})  => {
                 </div>
 
                 <div className='col-12 col-md-4 d-flex justify-content-around'>
-
-                        <Link to={"/MapBid/" + projectId + "/" + myBusiness.my_business}>
-                            <img src="https://static.thenounproject.com/png/3107437-200.png"  title="מפת הפרויקט"></img>
-                        </Link>
-
+                    <Link to={"/MapBid/" + projectId + "/" + myBusiness.my_business}>
+                        <img src="https://cdn4.iconfinder.com/data/icons/architecture-20/64/Map-house-home-blueprint-plan-512.png"
+                             title="מפת הפרויקט" width={"100%"}  class="shadow-lg p-3 mb-5 bg-body rounded border border-dark"></img>
+                    </Link>
                 </div>
                 <div className=' col-12 col-md-4 d-flex justify-content-around'>
-                        <Link to={'/TableBid/' + projectId + "/" + myBusiness.my_business}>
-                            <img src="https://cdn.iconscout.com/icon/premium/png-256-thumb/database-table-781612.png"
-                                 title="טבלת פירוט מחיר"></img>
-                        </Link>
+                    <Link to={'/TableBid/' + projectId + "/" + myBusiness.my_business}>
+                        <img src="https://www.pnglib.com/wp-content/uploads/2020/01/bill_5e18e97fa6b7f.png"
+                             title="טבלת פירוט מחיר" width={"100%"}  class="shadow-lg p-3 mb-5 bg-body rounded border border-dark"></img>
+                    </Link>
                 </div>
             </div>
             <br></br>
