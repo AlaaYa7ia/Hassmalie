@@ -301,7 +301,7 @@ const MapBid = ({match}) => {
 
                                }
 
-                             // window.location.href = "/TableBid/" + myBusiness.my_business + "/" + "B" +  newMap.id;
+                              window.location.href = "/TableBid/" + myBusiness.my_business + "/" + "B" +  newMap.id;
 
                            }}
                     //disableAnnotation={true}
@@ -376,15 +376,19 @@ const MapBid = ({match}) => {
             <meta charset="utf-8">
             </meta>
         </head>
-        <body class="container container-fluid p-3 mb-2 bg-secondary text-white " role="alert">
-        <h1 class="text-right  text-warning d-flex justify-content-center">מפת הפרויקט</h1>
+
+        <body className="counter container-fluid center2 text-black-70" dir="rtl" role="alert" style={{ backgroundColor: 'rgba(60, 60, 60, 0.2)'}}>
+        {/*<body class="container container-fluid p-3 mb-2 text-white " role="alert">*/}
+        <h1 class="text-right">מפת הפרויקט</h1>
+        <p class="text-right">כאן אפשר לבחור גרסה ישנה של המפה, או להעלות מפה חדשה.</p>
+        <hr/>
         <div id="buttonToHide" className="row">
-            <div className="col-12 col-md-6 d-flex justify-content-center">
+            <div className="col-6  d-flex justify-content-center">
 
                 <form className="row right-text" dir='rtl' onSubmit={e => handleClick(e)}>
                     <div className='form-group dropdown'>
-                        <h4 className={" text-warning "}>בחירה מפה ישנה </h4>
-
+                        <h4 >בחירה מפה ישנה </h4>
+                        <div className='row'>
                         <select
                             className='form-control right-text'
                             placeholder='בחר גרסה'
@@ -399,17 +403,18 @@ const MapBid = ({match}) => {
                         <button className="addBtn btn btn-dark"
                                 id="imgUpload" type="submit">בחירה
                         </button>
+                        </div>
                     </div>
 
                 </form>
             </div>
 
 
-            <div className="col-12 col-md-6 " dir="rtl">
+            <div className="col-6" dir="rtl">
+                <h4 className='text-right m-2'>הוספת מפה חדשה </h4>
+                <form onSubmit={e => mapSubmit(e)}  lang="he">
 
-                <form onSubmit={e => mapSubmit(e)} className="row " lang="he" dir="rtl">
-                    <h4 className={" text-warning "}>הוספת מפה חדשה </h4>
-                    <div className="  d-flex justify-content-center">
+                    <div className="d-flex">
                         <input className="form-group"
                                type='file'
                                name='photo'

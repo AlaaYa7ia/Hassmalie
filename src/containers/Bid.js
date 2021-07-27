@@ -112,9 +112,9 @@ const Bid = ({match})  => {
             return (
                 symbols.map(sympol => (
                         <div>
-                            <li className='row list-group-item  d-flex justify-content-center shadow-lg p-3 bg-body rounded'>
-                                <span className="close">×</span>
-                                <img className='col-3' src={sympol.photo}/>
+                            <li className='row list-group-item  d-flex justify-content-center shadow-lg p-3 bg-body rounded' style={{ backgroundColor: 'rgba(229, 225, 225)'}}>
+                                <span className="close" >×</span>
+                                <img className='col-3' src={sympol.photo} />
                                 <p>{sympol.type} [₪ {sympol.price}] </p>
                                 </li>
 
@@ -132,10 +132,11 @@ const Bid = ({match})  => {
             <meta charSet="utf-8">
             </meta>
         </head>
-
-        <body class="container container-fluid " role="alert" dir="rtl">
-        <div className="p-3 mb-2 bg-white text-dark">
-            <h1 className="text-right  text-warning d-flex justify-content-center ">הצעת מחיר</h1>
+        <body className="counter container-fluid center2 text-black-70" dir="rtl" role="alert" style={{ backgroundColor: 'rgba(60, 60, 60, 0.2)'}}>
+        <div className="p-3 mb-2 text-dark">
+            <h1 className="text-right">הצעת מחיר </h1>
+            <p className="text-right">כאן איפשר לעבור להפקת הצעת מחיר, לעבור לפירוט תשלומים לפי ההצעה האחרונה, או לעדכן את רישימת החפצים (שקעים וכדומה).</p>
+            <hr/>
             <br/>
             <br/>
 
@@ -181,13 +182,13 @@ const Bid = ({match})  => {
                 <div className='col-12 col-md-4 d-flex justify-content-around'>
                     <Link to={"/MapBid/" + projectId + "/" + myBusiness.my_business}>
                         <img src="https://cdn4.iconfinder.com/data/icons/architecture-20/64/Map-house-home-blueprint-plan-512.png"
-                             title="מפת הפרויקט" width={"100%"}  class="shadow-lg p-3 mb-5 bg-body rounded border border-dark"></img>
+                             title="מפת הפרויקט" width={"100%"}  class="shadow-lg p-3 mb-5 bg-body rounded border border-dark" style={{ backgroundColor: 'rgba(229, 225, 225)'}}></img>
                     </Link>
                 </div>
                 <div className=' col-12 col-md-4 d-flex justify-content-around'>
                     <Link to={'/TableBid/' + projectId + "/" + myBusiness.my_business}>
                         <img src="https://www.pnglib.com/wp-content/uploads/2020/01/bill_5e18e97fa6b7f.png"
-                             title="טבלת פירוט מחיר" width={"100%"}  class="shadow-lg p-3 mb-5 bg-body rounded border border-dark"></img>
+                             title="טבלת פירוט מחיר" width={"100%"}  class="shadow-lg p-3 mb-5 bg-body rounded border border-dark" style={{ backgroundColor: 'rgba(229, 225, 225)'}}></img>
                     </Link>
                 </div>
             </div>
