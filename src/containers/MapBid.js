@@ -383,21 +383,24 @@ const MapBid = ({match}) => {
 
                 <form className="row right-text" dir='rtl' onSubmit={e => handleClick(e)}>
                     <div className='form-group dropdown'>
+                        <h4 className={" text-warning "}>בחירה מפה ישנה </h4>
+
                         <select
                             className='form-control right-text'
-                            placeholder='בחר גרסה ישנה '
+                            placeholder='בחר גרסה'
                             name='id'
                             /*value={newMap.id}*/
                             onChange={e => projectChange(e)}
                             required
                         >
-                            <option value="">בחר גרסה</option>
+                            <option value=""> בחר גרסה </option>
                             {MenuInit()}
                         </select>
+                        <button className="addBtn btn btn-dark"
+                                id="imgUpload" type="submit">בחירה
+                        </button>
                     </div>
-                    <button className="addBtn btn btn-dark"
-                            id="imgUpload" type="submit">בחירה
-                    </button>
+
                 </form>
             </div>
 
@@ -405,7 +408,7 @@ const MapBid = ({match}) => {
             <div className="col-12 col-md-6 " dir="rtl">
 
                 <form onSubmit={e => mapSubmit(e)} className="row " lang="he" dir="rtl">
-                    <h4 className={" text-warning "}>הוספת מפה</h4>
+                    <h4 className={" text-warning "}>הוספת מפה חדשה </h4>
                     <div className="  d-flex justify-content-center">
                         <input className="form-group"
                                type='file'
