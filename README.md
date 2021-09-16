@@ -4,6 +4,17 @@ application deployed here:
 
 https://hassmalie.herokuapp.com/
 
+## About:
+
+The "Hassmalie" system was our graduation project in Hadassah academic collage. Supervised by Mr. Ihab Zahaika and Dr. Yoram Yekutieli. The system idea proposed by the company "Walid Haskiya Electrical Works Building and Industry".  In this project we developed a web application developed in parallel with a mobile application developed by another team. And both applications use the same database and API that we built.
+
+Since all the solutions on the market do not meet the business need, the goal of the "Hassmalie" system is to help run the business digitally and replace the standard management method (on paper) used in the business. The web application enables business management, employee management and employee reporting. In addition, it allows project management, so that each project is linked to its own file repository, and linked to a bid that can be filled in manually, or by manually labeling the project's map
+
+Our application meets important performance and security requirements, such as response time, storage space, password encryption and more. The technological tools we used for development are multifaceted, beginning with Django at the backend, React at the frontend and PostgreSQL as a database. 
+
+There was a design complexity in building the application, for example building the database and manual tagging. And throughout the construction we encountered many practical difficulties like the coordination of work between Django and React, the deployment of the application and the sad user interface.
+
+Finally, according to the results we have seen the application meets the requirements of the company, and the owners of the company are very satisfied with our work and they are interested in continuing to develop the system in order to use it.
 
 ## How to run the application (windows):
 
