@@ -2,6 +2,7 @@
 
 ## How to run the application (windows):
 1- Clone the repository. 
+
 2- Cd to hashmalie/ sittings.py folder 
 3- Set the following settings according: a. SECRET_KEY = 'your django application secret key' b. EMAIL_PORT = *port number* c. EMAIL_HOST_USER = 'your host email ex: emailhost@gmail.com' d. EMAIL_HOST_PASSWORD = 'your host email password ex: abcdefghijklmnop' 
 4- Run: npm run install, this will create a new package called node_modules in the reacthassmalie folder. 
