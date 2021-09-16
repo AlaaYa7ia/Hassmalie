@@ -1,5 +1,10 @@
 # Hassmalie
 
+application deployed here:
+
+https://hassmalie.herokuapp.com/
+
+
 ## How to run the application (windows):
 
 1- Clone the repository. 
